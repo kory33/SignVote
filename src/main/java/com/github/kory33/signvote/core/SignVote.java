@@ -2,7 +2,11 @@ package com.github.kory33.signvote.core;
 
 import java.io.File;
 
+import org.bukkit.event.HandlerList;
+
 import com.github.kory33.signvote.constants.DirectoryPaths;
+import com.github.kory33.signvote.listners.QuitListener;
+import com.github.kory33.signvote.listners.SignListner;
 import com.github.kory33.signvote.manager.VotePointCreationSessionManager;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.updatenotificationplugin.bukkit.github.GithubUpdateNotifyPlugin;
@@ -29,11 +33,18 @@ public class SignVote extends GithubUpdateNotifyPlugin {
         
         this.voteSessionManager = new VoteSessionManager(this);
         this.votePointCreationSessionManager = new VotePointCreationSessionManager();
+
+        new QuitListener(this);
+        new SignListner(this);
     }
     
     @Override
     public void onDisable() {
         super.onDisable();
+        
+        HandlerList.unregisterAll(this);
+        
+        this.voteSessionManager.saveAllSessions();
     }
     
     @Override

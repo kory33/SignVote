@@ -10,6 +10,7 @@ import com.github.kory33.signvote.session.VoteSession;
 public class VoteSessionManager {
     private BijectiveHashMap<String, VoteSession> sessionMap;
     private final SignVote plugin;
+    private final File sessionSaveDirectory;
 
     private void loadSession(File sessionDirectory) {
         try {
@@ -22,15 +23,33 @@ public class VoteSessionManager {
     
     public VoteSessionManager(SignVote plugin) {
         this.plugin = plugin;
-        
-        File sessionsDirectory = plugin.getSessionsDirectory();
+        this.sessionSaveDirectory = plugin.getSessionsDirectory();
 
-        for (File sessionFolder: sessionsDirectory.listFiles()) {
+        for (File sessionFolder: this.sessionSaveDirectory.listFiles()) {
             if (!sessionFolder.isDirectory()) {
                 continue;
             }
             
             this.loadSession(sessionFolder);
+        }
+    }
+
+    public void saveSession(VoteSession session) {
+        if (!this.sessionMap.containsKey(session)) {
+            throw new IllegalArgumentException("Non-registered session given!");
+        }
+        
+        File sessionDirectory = new File(this.sessionSaveDirectory, session.getName());
+        if (!sessionDirectory.exists()) {
+            sessionDirectory.mkdir();
+        }
+        
+        session.saveTo(sessionDirectory);
+    }
+    
+    public void saveAllSessions() {
+        for (VoteSession session: sessionMap.values()) {
+            this.saveSession(session);
         }
     }
     
