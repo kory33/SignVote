@@ -1,5 +1,6 @@
 package com.github.kory33.signvote.listners;
 
+import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
@@ -19,8 +20,9 @@ public class SignListner implements Listener {
     
     @EventHandler
     public void onVoteSignCreated(SignChangeEvent sign) {
-        String[] lines = sign.getLines();
-        if (!lines[0].equals(SignTexts.SIGN_CREATION_TEXT)) {
+        Sign interactedSign = (Sign)sign.getBlock().getState();
+        
+        if (!interactedSign.getLine(0).equals(SignTexts.SIGN_CREATION_TEXT)) {
             return;
         }
         
@@ -29,5 +31,7 @@ public class SignListner implements Listener {
         }
         
         sign.setLine(0, SignTexts.REGISTERED_SIGN_TEXT);
+        
+        this.plugin.getVotePointCreationSessionManager().createNewSession(interactedSign, sign.getPlayer());
     }
 }
