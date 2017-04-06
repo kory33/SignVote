@@ -2,7 +2,6 @@ package com.github.kory33.signvote.manager;
 
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.kory33.signvote.collection.BijectiveHashMap;
 import com.github.kory33.signvote.session.VotePointCreationSession;
@@ -10,7 +9,7 @@ import com.github.kory33.signvote.session.VotePointCreationSession;
 public class VotePointCreationSessionManager {
     private BijectiveHashMap<Player, VotePointCreationSession> sessionMap;
     
-    public VotePointCreationSessionManager(JavaPlugin plugin) {
+    public VotePointCreationSessionManager() {
         this.sessionMap = new BijectiveHashMap<>();
     }
 
