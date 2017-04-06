@@ -16,15 +16,15 @@ public class VotePointCreationSessionManager {
 
     /**
      * Creates a record of new session.
-     * @param targetSign
      * @param creator a player responsible for this session
+     * @param targetSign
      */
-    public void createNewSession(Sign targetSign, Player creator) {
+    public void createNewSession(Player creator, Sign targetSign) {
         if (this.sessionMap.containsKey(creator)) {
             this.sessionMap.removeKey(creator);
         }
         
-        VotePointCreationSession session = new VotePointCreationSession(targetSign, creator);
+        VotePointCreationSession session = new VotePointCreationSession(creator, targetSign);
         this.sessionMap.put(creator, session);
     }
 

@@ -32,6 +32,6 @@ public class SignListner implements Listener {
         
         sign.setLine(0, SignTexts.REGISTERED_SIGN_TEXT);
         
-        this.plugin.getVotePointCreationSessionManager().createNewSession(interactedSign, sign.getPlayer());
+        this.plugin.getVotePointCreationSessionManager().createNewSession(sign.getPlayer(), interactedSign);
     }
 }
