@@ -11,7 +11,7 @@ public class BijectiveHashMap<K, V> extends HashMap<K, V> {
 
     private BijectiveHashMap(HashMap<K, V> map, HashMap<V, K> inverse) {
         super(map);
-        this.inverse = inverse;
+        this.inverse = new HashMap<>(inverse);
     }
     
     public BijectiveHashMap(BijectiveHashMap<K, V> bMap) {
@@ -32,6 +32,11 @@ public class BijectiveHashMap<K, V> extends HashMap<K, V> {
         return super.put(key, value);
     }
     
+    /**
+     * Remove the mapping pair which has the given key.
+     * @param key
+     * @return
+     */
     public V removeKey(K key) {
         V removed = this.remove(key);
         
@@ -42,6 +47,11 @@ public class BijectiveHashMap<K, V> extends HashMap<K, V> {
         return removed;
     }
     
+    /**
+     * Remove the mapping pair which has the given value.
+     * @param key
+     * @return
+     */
     public K removeValue(V value) {
         K removed = this.inverse.remove(value);
         
