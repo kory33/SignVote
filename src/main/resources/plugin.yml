@@ -14,6 +14,9 @@ permissions:
     signvote.vote:
         description: allows a player to vote
         default: true
+    signvote.createsign:
+        description: allows a player to create a new vote endpoint
+        default: op
     signvote.createsession:
         description: allows a player to create a vote session
         default: op
