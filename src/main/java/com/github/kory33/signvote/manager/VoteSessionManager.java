@@ -3,8 +3,11 @@ package com.github.kory33.signvote.manager;
 import java.io.File;
 import java.util.logging.Level;
 
+import org.bukkit.block.Sign;
+
 import com.github.kory33.signvote.collection.BijectiveHashMap;
 import com.github.kory33.signvote.core.SignVote;
+import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 
 public class VoteSessionManager {
@@ -34,6 +37,10 @@ public class VoteSessionManager {
         }
     }
 
+    /**
+     * Save specific session.
+     * @param session
+     */
     public void saveSession(VoteSession session) {
         if (!this.sessionMap.containsKey(session)) {
             throw new IllegalArgumentException("Non-registered session given!");
@@ -47,13 +54,37 @@ public class VoteSessionManager {
         session.saveTo(sessionDirectory);
     }
     
+    /**
+     * Save all the sessions.
+     */
     public void saveAllSessions() {
         for (VoteSession session: sessionMap.values()) {
             this.saveSession(session);
         }
     }
-    
+
+    /**
+     * Get the mapping from the session name to the session instance.
+     * @return
+     */
     public BijectiveHashMap<String, VoteSession> getSessionMap() {
         return new BijectiveHashMap<>(this.sessionMap);
+    }
+
+    /**
+     * Get the corresponding vote point from sign.
+     * @param sign
+     * @return
+     */
+    public VotePoint getVotePoint(Sign sign) {
+        for (VoteSession session: this.sessionMap.values()) {
+            VotePoint votePoint = session.getVotePoint(sign);
+            
+            if (votePoint != null) {
+                return votePoint;
+            }
+        }
+        
+        return null;
     }
 }
