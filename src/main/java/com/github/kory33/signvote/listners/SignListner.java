@@ -12,6 +12,8 @@ public class SignListner implements Listener {
     private SignVote plugin;
     
     public SignListner(SignVote plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+
         this.plugin = plugin;
     }
     
