@@ -1,0 +1,22 @@
+name: ${pom.name}
+version: ${pom.version}
+main: com.github.kory33.signvote.core.SignVote
+description: ${pom.description}
+
+author: kory33
+
+commands:
+    signvote:
+        usage: /signvote - displays the help
+        description: displays the help
+
+permissions:
+    signvote.vote:
+        description: allows a player to vote
+        default: true
+    signvote.createsession:
+        description: allows a player to create a vote session
+        default: op
+    signvote.modifysession:
+        description: allows a player to modify the existing session
+
