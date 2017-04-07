@@ -1,6 +1,7 @@
 package com.github.kory33.signvote.manager;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.logging.Level;
 
 import org.bukkit.block.Sign;
@@ -51,7 +52,11 @@ public class VoteSessionManager {
             sessionDirectory.mkdir();
         }
         
-        session.saveTo(sessionDirectory);
+        try {
+            session.saveTo(sessionDirectory);
+        } catch (IOException e) {
+            this.plugin.getLogger().log(Level.SEVERE, "Error while saving sessions: ", e);;
+        }
     }
     
     /**
