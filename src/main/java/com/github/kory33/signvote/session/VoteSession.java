@@ -19,7 +19,7 @@ import lombok.Getter;
 public class VoteSession {
     private BijectiveHashMap<Sign, VotePoint> signMap;
 
-    private VoteScoreLimits voteScoreCountLimits;
+    @Getter private VoteScoreLimits voteScoreCountLimits;
     @Getter private String name;
     
     /**
@@ -45,23 +45,6 @@ public class VoteSession {
         this.name = sessionConfigJson.getString(VoteSessionDataFileKeys.NAME);
     }
 
-    /**
-     * 
-     * @param score The score whose count limit is to be set
-     * @param permissionNode Corresponding permission node for the limit.
-     * null or "default" should be given for default count limit.
-     * @param limit The limit of the count for two previously specified parameters
-     * @throws IllegalArgumentException when the score count limit already exists in the session.
-     */
-    public void addVoteScoreCountLimit(int score, String _permissionNode, int limit) throws IllegalArgumentException {
-        String permissionNode = _permissionNode;
-        if (permissionNode == null) {
-            permissionNode = "default";
-        }
-
-        this.voteScoreCountLimits.addLimit(score, permissionNode, limit);
-    }
-    
     /**
      * Constructs the vote session from its parameters.
      * @param sessionName
