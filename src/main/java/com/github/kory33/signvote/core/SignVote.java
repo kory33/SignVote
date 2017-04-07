@@ -20,18 +20,18 @@ import lombok.Getter;
 public class SignVote extends GithubUpdateNotifyPlugin {
     @Getter private VoteSessionManager voteSessionManager;
     @Getter private VotePointCreationSessionManager votePointCreationSessionManager;
-    @Getter private JSONConfiguration textsConfiguration;
+    @Getter private JSONConfiguration messagesConfiguration;
     
     private boolean isEnabled = false;
     
     private SignVoteCommandExecutor commandExecutor;
 
     private void loadConfigurations() throws IOException {
-        File textSettingsFile = new File(this.getDataFolder(), FilePaths.TEXT_SETTINGS_FILENAME);
-        if (!textSettingsFile.exists()) {
-            this.saveResource(FilePaths.TEXT_SETTINGS_FILENAME, false);
+        File messagesSettingsFile = new File(this.getDataFolder(), FilePaths.MESSAGES_SETTINGS_FILENAME);
+        if (!messagesSettingsFile.exists()) {
+            this.saveResource(FilePaths.MESSAGES_SETTINGS_FILENAME, false);
         }
-        this.textsConfiguration = new JSONConfiguration(textSettingsFile);
+        this.messagesConfiguration = new JSONConfiguration(messagesSettingsFile);
     }
     
     @Override

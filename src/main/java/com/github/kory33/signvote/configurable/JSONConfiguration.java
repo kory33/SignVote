@@ -20,4 +20,8 @@ public class JSONConfiguration {
         String fileContent = String.join("", Files.readAllLines(configFile.toPath()));
         this.jsonObject = new JSONObject(fileContent);
     }
+    
+    public String getString(String jsonKey) {
+        return this.jsonObject.getString(jsonKey);
+    }
 }
