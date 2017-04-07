@@ -6,7 +6,7 @@ import java.io.IOException;
 import org.bukkit.block.Sign;
 
 import com.github.kory33.signvote.collection.BijectiveHashMap;
-import com.github.kory33.signvote.constants.DirectoryPaths;
+import com.github.kory33.signvote.constants.FilePaths;
 import com.github.kory33.signvote.model.VotePoint;
 
 import lombok.Getter;
@@ -22,7 +22,7 @@ public class VoteSession {
      */
     public VoteSession(File sessionSaveLocation) throws IllegalArgumentException {
         // load all the saved votepoints
-        File votePointDirectory = new File(sessionSaveLocation, DirectoryPaths.VOTE_POINTS_DIR);
+        File votePointDirectory = new File(sessionSaveLocation, FilePaths.VOTE_POINTS_DIR);
         for (File votePointFile: votePointDirectory.listFiles()) {
             this.addVotePoint(votePointFile);
         }
@@ -57,7 +57,7 @@ public class VoteSession {
             throw new IOException("Votesession was about to be saved into a file! (" + sessionSaveLocation.getAbsolutePath() + ")");
         }
         
-        File votePointDirectory = new File(sessionSaveLocation, DirectoryPaths.VOTE_POINTS_DIR);
+        File votePointDirectory = new File(sessionSaveLocation, FilePaths.VOTE_POINTS_DIR);
         for (VotePoint votePoint: signMap.values()) {
             File votePointFile = new File(votePointDirectory, votePoint.getName());
             votePoint.saveTo(votePointFile);

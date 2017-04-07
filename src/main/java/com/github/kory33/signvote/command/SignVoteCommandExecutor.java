@@ -15,7 +15,6 @@ public class SignVoteCommandExecutor implements CommandExecutor{
     
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        // TODO 自動生成されたメソッド・スタブ
         return false;
     }
 }
