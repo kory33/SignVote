@@ -21,6 +21,11 @@ public class JSONConfiguration {
         this.jsonObject = new JSONObject(fileContent);
     }
     
+    /**
+     * Get the string data with the specified json key.
+     * @param jsonKey
+     * @return
+     */
     public String getString(String jsonKey) {
         return this.jsonObject.getString(jsonKey);
     }

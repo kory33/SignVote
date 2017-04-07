@@ -48,6 +48,14 @@ public class VoteSession {
     }
 
     /**
+     * 
+     * @param votePoint
+     */
+    public void addVotePoint(VotePoint votePoint) {
+        this.signMap.put(votePoint.getVoteSign(), votePoint);
+    }
+    
+    /**
      * Save the session data to the given directory.
      * @param sessionSaveLocation
      * @throws IOException when the given location is not a directory.

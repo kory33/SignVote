@@ -38,6 +38,10 @@ public class VoteSessionManager {
             this.loadSession(sessionFolder);
         }
     }
+    
+    public void addSession(VoteSession session) {
+        this.sessionMap.put(session.getName(), session);
+    }
 
     /**
      * Save specific session.
