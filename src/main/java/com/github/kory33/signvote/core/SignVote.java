@@ -20,21 +20,17 @@ public class SignVote extends GithubUpdateNotifyPlugin {
 
     private SignVoteCommandExecutor commandExecutor;
 
-    private void createDataDirectories() {
-        File sessionsDir = this.getSessionsDirectory();
-
-        if (!sessionsDir.exists()) {
-            sessionsDir.mkdirs();
-        }
-    }
-    
     @Override
     public void onEnable() {
         super.onEnable();
         
-        this.createDataDirectories();
+        File sessionsDir = new File(this.getDataFolder(), DirectoryPaths.SESSION_DIR);
+        if (!sessionsDir.exists()) {
+            sessionsDir.mkdirs();
+        }
+
         
-        this.voteSessionManager = new VoteSessionManager(this.getLogger(), this.getSessionsDirectory());
+        this.voteSessionManager = new VoteSessionManager(this.getLogger(), sessionsDir);
         
         if (this.votePointCreationSessionManager != null) {
             this.votePointCreationSessionManager = new VotePointCreationSessionManager();
@@ -60,13 +56,5 @@ public class SignVote extends GithubUpdateNotifyPlugin {
     @Override
     public String getGithubRepository() {
         return "kory33/SignVote";
-    }
-
-    /**
-     * Get the directory location in which the session folders are stored.
-     * @return
-     */
-    private File getSessionsDirectory() {
-        return new File(this.getDataFolder(), DirectoryPaths.SESSION_DIR);
     }
 }
