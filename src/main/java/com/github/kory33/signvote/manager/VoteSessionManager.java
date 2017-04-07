@@ -69,11 +69,12 @@ public class VoteSessionManager {
     }
 
     /**
-     * Get the mapping from the session name to the session instance.
+     * Get the vote session from session name
+     * @param sessionName
      * @return
      */
-    public BijectiveHashMap<String, VoteSession> getSessionMap() {
-        return new BijectiveHashMap<>(this.sessionMap);
+    public VoteSession getVoteSession(String sessionName) {
+        return this.sessionMap.get(sessionName);
     }
 
     /**
