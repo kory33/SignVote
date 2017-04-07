@@ -32,7 +32,10 @@ public class SignVote extends GithubUpdateNotifyPlugin {
         this.createDataDirectories();
         
         this.voteSessionManager = new VoteSessionManager(this);
-        this.votePointCreationSessionManager = new VotePointCreationSessionManager();
+        
+        if (this.votePointCreationSessionManager != null) {
+            this.votePointCreationSessionManager = new VotePointCreationSessionManager();
+        }
 
         new QuitListener(this);
         new SignListner(this);
@@ -45,6 +48,7 @@ public class SignVote extends GithubUpdateNotifyPlugin {
         HandlerList.unregisterAll(this);
         
         this.voteSessionManager.saveAllSessions();
+        this.voteSessionManager = null;
     }
     
     @Override
