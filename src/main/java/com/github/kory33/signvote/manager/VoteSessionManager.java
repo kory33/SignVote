@@ -3,33 +3,34 @@ package com.github.kory33.signvote.manager;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.bukkit.block.Sign;
 
 import com.github.kory33.signvote.collection.BijectiveHashMap;
-import com.github.kory33.signvote.core.SignVote;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 
 public class VoteSessionManager {
     private BijectiveHashMap<String, VoteSession> sessionMap;
-    private final SignVote plugin;
     private final File sessionSaveDirectory;
+    
+    private final Logger logger;
 
     private void loadSession(File sessionDirectory) {
         try {
             VoteSession session = new VoteSession(sessionDirectory);
             this.sessionMap.put(session.getName(), session);
         } catch(Exception e) {
-            this.plugin.getLogger().log(Level.WARNING, "Error reading the session directory: {0}", sessionDirectory.getName());
+            this.logger.log(Level.WARNING, "Error reading the session directory: {0}", sessionDirectory.getName());
         }
     }
     
-    public VoteSessionManager(SignVote plugin) {
-        this.plugin = plugin;
-        this.sessionSaveDirectory = plugin.getSessionsDirectory();
+    public VoteSessionManager(Logger logger, File sessionSaveDirectory) {
+        this.sessionSaveDirectory = sessionSaveDirectory;
+        this.logger = logger;
 
-        for (File sessionFolder: this.sessionSaveDirectory.listFiles()) {
+        for (File sessionFolder: sessionSaveDirectory.listFiles()) {
             if (!sessionFolder.isDirectory()) {
                 continue;
             }
@@ -55,7 +56,7 @@ public class VoteSessionManager {
         try {
             session.saveTo(sessionDirectory);
         } catch (IOException e) {
-            this.plugin.getLogger().log(Level.SEVERE, "Error while saving sessions: ", e);;
+            this.logger.log(Level.SEVERE, "Error while saving session: ", e);;
         }
     }
     

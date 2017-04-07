@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.bukkit.event.HandlerList;
 
+import com.github.kory33.signvote.command.SignVoteCommandExecutor;
 import com.github.kory33.signvote.constants.DirectoryPaths;
 import com.github.kory33.signvote.listners.QuitListener;
 import com.github.kory33.signvote.listners.SignListner;
@@ -16,6 +17,8 @@ import lombok.Getter;
 public class SignVote extends GithubUpdateNotifyPlugin {
     @Getter private VoteSessionManager voteSessionManager;
     @Getter private VotePointCreationSessionManager votePointCreationSessionManager;
+
+    private SignVoteCommandExecutor commandExecutor;
 
     private void createDataDirectories() {
         File sessionsDir = this.getSessionsDirectory();
@@ -31,7 +34,7 @@ public class SignVote extends GithubUpdateNotifyPlugin {
         
         this.createDataDirectories();
         
-        this.voteSessionManager = new VoteSessionManager(this);
+        this.voteSessionManager = new VoteSessionManager(this.getLogger(), this.getSessionsDirectory());
         
         if (this.votePointCreationSessionManager != null) {
             this.votePointCreationSessionManager = new VotePointCreationSessionManager();
@@ -39,6 +42,9 @@ public class SignVote extends GithubUpdateNotifyPlugin {
 
         new QuitListener(this);
         new SignListner(this);
+
+        this.commandExecutor = new SignVoteCommandExecutor(this);
+        this.getCommand("signvote").setExecutor(this.commandExecutor);
     }
     
     @Override
@@ -60,7 +66,7 @@ public class SignVote extends GithubUpdateNotifyPlugin {
      * Get the directory location in which the session folders are stored.
      * @return
      */
-    public File getSessionsDirectory() {
+    private File getSessionsDirectory() {
         return new File(this.getDataFolder(), DirectoryPaths.SESSION_DIR);
     }
 }
