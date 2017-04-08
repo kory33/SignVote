@@ -46,7 +46,7 @@ public class VoteSession {
         this.voteScoreCountLimits = new VoteScoreLimits(voteLimits);
         this.name = sessionConfigJson.getString(VoteSessionDataFileKeys.NAME);
     }
-
+    
     /**
      * Constructs the vote session from its parameters.
      * @param sessionName
