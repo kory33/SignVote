@@ -17,6 +17,7 @@ import com.github.kory33.signvote.manager.VoteManager;
 import com.github.kory33.signvote.model.VotePoint;
 
 import lombok.Getter;
+import lombok.Setter;
 
 public class VoteSession {
     private final BijectiveHashMap<Sign, VotePoint> signMap;
@@ -25,6 +26,9 @@ public class VoteSession {
     @Getter final private VoteScoreLimits voteScoreCountLimits;
     @Getter final private String name;
     private final VoteManager voteManager;
+    
+    @Setter @Getter private boolean isOpen;
+    
     /**
      * Constructs the vote session from the given session folder
      * @param sessionFolder
@@ -51,6 +55,8 @@ public class VoteSession {
 
         this.voteScoreCountLimits = new VoteScoreLimits(voteLimits);
         this.name = sessionConfigJson.getString(VoteSessionDataFileKeys.NAME);
+
+        this.setOpen(sessionConfigJson.getBoolean(VoteSessionDataFileKeys.IS_OPEN));
     }
     
     /**
@@ -65,6 +71,8 @@ public class VoteSession {
         
         this.signMap = new BijectiveHashMap<>();
         this.votePointNameMap = new BijectiveHashMap<>();
+        
+        this.setOpen(true);
     }
 
     /**
