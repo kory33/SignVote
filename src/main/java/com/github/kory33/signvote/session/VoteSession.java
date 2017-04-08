@@ -11,6 +11,7 @@ import com.github.kory33.signvote.collection.BijectiveHashMap;
 import com.github.kory33.signvote.collection.VoteScoreLimits;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.FilePaths;
+import com.github.kory33.signvote.constants.Formats;
 import com.github.kory33.signvote.constants.VoteSessionDataFileKeys;
 import com.github.kory33.signvote.model.VotePoint;
 
@@ -62,7 +63,7 @@ public class VoteSession {
         try {
             VotePoint votePoint = new VotePoint(votePointFIle);
             this.addVotePoint(votePoint);
-        } finally {}
+        } catch (Exception e) {}
     }
 
     /**
@@ -99,8 +100,12 @@ public class VoteSession {
         
         File votePointDirectory = new File(sessionSaveLocation, FilePaths.VOTE_POINTS_DIR);
         for (VotePoint votePoint: signMap.values()) {
-            File votePointFile = new File(votePointDirectory, votePoint.getName());
-            votePoint.saveTo(votePointFile);
+            File votePointFile = new File(votePointDirectory, votePoint.getName() + Formats.JSON_EXT);
+            if (!votePointFile.exists()) {
+                votePointFile.createNewFile();
+            }
+            
+            Files.write(votePointFile.toPath(), votePoint.toJson().toString(4).getBytes(Formats.FILE_ENCODING));
         }
 
         File sessionDataFile = new File(sessionSaveLocation, FilePaths.SESSION_DATA_FILENAME);
@@ -108,7 +113,7 @@ public class VoteSession {
             sessionDataFile.createNewFile();
         }
         
-        Files.write(sessionDataFile.toPath(), this.toJson().toString(4).getBytes("utf-8"));
+        Files.write(sessionDataFile.toPath(), this.toJson().toString(4).getBytes(Formats.FILE_ENCODING));
     }
 
     /**
