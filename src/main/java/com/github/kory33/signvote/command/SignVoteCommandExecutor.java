@@ -10,8 +10,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import com.github.kory33.signvote.command.subcommand.AddScoreCommandExecutor;
+import com.github.kory33.signvote.command.subcommand.CloseCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.CreateCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.HelpCommandExecutor;
+import com.github.kory33.signvote.command.subcommand.OpenCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.SubCommandExecutor;
 import com.github.kory33.signvote.constants.SubCommands;
 import com.github.kory33.signvote.core.SignVote;
@@ -23,8 +26,10 @@ public class SignVoteCommandExecutor implements CommandExecutor{
     public SignVoteCommandExecutor(SignVote plugin) {
         HashMap<String, SubCommandExecutor> commandMaps = new HashMap<>();
         
-        commandMaps.put(SubCommands.CREATE, new CreateCommandExecutor(plugin));
-        commandMaps.put(SubCommands.ADD_SCORE, new CreateCommandExecutor(plugin));
+        commandMaps.put(SubCommands.CREATE,    new CreateCommandExecutor(plugin));
+        commandMaps.put(SubCommands.ADD_SCORE, new AddScoreCommandExecutor(plugin));
+        commandMaps.put(SubCommands.OPEN,      new OpenCommandExecutor(plugin));
+        commandMaps.put(SubCommands.CLOSE,     new CloseCommandExecutor(plugin));
         
         this.subCommandExecutorMap = Collections.unmodifiableMap(commandMaps);
         this.defaultCommandExecutor = new HelpCommandExecutor(plugin);
