@@ -3,8 +3,11 @@ package com.github.kory33.signvote.session;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
 import org.json.JSONObject;
 
 import com.github.kory33.signvote.collection.BijectiveHashMap;
@@ -25,7 +28,7 @@ public class VoteSession {
 
     @Getter final private VoteScoreLimits voteScoreCountLimits;
     @Getter final private String name;
-    private final VoteManager voteManager;
+    @Getter private final VoteManager voteManager;
     
     @Setter @Getter private boolean isOpen;
     
@@ -149,5 +152,38 @@ public class VoteSession {
     
     public VotePoint getVotePoint(String pointName) {
         return this.votePointNameMap.get(pointName);
+    }
+    
+    /**
+     * Get a score -> count map of available votes for a given player
+     * @param player
+     * @return
+     */
+    public HashMap<Integer, Integer> getAvailableVoteCounts(Player player) {
+        HashMap<Integer, Integer> availableCounts = new HashMap<>();
+        
+        for (int score: this.voteScoreCountLimits.getVotableScores()) {
+            availableCounts.put(score, this.voteScoreCountLimits.getLimit(score, player));
+        }
+        
+        HashMap<Integer, HashSet<String>> votedScores = this.voteManager.getVotedPointsMap(player);
+        for (int score: votedScores.keySet()) {
+            int votedNum = votedScores.get(score).size();
+            
+            if (!availableCounts.containsKey(score)) {
+                continue;
+            }
+            
+            int reservedVotes = availableCounts.remove(score);
+            int remainingVotes = reservedVotes - votedNum;
+            
+            if (remainingVotes <= 0) {
+                continue;
+            }
+            
+            availableCounts.put(score, remainingVotes);
+        }
+        
+        return availableCounts;
     }
 }

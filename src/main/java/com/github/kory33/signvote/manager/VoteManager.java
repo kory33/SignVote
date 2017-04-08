@@ -131,3 +131,4 @@ public class VoteManager {
         votedPointnames.get(votedScore).add(votePoint.getName());
     }
 }
+    

@@ -1,6 +1,7 @@
 package com.github.kory33.signvote.collection;
 
 import java.util.HashMap;
+import java.util.Set;
 
 import org.bukkit.entity.Player;
 import org.json.JSONObject;
@@ -89,5 +90,13 @@ public class VoteScoreLimits {
         }
         
         return maxLimit;
+    }
+    
+    /**
+     * Get all the possible votable scores given that the voter has full permissions
+     * @return
+     */
+    public Set<Integer> getVotableScores() {
+        return this.limitMap.keySet();
     }
 }
