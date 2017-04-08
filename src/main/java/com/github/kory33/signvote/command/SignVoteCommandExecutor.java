@@ -2,12 +2,14 @@ package com.github.kory33.signvote.command;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import com.github.kory33.signvote.command.subcommand.AddScoreCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.CreateCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.HelpCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.SubCommandExecutor;
@@ -15,14 +17,17 @@ import com.github.kory33.signvote.constants.SubCommands;
 import com.github.kory33.signvote.core.SignVote;
 
 public class SignVoteCommandExecutor implements CommandExecutor{
-    private final CreateCommandExecutor createCommandExecutor;
-    private final AddScoreCommandExecutor addScoreCommandExecutor;
-    private final HelpCommandExecutor helpCommandExecutor;
+    private final Map<String, SubCommandExecutor> subCommandExecutorMap;
+    private final SubCommandExecutor defaultCommandExecutor;
 
     public SignVoteCommandExecutor(SignVote plugin) {
-        this.createCommandExecutor = new CreateCommandExecutor(plugin);
-        this.addScoreCommandExecutor = new AddScoreCommandExecutor(plugin);
-        this.helpCommandExecutor = new HelpCommandExecutor(plugin);
+        HashMap<String, SubCommandExecutor> commandMaps = new HashMap<>();
+        
+        commandMaps.put(SubCommands.CREATE, new CreateCommandExecutor(plugin));
+        commandMaps.put(SubCommands.ADD_SCORE, new CreateCommandExecutor(plugin));
+        
+        this.subCommandExecutorMap = Collections.unmodifiableMap(commandMaps);
+        this.defaultCommandExecutor = new HelpCommandExecutor(plugin);
     }
 
     @Override
@@ -30,21 +35,15 @@ public class SignVoteCommandExecutor implements CommandExecutor{
         ArrayList<String> argList = new ArrayList<>(Arrays.asList(args));
 
         String subCommand = argList.remove(0);
-        SubCommandExecutor commandExecutor = null;
-        switch(subCommand) {
-            case SubCommands.CREATE:
-                commandExecutor = this.createCommandExecutor;
-                break;
-            case SubCommands.ADD_SCORE:
-                commandExecutor = this.addScoreCommandExecutor;
-                break;
-            default:
-                commandExecutor = this.helpCommandExecutor;
+        SubCommandExecutor executor = this.subCommandExecutorMap.get(subCommand);
+        
+        if (executor == null) {
+            executor = this.defaultCommandExecutor;
         }
 
-        boolean isSuccess = commandExecutor.onCommand(sender, command, argList);
+        boolean isSuccess = executor.onCommand(sender, command, argList);
         if (!isSuccess) {
-            commandExecutor.displayHelp(sender);
+            executor.displayHelp(sender);
         }
         return isSuccess;
     }
