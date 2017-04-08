@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigurationNodes;
+import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.core.SignVote;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.session.VoteSession;
@@ -27,6 +28,11 @@ public class CloseCommandExecutor extends SubCommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, ArrayList<String> args) {
+        if (!sender.hasPermission(PermissionNodes.CLOSE_SESSION)) {
+            sender.sendMessage(messageConfiguration.getString(MessageConfigurationNodes.MISSING_PERMS));
+            return true;
+        }
+
         if (args.size() < 1) {
             return false;
         }
@@ -47,5 +53,4 @@ public class CloseCommandExecutor extends SubCommandExecutor {
         targetVoteSession.setOpen(false);
         return true;
     }
-    
 }
