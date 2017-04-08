@@ -160,11 +160,7 @@ public class VoteSession {
      * @return
      */
     public HashMap<Integer, Integer> getAvailableVoteCounts(Player player) {
-        HashMap<Integer, Integer> availableCounts = new HashMap<>();
-        
-        for (int score: this.voteScoreCountLimits.getVotableScores()) {
-            availableCounts.put(score, this.voteScoreCountLimits.getLimit(score, player));
-        }
+        HashMap<Integer, Integer> availableCounts = this.getReservedVoteCounts(player);
         
         HashMap<Integer, HashSet<String>> votedScores = this.voteManager.getVotedPointsMap(player);
         for (int score: votedScores.keySet()) {
@@ -185,5 +181,20 @@ public class VoteSession {
         }
         
         return availableCounts;
+    }
+    
+    /**
+     * Get a score -> count map of reserved votes for a given player
+     * @param player
+     * @return
+     */
+    public HashMap<Integer, Integer> getReservedVoteCounts(Player player) {
+        HashMap<Integer, Integer> reservedCounts = new HashMap<>();
+        
+        for (int score: this.voteScoreCountLimits.getVotableScores()) {
+            reservedCounts.put(score, this.voteScoreCountLimits.getLimit(score, player));
+        }
+        
+        return reservedCounts;
     }
 }
