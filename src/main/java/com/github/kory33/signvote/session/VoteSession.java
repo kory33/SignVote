@@ -18,6 +18,7 @@ import lombok.Getter;
 
 public class VoteSession {
     private BijectiveHashMap<Sign, VotePoint> signMap;
+    private BijectiveHashMap<String, VotePoint> votePointNameMap;
 
     @Getter private VoteScoreLimits voteScoreCountLimits;
     @Getter private String name;
@@ -60,7 +61,7 @@ public class VoteSession {
     private void addVotePoint(File votePointFIle) {
         try {
             VotePoint votePoint = new VotePoint(votePointFIle);
-            this.signMap.put(votePoint.getVoteSign(), votePoint);
+            this.addVotePoint(votePoint);
         } finally {}
     }
 
@@ -70,6 +71,7 @@ public class VoteSession {
      */
     public void addVotePoint(VotePoint votePoint) {
         this.signMap.put(votePoint.getVoteSign(), votePoint);
+        this.votePointNameMap.put(votePoint.getName(), votePoint);
     }
     
     /**
@@ -116,5 +118,9 @@ public class VoteSession {
      */
     public VotePoint getVotePoint(Sign sign) {
         return this.signMap.get(sign);
+    }
+    
+    public VotePoint getVotePoint(String pointName) {
+        return this.votePointNameMap.get(pointName);
     }
 }

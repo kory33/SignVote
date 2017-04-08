@@ -9,9 +9,7 @@ import org.bukkit.event.HandlerList;
 import com.github.kory33.signvote.command.SignVoteCommandExecutor;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.FilePaths;
-import com.github.kory33.signvote.listners.QuitListener;
 import com.github.kory33.signvote.listners.SignListner;
-import com.github.kory33.signvote.manager.VotePointCreationSessionManager;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.updatenotificationplugin.bukkit.github.GithubUpdateNotifyPlugin;
 
@@ -19,7 +17,6 @@ import lombok.Getter;
 
 public class SignVote extends GithubUpdateNotifyPlugin {
     @Getter private VoteSessionManager voteSessionManager;
-    @Getter private VotePointCreationSessionManager votePointCreationSessionManager;
     @Getter private JSONConfiguration messagesConfiguration;
     
     private boolean isEnabled = false;
@@ -52,12 +49,6 @@ public class SignVote extends GithubUpdateNotifyPlugin {
         
         this.voteSessionManager = new VoteSessionManager(this.getLogger(), sessionsDir);
         
-        if (this.votePointCreationSessionManager != null) {
-            this.votePointCreationSessionManager = new VotePointCreationSessionManager();
-        }
-
-        
-        new QuitListener(this);
         new SignListner(this);
 
         this.commandExecutor = new SignVoteCommandExecutor(this);
