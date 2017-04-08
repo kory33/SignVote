@@ -13,6 +13,7 @@ import com.github.kory33.signvote.session.VoteSession;
 
 public class VoteSessionManager {
     private BijectiveHashMap<String, VoteSession> sessionMap;
+    
     private final File sessionSaveDirectory;
     
     private final Logger logger;

@@ -56,7 +56,7 @@ public class VoteManager {
             this.voteData.put(player, votedPointsMap);
         }
     }
-    
+
     /**
      * Save the vote data under the given directory.
      * @param voteDataDirectory
@@ -110,7 +110,7 @@ public class VoteManager {
      * @param votePoint
      * @throws IllegalArgumentException when there is a duplicate in the vote
      */
-    public void addVotedPointName(Player voter, int votedScore, VotePoint votePoint) throws IllegalArgumentException{
+    public void addVotePointName(Player voter, int votedScore, VotePoint votePoint) throws IllegalArgumentException{
         if (!this.voteData.containsKey(voter)) {
             this.voteData.put(voter, new HashMap<>());
         }

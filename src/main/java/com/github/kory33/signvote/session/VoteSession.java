@@ -13,17 +13,18 @@ import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.FilePaths;
 import com.github.kory33.signvote.constants.Formats;
 import com.github.kory33.signvote.constants.VoteSessionDataFileKeys;
+import com.github.kory33.signvote.manager.VoteManager;
 import com.github.kory33.signvote.model.VotePoint;
 
 import lombok.Getter;
 
 public class VoteSession {
-    private BijectiveHashMap<Sign, VotePoint> signMap;
-    private BijectiveHashMap<String, VotePoint> votePointNameMap;
+    private final BijectiveHashMap<Sign, VotePoint> signMap;
+    private final BijectiveHashMap<String, VotePoint> votePointNameMap;
 
-    @Getter private VoteScoreLimits voteScoreCountLimits;
-    @Getter private String name;
-    
+    @Getter final private VoteScoreLimits voteScoreCountLimits;
+    @Getter final private String name;
+    private final VoteManager voteManager;
     /**
      * Constructs the vote session from the given session folder
      * @param sessionFolder
@@ -31,12 +32,17 @@ public class VoteSession {
      * @throws IOException 
      */
     public VoteSession(File sessionSaveLocation) throws IllegalArgumentException, IOException {
+        this.signMap = new BijectiveHashMap<>();
+        this.votePointNameMap = new BijectiveHashMap<>();
+        
         // load all the saved votepoints
         File votePointDirectory = new File(sessionSaveLocation, FilePaths.VOTE_POINTS_DIR);
         for (File votePointFile: votePointDirectory.listFiles()) {
             this.addVotePoint(votePointFile);
         }
 
+        this.voteManager = new VoteManager(new File(sessionSaveLocation, FilePaths.VOTE_DATA_DIR));
+        
         // read information of this vote session
         File sessionDataFile = new File(sessionSaveLocation, FilePaths.SESSION_DATA_FILENAME);
 
@@ -53,6 +59,12 @@ public class VoteSession {
      */
     public VoteSession(String sessionName) {
         this.name = sessionName;
+
+        this.voteScoreCountLimits = new VoteScoreLimits();
+        this.voteManager = new VoteManager();
+        
+        this.signMap = new BijectiveHashMap<>();
+        this.votePointNameMap = new BijectiveHashMap<>();
     }
 
     /**
@@ -108,6 +120,8 @@ public class VoteSession {
             Files.write(votePointFile.toPath(), votePoint.toJson().toString(4).getBytes(Formats.FILE_ENCODING));
         }
 
+        this.voteManager.saveTo(new File(sessionSaveLocation, FilePaths.VOTE_DATA_DIR));
+        
         File sessionDataFile = new File(sessionSaveLocation, FilePaths.SESSION_DATA_FILENAME);
         if (!sessionDataFile.exists()) {
             sessionDataFile.createNewFile();

@@ -12,6 +12,13 @@ public class VoteScoreLimits {
         // TODO implementations
     }
     
+    /**
+     * Construct an empty VoteScoreLimits object.
+     */
+    public VoteScoreLimits() {
+        this.limitMap = new HashMap<>();
+    }
+    
     public JSONObject toJson() {
         // TODO implementations
         return null;
