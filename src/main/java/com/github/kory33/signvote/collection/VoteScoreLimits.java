@@ -7,9 +7,29 @@ import org.json.JSONObject;
 
 public class VoteScoreLimits {
     HashMap<Integer, HashMap<String, Integer>> limitMap;
-    
+
+    /**
+     * Construct a VoteScoreLimits from an json data
+     * @param jsonObject
+     */
     public VoteScoreLimits(JSONObject jsonObject) {
-        // TODO implementations
+        this.limitMap = new HashMap<>();
+        
+        for (String scoreString: jsonObject.keySet()) {
+            try {
+                int score = new Integer(scoreString);
+                
+                HashMap<String, Integer> permissiveLimitMap = new HashMap<>();
+                JSONObject permLimits = jsonObject.getJSONObject(scoreString);
+                for (String permission: permLimits.keySet()) {
+                    permissiveLimitMap.put(permission, permLimits.getInt(permission));
+                }
+
+                this.limitMap.put(score, permissiveLimitMap);
+            } catch (Exception exception) {
+                continue;
+            }
+        }
     }
     
     /**
@@ -19,9 +39,12 @@ public class VoteScoreLimits {
         this.limitMap = new HashMap<>();
     }
     
+    /**
+     * Get the Json representation of this object
+     * @return
+     */
     public JSONObject toJson() {
-        // TODO implementations
-        return null;
+        return new JSONObject(this.limitMap);
     }
     
     public void addLimit(int score, String permission, int limit) {
