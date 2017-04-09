@@ -1,2 +1,39 @@
 {
+    "command": {
+        "help": "",
+        "create": {
+            "help": ""
+        },
+        "addscore": {
+            "help": ""
+        },
+        "open": {
+            "help": "",
+            "error": {
+                "alreadyopened": ""
+            }
+        },
+        "close": {
+            "help": "",
+            "error": {
+                "alreadyclosed": ""
+            }
+        },
+        "vote": {
+            "help": "",
+            "voteaccepted": "",
+            "error": {
+                "invalidscore": "",
+                "reachedlimit": "",
+                "alreadyvoted": ""
+            }
+        }
+    },
+    "error": {
+        "missingpermission": "",
+        "nosession": "",
+        "vpemptyname": "",
+        "vpexists": "",
+        "onlyforplayers": ""
+    }
 }
