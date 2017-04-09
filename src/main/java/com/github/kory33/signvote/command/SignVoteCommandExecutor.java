@@ -50,10 +50,10 @@ public class SignVoteCommandExecutor implements CommandExecutor{
             executor = this.defaultCommandExecutor;
         }
 
-        boolean isSuccess = executor.onCommand(sender, command, argList);
-        if (!isSuccess) {
+        if (!executor.onCommand(sender, command, argList)) {
             executor.displayHelp(sender);
         }
-        return isSuccess;
+
+        return true;
     }
 }
