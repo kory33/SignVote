@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -36,8 +37,12 @@ public class VoteManager {
             String fileName = playerVoteDataFile.getName();
             String playerUUID = fileName.substring(0, fileName.length() - Formats.JSON_EXT.length() - 1);
 
-            Player player = Bukkit.getPlayer(playerUUID);
+            Player player = Bukkit.getPlayer(UUID.fromString(playerUUID));
 
+            if (player == null) {
+                continue;
+            }
+            
             HashMap<Integer, HashSet<String>> votedPointsMap = new HashMap<>();
             
             for (String scoreString: jsonObject.keySet()) {
