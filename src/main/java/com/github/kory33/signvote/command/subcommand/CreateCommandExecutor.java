@@ -32,6 +32,10 @@ public class CreateCommandExecutor extends SubCommandExecutor{
             return true;
         }
         
+        if (args.size() < 1) {
+            return false;
+        }
+        
         String voteSessionName = args.remove(0);
 
         if (this.voteSessionManager.getVoteSession(voteSessionName) != null) {
@@ -46,7 +50,7 @@ public class CreateCommandExecutor extends SubCommandExecutor{
             return false;
         }
         
-        sender.sendMessage(messageConfiguration.getMessageFormat(MessageConfigurationNodes.F_SESSION_CREATED).format(voteSessionName));
+        sender.sendMessage(messageConfiguration.getFormatted(MessageConfigurationNodes.F_SESSION_CREATED, voteSessionName));
         return true;
     }
 

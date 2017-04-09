@@ -47,18 +47,29 @@ public class JSONConfiguration {
                 return result;
             }
         } catch (Exception e) {
+            Bukkit.getLogger().log(Level.WARNING, e.getMessage());
         }
         
-        Bukkit.getLogger().log(Level.SEVERE, "Failed to fetch the message: " + jsonKey + ". Returning this key instead.");
+        Bukkit.getLogger().log(Level.WARNING, "Failed to fetch the message: " + jsonKey + ". Returning this key instead.");
         return jsonKey;
     }
     
     /**
-     * Get the message format with a specified json key.
+     * Get a message of specified jsonKey formatted using an object
      * @param jsonKey
      * @return
      */
-    public MessageFormat getMessageFormat(String jsonKey) {
-        return new MessageFormat(this.getString(jsonKey));
+    public String getFormatted(String jsonKey, Object object) {
+        Object[] objArray = {object};
+        return this.getFormatted(jsonKey, objArray);
+    }
+
+    /**
+     * Get a message of specified jsonKey formatted using an object
+     * @param jsonKey
+     * @return
+     */
+    public String getFormatted(String jsonKey, Object... arguments) {
+        return MessageFormat.format(this.getString(jsonKey), arguments);
     }
 }
