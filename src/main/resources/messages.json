@@ -3,6 +3,7 @@
 		"help": "§e/signvote <create|addscore|open|close|vote>\n§aRun subcommands without arguments to see their help.",
 		"create": {
 			"help": "/signvote create <session name> - create a new session with the given name",
+			"created": "§aSession §6{0} §acreated!",
 			"error": {
 			    "sessionexists": "§csession already exists!"
 			}

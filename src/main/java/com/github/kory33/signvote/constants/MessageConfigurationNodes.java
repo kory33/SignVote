@@ -1,10 +1,17 @@
 package com.github.kory33.signvote.constants;
 
+/**
+ * Json nodes in message configuration.
+ * Nodes that are preceded with "F_" are expected to be a format string.
+ * @author kory
+ *
+ */
 public class MessageConfigurationNodes {
     public static final String COMMAND_ROOT = "command";
     public static final String COMMAND_HELP = COMMAND_ROOT + ".help";
     
     public static final String CREATE_COMMAND_HELP      = COMMAND_ROOT + ".create.help";
+    public static final String F_SESSION_CREATED        = COMMAND_ROOT + ".create.created";
     public static final String SESSION_ALREADY_EXISTS   = COMMAND_ROOT + ".create.error.sessionexists";
     
     public static final String ADD_SCORE_COMMAND_HELP   = COMMAND_ROOT + ".addscore.help";

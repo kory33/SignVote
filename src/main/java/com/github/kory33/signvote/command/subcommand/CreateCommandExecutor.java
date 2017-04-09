@@ -1,6 +1,8 @@
 package com.github.kory33.signvote.command.subcommand;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -15,10 +17,12 @@ import com.github.kory33.signvote.session.VoteSession;
 public class CreateCommandExecutor extends SubCommandExecutor{
     private final JSONConfiguration messageConfiguration;
     private final VoteSessionManager voteSessionManager;
+    private final Logger pluginLogger;
 
     public CreateCommandExecutor(SignVote plugin) {
         this.messageConfiguration = plugin.getMessagesConfiguration();
         this.voteSessionManager = plugin.getVoteSessionManager();
+        this.pluginLogger = plugin.getLogger();
     }
     
     @Override
@@ -38,9 +42,11 @@ public class CreateCommandExecutor extends SubCommandExecutor{
         try {
             this.voteSessionManager.addSession(new VoteSession(voteSessionName));
         } catch (Exception exception) {
+            this.pluginLogger.log(Level.SEVERE, "Error while creating session: ", exception);
             return false;
         }
         
+        sender.sendMessage(messageConfiguration.getMessageFormat(MessageConfigurationNodes.F_SESSION_CREATED).format(voteSessionName));
         return true;
     }
 

@@ -3,6 +3,7 @@ package com.github.kory33.signvote.configurable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.text.MessageFormat;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -50,5 +51,14 @@ public class JSONConfiguration {
         
         Bukkit.getLogger().log(Level.SEVERE, "Failed to fetch the message: " + jsonKey + ". Returning this key instead.");
         return jsonKey;
+    }
+    
+    /**
+     * Get the message format with a specified json key.
+     * @param jsonKey
+     * @return
+     */
+    public MessageFormat getMessageFormat(String jsonKey) {
+        return new MessageFormat(this.getString(jsonKey));
     }
 }
