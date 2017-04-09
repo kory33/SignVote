@@ -4,6 +4,7 @@
 		"create": {
 			"help": "/votesign create <session name> - create a new session with the given name",
 			"error": {
+			    "sessionexists": "§csession already exists!",
 				"vpemptyname": "§cPlease enter the name of votepoint",
 				"vpexists": "§cThe session with that name already exists!"
 			}

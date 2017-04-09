@@ -12,7 +12,7 @@ import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 
 public class VoteSessionManager {
-    private BijectiveHashMap<String, VoteSession> sessionMap;
+    private final BijectiveHashMap<String, VoteSession> sessionMap;
     
     private final File sessionSaveDirectory;
     
@@ -28,6 +28,8 @@ public class VoteSessionManager {
     }
     
     public VoteSessionManager(Logger logger, File sessionSaveDirectory) {
+        this.sessionMap = new BijectiveHashMap<>();
+        
         this.sessionSaveDirectory = sessionSaveDirectory;
         this.logger = logger;
 
@@ -48,8 +50,8 @@ public class VoteSessionManager {
      * Save specific session.
      * @param session
      */
-    public void saveSession(VoteSession session) {
-        if (!this.sessionMap.containsKey(session)) {
+    private void saveSession(VoteSession session) {
+        if (!this.sessionMap.getInverse().containsKey(session)) {
             throw new IllegalArgumentException("Non-registered session given!");
         }
         

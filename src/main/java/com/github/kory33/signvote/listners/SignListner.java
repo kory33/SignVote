@@ -38,17 +38,15 @@ public class SignListner implements Listener {
     
     @EventHandler
     public void onVoteSignCreated(SignChangeEvent sign) {
-        Sign interactedSign = (Sign)sign.getBlock().getState();
-        
-        if (!interactedSign.getLine(0).equals(SignTexts.SIGN_CREATION_TEXT)) {
+        if (!sign.getLine(0).equals(SignTexts.SIGN_CREATION_TEXT)) {
             return;
         }
-        
+
         if(!sign.getPlayer().hasPermission(PermissionNodes.CREATE_SIGN)) {
             this.rejectSignCreation(sign, messageConfig.getString(MessageConfigurationNodes.MISSING_PERMS));
             return;
         }
-        
+
         String sessionName = sign.getLine(1);
         VoteSession session = this.voteSessionManager.getVoteSession(sessionName);
         
@@ -56,7 +54,7 @@ public class SignListner implements Listener {
             this.rejectSignCreation(sign, messageConfig.getString(MessageConfigurationNodes.SESSION_DOES_NOT_EXIST));
             return;
         }
-        
+
         String pointName = sign.getLine(2);
         if (pointName == "") {
             this.rejectSignCreation(sign, messageConfig.getString(MessageConfigurationNodes.VOTEPOINT_NAME_EMPTY));

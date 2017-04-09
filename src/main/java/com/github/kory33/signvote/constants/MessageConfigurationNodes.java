@@ -5,6 +5,7 @@ public class MessageConfigurationNodes {
     public static final String COMMAND_HELP = COMMAND_ROOT + ".help";
     
     public static final String CREATE_COMMAND_HELP      = COMMAND_ROOT + ".create.help";
+    public static final String SESSION_ALREADY_EXISTS   = COMMAND_ROOT + ".create.error.sessionexists";
     public static final String VOTEPOINT_NAME_EMPTY     = COMMAND_ROOT + ".create.error.vpemptyname";
     public static final String VOTEPOINT_ALREADY_EXISTS = COMMAND_ROOT + ".create.error.vpexists";
     

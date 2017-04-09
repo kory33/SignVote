@@ -46,8 +46,6 @@ public class JSONConfiguration {
                 return result;
             }
         } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Failed to fetch message: ", e);
-            Bukkit.getLogger().log(Level.SEVERE, this.jsonObject.toString());
         }
         
         Bukkit.getLogger().log(Level.SEVERE, "Failed to fetch the message: " + jsonKey + ". Returning this key instead.");

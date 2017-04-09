@@ -28,8 +28,14 @@ public class CreateCommandExecutor extends SubCommandExecutor{
             return true;
         }
         
+        String voteSessionName = args.remove(0);
+
+        if (this.voteSessionManager.getVoteSession(voteSessionName) != null) {
+            sender.sendMessage(messageConfiguration.getString(MessageConfigurationNodes.SESSION_ALREADY_EXISTS));
+            return true;
+        }
+        
         try {
-            String voteSessionName = args.remove(0);
             this.voteSessionManager.addSession(new VoteSession(voteSessionName));
         } catch (Exception exception) {
             return false;

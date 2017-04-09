@@ -30,9 +30,9 @@ public class VotePoint {
         this.name = jsonObject.getString(VotePointDataFileKeys.NAME);
         
         World world = Bukkit.getWorld(jsonObject.getString(VotePointDataFileKeys.VOTE_SIGN_WORLD));
-        int signX = new Integer(jsonObject.getString(VotePointDataFileKeys.VOTE_SIGN_LOC_X));
-        int signY = new Integer(jsonObject.getString(VotePointDataFileKeys.VOTE_SIGN_LOC_Y));
-        int signZ = new Integer(jsonObject.getString(VotePointDataFileKeys.VOTE_SIGN_LOC_Z));
+        int signX = jsonObject.getInt(VotePointDataFileKeys.VOTE_SIGN_LOC_X);
+        int signY = jsonObject.getInt(VotePointDataFileKeys.VOTE_SIGN_LOC_Y);
+        int signZ = jsonObject.getInt(VotePointDataFileKeys.VOTE_SIGN_LOC_Z);
         
         if (world == null) {
             throw new IllegalArgumentException("Invalid file given! (world name missing)");
@@ -54,7 +54,7 @@ public class VotePoint {
         JSONObject jsonObject = new JSONObject();
         
         jsonObject.put(VotePointDataFileKeys.NAME, this.name);
-        jsonObject.put(VotePointDataFileKeys.VOTE_SIGN_WORLD, this.voteSign.getWorld());
+        jsonObject.put(VotePointDataFileKeys.VOTE_SIGN_WORLD, this.voteSign.getWorld().getName());
         jsonObject.put(VotePointDataFileKeys.VOTE_SIGN_LOC_X, this.voteSign.getX());
         jsonObject.put(VotePointDataFileKeys.VOTE_SIGN_LOC_Y, this.voteSign.getY());
         jsonObject.put(VotePointDataFileKeys.VOTE_SIGN_LOC_Z, this.voteSign.getZ());

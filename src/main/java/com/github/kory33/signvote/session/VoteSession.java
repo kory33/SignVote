@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.json.JSONObject;
@@ -89,7 +91,9 @@ public class VoteSession {
         try {
             VotePoint votePoint = new VotePoint(votePointFIle);
             this.addVotePoint(votePoint);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            Bukkit.getLogger().log(Level.SEVERE, "", e);
+        }
     }
 
     /**
@@ -110,6 +114,7 @@ public class VoteSession {
         
         sessionData.put(VoteSessionDataFileKeys.NAME, this.name);
         sessionData.put(VoteSessionDataFileKeys.VOTE_SCORE_LIMITS, this.voteScoreCountLimits.toJson());
+        sessionData.put(VoteSessionDataFileKeys.IS_OPEN, this.isOpen);
         
         return sessionData;
     }
@@ -120,11 +125,17 @@ public class VoteSession {
      * @throws IOException when the given location is not a directory.
      */
     public void saveTo(File sessionSaveLocation) throws IOException {
-        if (!sessionSaveLocation.isDirectory()) {
+        if (!sessionSaveLocation.exists()) {
+            sessionSaveLocation.mkdirs();
+        } else if (!sessionSaveLocation.isDirectory()) {
             throw new IOException("Votesession was about to be saved into a file! (" + sessionSaveLocation.getAbsolutePath() + ")");
         }
         
         File votePointDirectory = new File(sessionSaveLocation, FilePaths.VOTE_POINTS_DIR);
+        if (!votePointDirectory.exists()) {
+            votePointDirectory.mkdirs();
+        }
+
         for (VotePoint votePoint: signMap.values()) {
             File votePointFile = new File(votePointDirectory, votePoint.getName() + Formats.JSON_EXT);
             if (!votePointFile.exists()) {

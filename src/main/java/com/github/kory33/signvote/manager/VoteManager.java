@@ -63,7 +63,9 @@ public class VoteManager {
      * @throws IOException
      */
     public void saveTo(File voteDataDirectory) throws IOException {
-        if (!voteDataDirectory.isDirectory()) {
+        if (!voteDataDirectory.exists()) {
+            voteDataDirectory.mkdirs();
+        }else if (!voteDataDirectory.isDirectory()) {
             throw new IOException("Directory has to be specified for save location!");
         }
         
