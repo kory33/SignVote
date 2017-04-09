@@ -6,8 +6,6 @@ public class MessageConfigurationNodes {
     
     public static final String CREATE_COMMAND_HELP      = COMMAND_ROOT + ".create.help";
     public static final String SESSION_ALREADY_EXISTS   = COMMAND_ROOT + ".create.error.sessionexists";
-    public static final String VOTEPOINT_NAME_EMPTY     = COMMAND_ROOT + ".create.error.vpemptyname";
-    public static final String VOTEPOINT_ALREADY_EXISTS = COMMAND_ROOT + ".create.error.vpexists";
     
     public static final String ADD_SCORE_COMMAND_HELP   = COMMAND_ROOT + ".addscore.help";
     
@@ -29,4 +27,6 @@ public class MessageConfigurationNodes {
     public static final String SESSION_DOES_NOT_EXIST   = GENERIC_COMMAND_ERROR + ".nosession";
     public static final String VOTEPOINT_DOES_NOT_EXIST = GENERIC_COMMAND_ERROR + ".novotepoint";
     public static final String MISSING_PERMS            = GENERIC_COMMAND_ERROR + ".missingpermission";
+    public static final String VOTEPOINT_NAME_EMPTY     = GENERIC_COMMAND_ERROR + ".vpemptyname";
+    public static final String VOTEPOINT_ALREADY_EXISTS = GENERIC_COMMAND_ERROR + ".vpexists";
 }
