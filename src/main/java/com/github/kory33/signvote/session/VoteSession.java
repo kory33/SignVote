@@ -16,6 +16,9 @@ import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.FilePaths;
 import com.github.kory33.signvote.constants.Formats;
 import com.github.kory33.signvote.constants.VoteSessionDataFileKeys;
+import com.github.kory33.signvote.exception.InvalidVoteScoreException;
+import com.github.kory33.signvote.exception.ScoreCountLimitReachedException;
+import com.github.kory33.signvote.exception.VotePointAlreadyVotedException;
 import com.github.kory33.signvote.manager.VoteManager;
 import com.github.kory33.signvote.model.VotePoint;
 
@@ -196,5 +199,21 @@ public class VoteSession {
         }
         
         return reservedCounts;
+    }
+
+    /**
+     * Make a vote to the specified votepoint with a given score.
+     * Score has to be checked for it's validity,
+     * but may not be checked for player vote limits as an exception is thrown
+     * @param player
+     * @param votePoint
+     * @param voteScore
+     *
+     * @throws ScoreCountLimitReachedException when the player can no longer vote with the given score due to the limit
+     * @throws VotePointAlreadyVotedException when the player has already voted to the votepoint
+     */
+    public void vote(Player player, VotePoint votePoint, int voteScore)
+            throws ScoreCountLimitReachedException, VotePointAlreadyVotedException, InvalidVoteScoreException {
+        this.voteManager.addVotePointName(player, voteScore, votePoint);
     }
 }

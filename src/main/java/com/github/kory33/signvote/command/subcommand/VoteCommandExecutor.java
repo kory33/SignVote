@@ -9,6 +9,9 @@ import org.bukkit.entity.Player;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigurationNodes;
 import com.github.kory33.signvote.core.SignVote;
+import com.github.kory33.signvote.exception.InvalidVoteScoreException;
+import com.github.kory33.signvote.exception.ScoreCountLimitReachedException;
+import com.github.kory33.signvote.exception.VotePointAlreadyVotedException;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
@@ -70,8 +73,12 @@ public class VoteCommandExecutor extends SubCommandExecutor {
         
         try {
             session.vote(player, votePoint, voteScore);
-        } catch (Exception exception) {
+        } catch (ScoreCountLimitReachedException exception) {
             player.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.REACHED_VOTE_SCORE_LIMIT));
+        } catch (VotePointAlreadyVotedException exception) {
+            player.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.VOTEPOINT_ALREADY_VOTED));
+        } catch (InvalidVoteScoreException exception) {
+            player.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.INVALID_VOTE_SCORE));
         }
         
         return true;
