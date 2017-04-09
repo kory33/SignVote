@@ -1,39 +1,44 @@
 {
-    "command": {
-        "help": "",
-        "create": {
-            "help": ""
-        },
-        "addscore": {
-            "help": ""
-        },
-        "open": {
-            "help": "",
-            "error": {
-                "alreadyopened": ""
-            }
-        },
-        "close": {
-            "help": "",
-            "error": {
-                "alreadyclosed": ""
-            }
-        },
-        "vote": {
-            "help": "",
-            "voteaccepted": "",
-            "error": {
-                "invalidscore": "",
-                "reachedlimit": "",
-                "alreadyvoted": ""
-            }
-        }
-    },
-    "error": {
-        "missingpermission": "",
-        "nosession": "",
-        "vpemptyname": "",
-        "vpexists": "",
-        "onlyforplayers": ""
-    }
+	"command": {
+		"help": "/votesign ",
+		"create": {
+			"help": "/votesign create <session name> - create a new session with the given name",
+			"error": {
+				"vpemptyname": "§cPlease enter the name of votepoint",
+				"vpexists": "§cThe session with that name already exists!"
+			}
+		},
+		"addscore": {
+			"help": "/votesign addscore <session name> <score> <limit> [permission] - create a vote score limit for the given session and permission if provided"
+		},
+		"open": {
+			"help": "/votesign open <session name> - re-open a closed session",
+			"error": {
+				"alreadyopened": "§cThe provided session is already open!"
+			}
+		},
+		"close": {
+			"help": "/votesign close <session name> - close an opened session",
+			"error": {
+				"alreadyclosed": "§cThe provided session is already closed!"
+			}
+		},
+		"vote": {
+			"help": "/votesign vote <session name> <votepoint name> <score> - vote to a given votepoint with a provided score",
+			"voteaccepted": "§aYour vote has been accepted.",
+			"error": {
+				"invalidscore": "§cPlease enter a valid vote score.",
+				"reachedlimit": "§cYou can't vote anymore with that score!",
+				"alreadyvoted": "§cYou have already voted to this votepoint."
+			}
+		},
+		"generic": {
+			"error": {
+				"onlyforplayers": "§cThis command can only be run by players.",
+				"nosession": "§cThe provided session does not exist",
+				"novotepoint": "§cThe provided votepoint does not exist",
+				"missingpermission": "§cYou lack permission to do that!"
+			}
+		}
+	}
 }
