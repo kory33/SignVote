@@ -30,9 +30,7 @@ public class SignListner implements Listener {
             sign.setLine(index, "");
         }
         
-        String errorText = messageConfig.getString(SignTexts.SIGN_CREATION_REJECTED_TEXT);
-        sign.setLine(1, errorText);
-        
+        sign.setLine(1, SignTexts.SIGN_CREATION_REJECTED_TEXT);
         sign.getPlayer().sendMessage(reason);
     }
     
@@ -70,5 +68,7 @@ public class SignListner implements Listener {
         session.addVotePoint(votePoint);
         
         sign.setLine(0, SignTexts.REGISTERED_SIGN_TEXT);
+        
+        sign.getPlayer().sendMessage(messageConfig.getFormatted(MessageConfigurationNodes.VOTEPOINT_CREATED, sessionName, votePoint.getName()));
     }
 }

@@ -1,6 +1,6 @@
 {
 	"command": {
-		"help": "§e/signvote <create|addscore|open|close|vote>\n§aRun subcommands without arguments to see their help.",
+		"help": "§e/signvote <create|addscore|open|close|vote>\nRun subcommands without arguments to see their help.",
 		"create": {
 			"help": "/signvote create <session name> - create a new session with the given name",
 			"created": "§aSession §6{0} §acreated!",
@@ -42,5 +42,8 @@
 				"vpexists": "§cA votepoint with that name already exists!"
 			}
 		}
+	},
+	"votepoint": {
+		"created": "§aVotepoint created with a name of §6{1} §afor the session §6{0}."
 	}
 }
