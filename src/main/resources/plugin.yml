@@ -1,7 +1,7 @@
-name: ${pom.name}
-version: ${pom.version}
+name: SignVote
+version: 0.0.1-alpha
 main: com.github.kory33.signvote.core.SignVote
-description: ${pom.description}
+description: A Bukkit plugin that allows player to vote through signs.
 
 author: kory33
 
