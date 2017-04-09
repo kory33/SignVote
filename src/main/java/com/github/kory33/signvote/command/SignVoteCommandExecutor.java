@@ -38,9 +38,13 @@ public class SignVoteCommandExecutor implements CommandExecutor{
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         ArrayList<String> argList = new ArrayList<>(Arrays.asList(args));
-
-        String subCommand = argList.remove(0);
-        SubCommandExecutor executor = this.subCommandExecutorMap.get(subCommand);
+        
+        SubCommandExecutor executor = null;
+        if (args.length == 0) {
+            executor = this.defaultCommandExecutor;
+        } else {
+            executor = this.subCommandExecutorMap.get(argList.remove(0));
+        }
         
         if (executor == null) {
             executor = this.defaultCommandExecutor;
