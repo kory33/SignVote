@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import lombok.Getter;
@@ -23,6 +24,16 @@ public class JSONConfiguration {
         this.jsonObject = new JSONObject(fileContent);
     }
     
+    public Object fetchKeyObject(String joinedKey, String delimeter) throws JSONException {
+        String[] keys = joinedKey.split(delimeter);
+        JSONObject object = this.jsonObject;
+        
+        for (int index = 0; index < keys.length - 1; index++) {
+            object = object.getJSONObject(keys[index]);
+        }
+        return object.get(keys[keys.length - 1]);
+    }
+    
     /**
      * Get the string data with the specified json key.
      * @param jsonKey
@@ -30,11 +41,14 @@ public class JSONConfiguration {
      */
     public String getString(String jsonKey) {
         try {
-            String result = this.jsonObject.getString(jsonKey);
+            String result = this.fetchKeyObject(jsonKey, "\\.").toString();
             if (result != null) {
                 return result;
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            Bukkit.getLogger().log(Level.SEVERE, "Failed to fetch message: ", e);
+            Bukkit.getLogger().log(Level.SEVERE, this.jsonObject.toString());
+        }
         
         Bukkit.getLogger().log(Level.SEVERE, "Failed to fetch the message: " + jsonKey + ". Returning this key instead.");
         return jsonKey;
