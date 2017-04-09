@@ -16,6 +16,7 @@ import com.github.kory33.signvote.command.subcommand.CreateCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.HelpCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.OpenCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.SubCommandExecutor;
+import com.github.kory33.signvote.command.subcommand.VoteCommandExecutor;
 import com.github.kory33.signvote.constants.SubCommands;
 import com.github.kory33.signvote.core.SignVote;
 
@@ -30,6 +31,7 @@ public class SignVoteCommandExecutor implements CommandExecutor{
         commandMaps.put(SubCommands.ADD_SCORE, new AddScoreCommandExecutor(plugin));
         commandMaps.put(SubCommands.OPEN,      new OpenCommandExecutor(plugin));
         commandMaps.put(SubCommands.CLOSE,     new CloseCommandExecutor(plugin));
+        commandMaps.put(SubCommands.VOTE,      new VoteCommandExecutor(plugin));
         
         this.subCommandExecutorMap = Collections.unmodifiableMap(commandMaps);
         this.defaultCommandExecutor = new HelpCommandExecutor(plugin);
