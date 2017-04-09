@@ -214,6 +214,18 @@ public class VoteSession {
      */
     public void vote(Player player, VotePoint votePoint, int voteScore)
             throws ScoreCountLimitReachedException, VotePointAlreadyVotedException, InvalidVoteScoreException {
+        if (this.voteScoreCountLimits.getLimit(voteScore, player) <= 0) {
+            throw new InvalidVoteScoreException(votePoint, player, voteScore);
+        }
+        
+        if (!this.getReservedVoteCounts(player).containsKey(voteScore)) {
+            throw new ScoreCountLimitReachedException(player, votePoint, voteScore);
+        }
+        
+        if (!this.getAvailableVoteCounts(player).containsKey(voteScore)) {
+            throw new ScoreCountLimitReachedException(player, votePoint, voteScore);
+        }
+        
         this.voteManager.addVotePointName(player, voteScore, votePoint);
     }
 }

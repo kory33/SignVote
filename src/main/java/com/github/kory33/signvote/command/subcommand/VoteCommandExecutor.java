@@ -73,6 +73,7 @@ public class VoteCommandExecutor extends SubCommandExecutor {
         
         try {
             session.vote(player, votePoint, voteScore);
+            player.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.VOTED));
         } catch (ScoreCountLimitReachedException exception) {
             player.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.REACHED_VOTE_SCORE_LIMIT));
         } catch (VotePointAlreadyVotedException exception) {

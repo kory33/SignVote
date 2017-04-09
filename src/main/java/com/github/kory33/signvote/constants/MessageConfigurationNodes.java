@@ -17,6 +17,7 @@ public class MessageConfigurationNodes {
     public static final String INVALID_VOTE_SCORE       = COMMAND_ROOT + "vote.invalidscore";
     public static final String REACHED_VOTE_SCORE_LIMIT = COMMAND_ROOT + "vote.reachedlimit";
     public static final String VOTEPOINT_ALREADY_VOTED  = COMMAND_ROOT + "vote.alreadyvoted";
+    public static final String VOTED                    = COMMAND_ROOT + "vote.voteaccepted";
     
     public static final String ERROR_ROOT = "error";
     
