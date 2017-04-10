@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigurationNodes;
+import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.core.SignVote;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.model.VotePoint;
@@ -30,6 +31,10 @@ public class DeleteVPCommandExecutor extends SubCommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, ArrayList<String> args) {
         if (args.size() < 2) {
             return false;
+        }
+        
+        if (!sender.hasPermission(PermissionNodes.DELETE_VOTEPOINT)) {
+            sender.sendMessage(messageConfiguration.getString(MessageConfigurationNodes.MISSING_PERMS));
         }
         
         String sessionName = args.remove(0);
