@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 
 import com.github.kory33.signvote.command.SignVoteCommandExecutor;
@@ -18,6 +19,7 @@ import lombok.Getter;
 public class SignVote extends GithubUpdateNotifyPlugin {
     @Getter private VoteSessionManager voteSessionManager;
     @Getter private JSONConfiguration messagesConfiguration;
+    @Getter private FileConfiguration configuration;
     
     private boolean isEnabled = false;
     
@@ -29,6 +31,9 @@ public class SignVote extends GithubUpdateNotifyPlugin {
             this.saveResource(FilePaths.MESSAGES_SETTINGS_FILENAME, false);
         }
         this.messagesConfiguration = new JSONConfiguration(messagesSettingsFile);
+        
+        this.saveDefaultConfig();
+        this.configuration = this.getConfig();
     }
     
     @Override
@@ -67,8 +72,7 @@ public class SignVote extends GithubUpdateNotifyPlugin {
         
         HandlerList.unregisterAll(this);
         
-        this.voteSessionManager.saveAllSessions();
-        this.voteSessionManager = null;
+        saveSessionData();
     }
     
     /**
@@ -76,7 +80,12 @@ public class SignVote extends GithubUpdateNotifyPlugin {
      */
     public void reload() {
         this.onDisable();
+        this.reloadConfig();
         this.onEnable();
+    }
+    
+    public void saveSessionData() {
+        this.voteSessionManager.saveAllSessions();
     }
     
     @Override

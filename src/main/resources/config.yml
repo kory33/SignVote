@@ -1,0 +1,3 @@
+autosave:
+    enabled: true
+    interval-ticks: 2000
