@@ -29,4 +29,6 @@ permissions:
     signvote.closesession:
         description: allows a player to close an opened session
         default: op
-
+    signvote.deletevotepoint:
+        description: allows a player to delete a votepoint
+        default: op

@@ -1,8 +1,10 @@
 package com.github.kory33.signvote.listners;
 
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 
 import com.github.kory33.signvote.configurable.JSONConfiguration;
@@ -70,5 +72,23 @@ public class SignListner implements Listener {
         sign.setLine(0, SignTexts.REGISTERED_SIGN_TEXT);
         
         sign.getPlayer().sendMessage(messageConfig.getFormatted(MessageConfigurationNodes.VOTEPOINT_CREATED, sessionName, votePoint.getName()));
+    }
+    
+    @EventHandler
+    public void onVotePointBreak(BlockBreakEvent event) {
+        BlockState state = event.getBlock().getState();
+        if (!(state instanceof Sign)) {
+            return;
+        }
+        
+        VotePoint votePoint = this.voteSessionManager.getVotePoint((Sign)state);
+        
+        if (votePoint == null) {
+            return;
+        }
+        
+        event.setCancelled(true);
+        event.getPlayer().sendMessage(messageConfig.getFormatted(MessageConfigurationNodes.F_VOTEPOINT_BREAK,
+                votePoint.getVoteSign().getLine(1), votePoint.getName()));
     }
 }

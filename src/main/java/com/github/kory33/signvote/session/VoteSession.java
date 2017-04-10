@@ -136,6 +136,21 @@ public class VoteSession {
             votePointDirectory.mkdirs();
         }
 
+        // purge non-registered votepoint files under the votepoint directory
+        for (File savedVotepointFile: votePointDirectory.listFiles()) {
+            String savedVotepointFileName = savedVotepointFile.getName();
+            if (savedVotepointFileName.length() < 6) {
+                savedVotepointFile.delete();
+                continue;
+            }
+            // delete the file if the votepoint filename is not a valid votepoint
+            if (!this.votePointNameMap.containsKey(savedVotepointFileName.substring(0,
+                    savedVotepointFileName.length() - Formats.JSON_EXT.length() - 1))) {
+                savedVotepointFile.delete();
+            }
+        }
+
+        // save votepoints
         for (VotePoint votePoint: signMap.values()) {
             File votePointFile = new File(votePointDirectory, votePoint.getName() + Formats.JSON_EXT);
             if (!votePointFile.exists()) {
@@ -146,12 +161,12 @@ public class VoteSession {
         }
 
         this.voteManager.saveTo(new File(sessionSaveLocation, FilePaths.VOTE_DATA_DIR));
-        
+
+        // write session data
         File sessionDataFile = new File(sessionSaveLocation, FilePaths.SESSION_DATA_FILENAME);
         if (!sessionDataFile.exists()) {
             sessionDataFile.createNewFile();
         }
-        
         Files.write(sessionDataFile.toPath(), this.toJson().toString(4).getBytes(Formats.FILE_ENCODING));
     }
 
@@ -238,5 +253,14 @@ public class VoteSession {
         }
         
         this.voteManager.addVotePointName(player, voteScore, votePoint);
+    }
+
+    /**
+     * Delete the specified votepoint
+     * @param votePoint
+     */
+    public void deleteVotepoint(VotePoint votePoint) {
+        this.votePointNameMap.removeValue(votePoint);
+        this.signMap.removeValue(votePoint);
     }
 }

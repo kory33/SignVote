@@ -13,7 +13,10 @@ public class MessageConfigurationNodes {
     public static final String CREATE_COMMAND_HELP      = COMMAND_ROOT + ".create.help";
     public static final String F_SESSION_CREATED        = COMMAND_ROOT + ".create.created";
     public static final String SESSION_ALREADY_EXISTS   = COMMAND_ROOT + ".create.error.sessionexists";
-    
+
+    public static final String DELETE_VP_COMMAND_HELP   = COMMAND_ROOT + ".deletevp.help";
+    public static final String F_VOTEPOINT_DELETED      = COMMAND_ROOT + ".deletevp.deleted";
+
     public static final String ADD_SCORE_COMMAND_HELP   = COMMAND_ROOT + ".addscore.help";
     
     public static final String OPEN_COMMAND_HELP        = COMMAND_ROOT + ".open.help";
@@ -39,4 +42,5 @@ public class MessageConfigurationNodes {
 
     public static final String VOTEPOINT_MESSAGE_ROOT   = "votepoint";
     public static final String VOTEPOINT_CREATED        = VOTEPOINT_MESSAGE_ROOT + ".created";
+    public static final String F_VOTEPOINT_BREAK        = VOTEPOINT_MESSAGE_ROOT + ".break";
 }

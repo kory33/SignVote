@@ -13,6 +13,7 @@ import org.bukkit.command.CommandSender;
 import com.github.kory33.signvote.command.subcommand.AddScoreCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.CloseCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.CreateCommandExecutor;
+import com.github.kory33.signvote.command.subcommand.DeleteVPCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.HelpCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.OpenCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.SubCommandExecutor;
@@ -32,6 +33,7 @@ public class SignVoteCommandExecutor implements CommandExecutor{
         commandMaps.put(SubCommands.OPEN,      new OpenCommandExecutor(plugin));
         commandMaps.put(SubCommands.CLOSE,     new CloseCommandExecutor(plugin));
         commandMaps.put(SubCommands.VOTE,      new VoteCommandExecutor(plugin));
+        commandMaps.put(SubCommands.DELETEVP,  new DeleteVPCommandExecutor(plugin));
         
         this.subCommandExecutorMap = Collections.unmodifiableMap(commandMaps);
         this.defaultCommandExecutor = new HelpCommandExecutor(plugin);

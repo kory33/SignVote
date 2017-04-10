@@ -6,4 +6,5 @@ public class SubCommands {
     public static final String OPEN      = "open";
     public static final String CLOSE     = "close";
     public static final String VOTE      = "vote";
+    public static final String DELETEVP  = "deletevp";
 }

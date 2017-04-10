@@ -8,6 +8,10 @@
 			    "sessionexists": "§csession already exists!"
 			}
 		},
+		"deletevp": {
+			"help": "/signvote deletevp <session name> <votepoint name> - delete the specified votepoint",
+			"deleted": "§aVotepoint §6{0} §ais successfully deleted from session §6{1}"
+		},
 		"addscore": {
 			"help": "/signvote addscore <session name> <score> <limit> [permission] - create a vote score limit for the given session and permission if provided"
 		},
@@ -44,6 +48,7 @@
 		}
 	},
 	"votepoint": {
-		"created": "§aVotepoint created with a name of §6{1} §afor the session §6{0}."
+		"created": "§aVotepoint created with a name of §6{1} §afor the session §6{0}.",
+		"break": "§eYou are about to break a votepoint.\nType §6/signvote deletevp {0} {1} §eto delete the votepoint."
 	}
 }
