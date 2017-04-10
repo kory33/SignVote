@@ -51,6 +51,8 @@ public class CloseCommandExecutor extends SubCommandExecutor {
         }
         
         targetVoteSession.setOpen(false);
+        String completionMessage = this.messageConfiguration.getFormatted(MessageConfigurationNodes.F_SESSION_CLOSED, closeTargetSessionName);
+        sender.sendMessage(completionMessage);
         return true;
     }
 }

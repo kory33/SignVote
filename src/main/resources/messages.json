@@ -17,12 +17,14 @@
 		},
 		"open": {
 			"help": "/signvote open <session name> - re-open a closed session",
+			"opened": "§aSession §6{0} §ais set to be §6OPENED",
 			"error": {
 				"alreadyopened": "§cThe provided session is already open!"
 			}
 		},
 		"close": {
 			"help": "/signvote close <session name> - close an opened session",
+			"closed": "§aSession §6{0} §ais set to be §6CLOSED",
 			"error": {
 				"alreadyclosed": "§cThe provided session is already closed!"
 			}
