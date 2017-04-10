@@ -9,7 +9,9 @@ import org.bukkit.event.HandlerList;
 
 import com.github.kory33.signvote.command.SignVoteCommandExecutor;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
+import com.github.kory33.signvote.constants.ConfigNodes;
 import com.github.kory33.signvote.constants.FilePaths;
+import com.github.kory33.signvote.io.PluginDataAutoSaver;
 import com.github.kory33.signvote.listners.SignListner;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.updatenotificationplugin.bukkit.github.GithubUpdateNotifyPlugin;
@@ -22,9 +24,10 @@ public class SignVote extends GithubUpdateNotifyPlugin {
     @Getter private FileConfiguration configuration;
     
     private boolean isEnabled = false;
-    
     private SignVoteCommandExecutor commandExecutor;
-
+    
+    private PluginDataAutoSaver autoSaver;
+    
     private void loadConfigurations() throws IOException {
         File messagesSettingsFile = new File(this.getDataFolder(), FilePaths.MESSAGES_SETTINGS_FILENAME);
         if (!messagesSettingsFile.exists()) {
@@ -59,6 +62,11 @@ public class SignVote extends GithubUpdateNotifyPlugin {
         this.commandExecutor = new SignVoteCommandExecutor(this);
         this.getCommand("signvote").setExecutor(this.commandExecutor);
         
+        if (this.configuration.getBoolean(ConfigNodes.IS_AUTOSAVE_ENABLED, false)) {
+            int intervalTicks = this.configuration.getInt(ConfigNodes.AUTOSAVE_INTERVAL_TICKS, 2000);
+            this.autoSaver = new PluginDataAutoSaver(this, intervalTicks);
+        }
+        
         this.isEnabled = true;
     }
     
@@ -71,6 +79,10 @@ public class SignVote extends GithubUpdateNotifyPlugin {
         }
         
         HandlerList.unregisterAll(this);
+        
+        if (this.autoSaver != null) {
+            this.autoSaver.stopAutoSaveTask();
+        }
         
         saveSessionData();
     }
