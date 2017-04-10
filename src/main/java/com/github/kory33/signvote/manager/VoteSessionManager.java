@@ -86,6 +86,21 @@ public class VoteSessionManager {
     }
 
     /**
+     * Get votepoint corresponding to the given sign
+     * @param votepointSign
+     * @return
+     */
+    public VoteSession getVoteSession(Sign votepointSign) {
+        for (VoteSession session: this.sessionMap.values()) {
+            if (session.getVotePoint(votepointSign) != null) {
+                return session;
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
      * Get the corresponding vote point from sign.
      * @param sign
      * @return

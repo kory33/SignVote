@@ -81,14 +81,18 @@ public class SignListner implements Listener {
             return;
         }
         
-        VotePoint votePoint = this.voteSessionManager.getVotePoint((Sign)state);
+        Sign sign = (Sign)state;
+        VotePoint votePoint = this.voteSessionManager.getVotePoint(sign);
         
         if (votePoint == null) {
             return;
         }
         
+        String sessionName = voteSessionManager.getVoteSession(sign).getName();
+        String votepointName = votePoint.getName();
+        
         event.setCancelled(true);
         event.getPlayer().sendMessage(messageConfig.getFormatted(MessageConfigurationNodes.F_VOTEPOINT_BREAK,
-                votePoint.getVoteSign().getLine(1), votePoint.getName()));
+                sessionName, votepointName));
     }
 }

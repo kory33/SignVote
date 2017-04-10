@@ -17,6 +17,7 @@ import com.github.kory33.signvote.collection.VoteScoreLimits;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.FilePaths;
 import com.github.kory33.signvote.constants.Formats;
+import com.github.kory33.signvote.constants.SignTexts;
 import com.github.kory33.signvote.constants.VoteSessionDataFileKeys;
 import com.github.kory33.signvote.exception.InvalidVoteScoreException;
 import com.github.kory33.signvote.exception.ScoreCountLimitReachedException;
@@ -261,6 +262,13 @@ public class VoteSession {
      */
     public void deleteVotepoint(VotePoint votePoint) {
         this.votePointNameMap.removeValue(votePoint);
-        this.signMap.removeValue(votePoint);
+        Sign sign = this.signMap.removeValue(votePoint);
+        
+        sign.setLine(0, SignTexts.REGISTERED_SIGN_TEXT);
+        sign.setLine(1, SignTexts.DELETED);
+        sign.setLine(2, "");
+        sign.update();
+        
+        return;
     }
 }

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import com.avaje.ebeaninternal.server.cluster.mcast.Message;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigurationNodes;
 import com.github.kory33.signvote.core.SignVote;
