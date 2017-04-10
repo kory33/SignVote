@@ -1,12 +1,16 @@
 {
 	"command": {
-		"help": "§e/signvote <create|addscore|open|close|vote>\nRun subcommands without arguments to see their help.",
+		"help": "§e/signvote <create|delete|addscore|open|close|vote|deletevp>\nRun subcommands without arguments to see their help.",
 		"create": {
 			"help": "/signvote create <session name> - create a new session with the given name",
 			"created": "§aSession §6{0} §acreated!",
 			"error": {
 			    "sessionexists": "§csession already exists!"
 			}
+		},
+		"delete": {
+			"help": "/signvote deletesess <session name> - delete the specified vote session.",
+			"deleted": "§aSession §6{0} §ahas been successfully §cDELETED"
 		},
 		"deletevp": {
 			"help": "/signvote deletevp <session name> <votepoint name> - delete the specified votepoint",

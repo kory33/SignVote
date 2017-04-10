@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import org.bukkit.block.Sign;
 
+import com.github.kory33.signvote.Utils.FileUtils;
 import com.github.kory33.signvote.collection.BijectiveHashMap;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
@@ -71,6 +72,18 @@ public class VoteSessionManager {
      * Save all the sessions.
      */
     public void saveAllSessions() {
+        // purge non-existent sessions
+        for (File sessionDirectory: this.sessionSaveDirectory.listFiles()) {
+            String sessionName = sessionDirectory.getName();
+            if (!this.sessionMap.containsKey(sessionName)) {
+                try {
+                    FileUtils.deleteFolderRecursively(sessionDirectory);
+                } catch (IOException e) {
+                    this.logger.log(Level.SEVERE, "Failed to purge session folder " + sessionName, e);
+                }
+            }
+        }
+        
         for (VoteSession session: sessionMap.values()) {
             this.saveSession(session);
         }
@@ -115,5 +128,9 @@ public class VoteSessionManager {
         }
         
         return null;
+    }
+
+    public void deleteSession(VoteSession targetVoteSession) {
+        this.sessionMap.removeValue(targetVoteSession);
     }
 }

@@ -14,6 +14,9 @@ public class MessageConfigurationNodes {
     public static final String F_SESSION_CREATED        = COMMAND_ROOT + ".create.created";
     public static final String SESSION_ALREADY_EXISTS   = COMMAND_ROOT + ".create.error.sessionexists";
 
+    public static final String DELETE_SESS_COMMAND_HELP = COMMAND_ROOT + ".delete.help";
+    public static final String F_SESSION_DELETED        = COMMAND_ROOT + ".delete.deleted";
+
     public static final String DELETE_VP_COMMAND_HELP   = COMMAND_ROOT + ".deletevp.help";
     public static final String F_VOTEPOINT_DELETED      = COMMAND_ROOT + ".deletevp.deleted";
 
@@ -33,6 +36,7 @@ public class MessageConfigurationNodes {
     public static final String INVALID_VOTE_SCORE       = COMMAND_ROOT + ".vote.error.invalidscore";
     public static final String REACHED_VOTE_SCORE_LIMIT = COMMAND_ROOT + ".vote.error.reachedlimit";
     public static final String VOTEPOINT_ALREADY_VOTED  = COMMAND_ROOT + ".vote.error.alreadyvoted";
+
     
     public static final String GENERIC_COMMAND_ERROR    = COMMAND_ROOT + ".generic.error";
     public static final String COMMAND_ONLY_FOR_PLAYERS = GENERIC_COMMAND_ERROR + ".onlyforplayers";
