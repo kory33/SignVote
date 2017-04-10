@@ -1,5 +1,5 @@
 name: SignVote
-version: 0.0.1-alpha
+version: 0.1.0
 main: com.github.kory33.signvote.core.SignVote
 description: A Bukkit plugin that allows player to vote through signs.
 
