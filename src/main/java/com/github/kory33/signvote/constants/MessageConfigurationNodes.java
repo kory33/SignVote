@@ -21,11 +21,11 @@ public class MessageConfigurationNodes {
     
     public static final String OPEN_COMMAND_HELP        = COMMAND_ROOT + ".open.help";
     public static final String F_SESSION_OPENED         = COMMAND_ROOT + ".open.opened";
-    public static final String SESSION_ALREADY_OPENED   = COMMAND_ROOT + ".open.error.alreadyopened";
+    public static final String F_SESSION_ALREADY_OPENED = COMMAND_ROOT + ".open.error.alreadyopened";
     
     public static final String CLOSE_COMMAND_HELP       = COMMAND_ROOT + ".close.help";
     public static final String F_SESSION_CLOSED         = COMMAND_ROOT + ".close.closed";
-    public static final String SESSION_ALREADY_CLOSED   = COMMAND_ROOT + ".close.error.alreadyclosed";
+    public static final String F_SESSION_ALREADY_CLOSED = COMMAND_ROOT + ".close.error.alreadyclosed";
     
     public static final String VOTE_COMMAND_HELP        = COMMAND_ROOT + ".vote.help";
     public static final String VOTED                    = COMMAND_ROOT + ".vote.voteaccepted";

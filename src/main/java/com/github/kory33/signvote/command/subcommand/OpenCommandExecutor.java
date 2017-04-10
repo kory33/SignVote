@@ -37,8 +37,8 @@ public class OpenCommandExecutor extends SubCommandExecutor {
             return false;
         }
         
-        String closeTargetSessionName = args.remove(0);
-        VoteSession targetVoteSession = this.voteSessionManager.getVoteSession(closeTargetSessionName);
+        String openTargetSessionName = args.remove(0);
+        VoteSession targetVoteSession = this.voteSessionManager.getVoteSession(openTargetSessionName);
         
         if (targetVoteSession == null) {
             sender.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.SESSION_DOES_NOT_EXIST));
@@ -46,12 +46,12 @@ public class OpenCommandExecutor extends SubCommandExecutor {
         }
         
         if (targetVoteSession.isOpen()) {
-            sender.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.SESSION_ALREADY_OPENED));
+            sender.sendMessage(this.messageConfiguration.getFormatted(MessageConfigurationNodes.F_SESSION_ALREADY_OPENED, openTargetSessionName));
             return true;
         }
         
         targetVoteSession.setOpen(true);
-        String completionMessage = this.messageConfiguration.getFormatted(MessageConfigurationNodes.F_SESSION_OPENED, closeTargetSessionName);
+        String completionMessage = this.messageConfiguration.getFormatted(MessageConfigurationNodes.F_SESSION_OPENED, openTargetSessionName);
         sender.sendMessage(completionMessage);
         return true;
     }

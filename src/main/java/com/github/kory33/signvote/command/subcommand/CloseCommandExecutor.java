@@ -46,7 +46,7 @@ public class CloseCommandExecutor extends SubCommandExecutor {
         }
         
         if (!targetVoteSession.isOpen()) {
-            sender.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.SESSION_ALREADY_CLOSED));
+            sender.sendMessage(this.messageConfiguration.getFormatted(MessageConfigurationNodes.F_SESSION_ALREADY_CLOSED, closeTargetSessionName));
             return true;
         }
         
