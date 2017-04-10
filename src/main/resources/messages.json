@@ -1,6 +1,6 @@
 {
 	"command": {
-		"help": "§e/signvote <create|delete|addscore|open|close|vote|deletevp>\nRun subcommands without arguments to see their help.",
+		"help": "§e/signvote <create|delete|addscore|open|close|vote|unvote|deletevp|reload>\nRun subcommands without arguments to see their help.",
 		"create": {
 			"help": "/signvote create <session name> - create a new session with the given name",
 			"created": "§aSession §6{0} §acreated!",
@@ -40,6 +40,13 @@
 				"invalidscore": "§cPlease enter a valid vote score.",
 				"reachedlimit": "§cYou can't vote anymore with that score!",
 				"alreadyvoted": "§cYou have already voted to this votepoint."
+			}
+		},
+		"unvote": {
+			"help": "/signvote unvote <session name> <votepoint name> - cancel the vote to a given votepoint",
+			"unvoted": "§aYour vote to §6{0} §ahas been cancelled.",
+			"error": {
+				"notvoted": "§cYou have not voted to this votepoint."
 			}
 		},
 		"reload": {

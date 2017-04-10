@@ -22,6 +22,7 @@ import com.github.kory33.signvote.constants.VoteSessionDataFileKeys;
 import com.github.kory33.signvote.exception.InvalidVoteScoreException;
 import com.github.kory33.signvote.exception.ScoreCountLimitReachedException;
 import com.github.kory33.signvote.exception.VotePointAlreadyVotedException;
+import com.github.kory33.signvote.exception.VotePointNotVotedException;
 import com.github.kory33.signvote.manager.VoteManager;
 import com.github.kory33.signvote.model.VotePoint;
 
@@ -54,7 +55,7 @@ public class VoteSession {
             this.addVotePoint(votePointFile);
         }
 
-        this.voteManager = new VoteManager(new File(sessionSaveLocation, FilePaths.VOTE_DATA_DIR));
+        this.voteManager = new VoteManager(new File(sessionSaveLocation, FilePaths.VOTE_DATA_DIR), this);
         
         // read information of this vote session
         File sessionDataFile = new File(sessionSaveLocation, FilePaths.SESSION_DATA_FILENAME);
@@ -76,7 +77,7 @@ public class VoteSession {
         this.name = sessionName;
 
         this.voteScoreCountLimits = new VoteScoreLimits();
-        this.voteManager = new VoteManager();
+        this.voteManager = new VoteManager(this);
         
         this.signMap = new BijectiveHashMap<>();
         this.votePointNameMap = new BijectiveHashMap<>();
@@ -270,5 +271,15 @@ public class VoteSession {
         sign.update();
         
         return;
+    }
+
+    /**
+     * Cancel the vote made by the player
+     * @param player
+     * @param votePoint
+     * @throws VotePointNotVotedException
+     */
+    public void unvote(Player player, VotePoint votePoint) throws VotePointNotVotedException {
+        this.voteManager.removeVote(player, votePoint);
     }
 }

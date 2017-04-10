@@ -13,17 +13,21 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.github.kory33.signvote.constants.Formats;
+import com.github.kory33.signvote.exception.VotePointNotVotedException;
 import com.github.kory33.signvote.model.VotePoint;
+import com.github.kory33.signvote.session.VoteSession;
 
 public class VoteManager {
-    private HashMap<Player, HashMap<Integer, HashSet<String>>> voteData;
+    private final HashMap<Player, HashMap<Integer, HashSet<String>>> voteData;
+    private final VoteSession parentSession;
     
     /**
      * Construct a VoteManager object from data at given file location
      * @param voteDataDirectory
      * @throws IOException
      */
-    public VoteManager(File voteDataDirectory) throws IOException {
+    public VoteManager(File voteDataDirectory, VoteSession parentSession) throws IOException {
+        this.parentSession = parentSession;
         this.voteData = new HashMap<>();
 
         if (!voteDataDirectory.isDirectory()) {
@@ -95,8 +99,9 @@ public class VoteManager {
     /**
      * Construct an empty VoteManager object.
      */
-    public VoteManager() {
+    public VoteManager(VoteSession parentSession) {
         this.voteData = new HashMap<>();
+        this.parentSession = parentSession;
     }
     
     /**
@@ -136,6 +141,19 @@ public class VoteManager {
         }
         
         votedPointnames.get(votedScore).add(votePoint.getName());
+    }
+
+    public void removeVote(Player player, VotePoint votePoint) throws VotePointNotVotedException {
+        HashMap<Integer, HashSet<String>> playerVotes = this.getVotedPointsMap(player);
+
+        for (Integer voteScore: playerVotes.keySet()) {
+            HashSet<String> votedPoints = playerVotes.get(voteScore);
+            if (votedPoints.remove(votePoint.getName())) {
+                return;
+            }
+        }
+        
+        throw new VotePointNotVotedException(player, votePoint, this.parentSession);
     }
 }
     

@@ -27,7 +27,7 @@ public class VoteCommandExecutor extends SubCommandExecutor {
     
     @Override
     protected String getHelpString() {
-        return this.messageConfiguration.getString(MessageConfigurationNodes.CLOSE_COMMAND_HELP);
+        return this.messageConfiguration.getString(MessageConfigurationNodes.VOTE_COMMAND_HELP);
     }
 
     @Override
