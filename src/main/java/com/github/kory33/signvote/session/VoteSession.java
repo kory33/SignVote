@@ -2,7 +2,6 @@ package com.github.kory33.signvote.session;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.logging.Level;
@@ -12,6 +11,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.json.JSONObject;
 
+import com.github.kory33.signvote.Utils.FileUtils;
 import com.github.kory33.signvote.collection.BijectiveHashMap;
 import com.github.kory33.signvote.collection.VoteScoreLimits;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
@@ -145,9 +145,12 @@ public class VoteSession {
                 savedVotepointFile.delete();
                 continue;
             }
+
+            String savedVotepointName = savedVotepointFileName.substring(0,
+                    savedVotepointFileName.length() - Formats.JSON_EXT.length() - 1);
+            
             // delete the file if the votepoint filename is not a valid votepoint
-            if (!this.votePointNameMap.containsKey(savedVotepointFileName.substring(0,
-                    savedVotepointFileName.length() - Formats.JSON_EXT.length() - 1))) {
+            if (!this.votePointNameMap.containsKey(savedVotepointName)) {
                 savedVotepointFile.delete();
             }
         }
@@ -155,21 +158,14 @@ public class VoteSession {
         // save votepoints
         for (VotePoint votePoint: signMap.values()) {
             File votePointFile = new File(votePointDirectory, votePoint.getName() + Formats.JSON_EXT);
-            if (!votePointFile.exists()) {
-                votePointFile.createNewFile();
-            }
-            
-            Files.write(votePointFile.toPath(), votePoint.toJson().toString(4).getBytes(Formats.FILE_ENCODING));
+            FileUtils.writeJSON(votePointFile, votePoint.toJson());
         }
 
         this.voteManager.saveTo(new File(sessionSaveLocation, FilePaths.VOTE_DATA_DIR));
 
         // write session data
         File sessionDataFile = new File(sessionSaveLocation, FilePaths.SESSION_DATA_FILENAME);
-        if (!sessionDataFile.exists()) {
-            sessionDataFile.createNewFile();
-        }
-        Files.write(sessionDataFile.toPath(), this.toJson().toString(4).getBytes(Formats.FILE_ENCODING));
+        FileUtils.writeJSON(sessionDataFile, this.toJson());
     }
 
     /**

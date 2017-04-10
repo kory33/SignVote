@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.github.kory33.signvote.Utils.FileUtils;
 import com.github.kory33.signvote.constants.Formats;
 import com.github.kory33.signvote.exception.VotePointNotVotedException;
 import com.github.kory33.signvote.model.VotePoint;
@@ -80,9 +81,6 @@ public class VoteManager {
         
         for (Player player: this.voteData.keySet()) {
             File playerVoteDataFile = new File(voteDataDirectory, player.getUniqueId().toString() + Formats.JSON_EXT);
-            if (!playerVoteDataFile.exists()) {
-                playerVoteDataFile.createNewFile();
-            }
             
             JSONObject jsonObject = new JSONObject();
             HashMap<Integer, HashSet<String>> playerVotedPointsMap = this.voteData.get(player);
@@ -92,7 +90,7 @@ public class VoteManager {
                 jsonObject.put(score.toString(), votedPointsArray);
             }
             
-            Files.write(playerVoteDataFile.toPath(), jsonObject.toString(4).getBytes(Formats.FILE_ENCODING));
+            FileUtils.writeJSON(playerVoteDataFile, jsonObject);
         }
     }
     
