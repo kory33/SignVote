@@ -8,4 +8,5 @@ public class SubCommands {
     public static final String CLOSE     = "close";
     public static final String VOTE      = "vote";
     public static final String DELETEVP  = "deletevp";
+    public static final String RELOAD    = "reload";
 }

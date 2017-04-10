@@ -71,6 +71,14 @@ public class SignVote extends GithubUpdateNotifyPlugin {
         this.voteSessionManager = null;
     }
     
+    /**
+     * Reload the plugin
+     */
+    public void reload() {
+        this.onDisable();
+        this.onEnable();
+    }
+    
     @Override
     public String getGithubRepository() {
         return "kory33/SignVote";

@@ -42,6 +42,9 @@
 				"alreadyvoted": "§cYou have already voted to this votepoint."
 			}
 		},
+		"reload": {
+			"complete": "§aReload complete."
+		},
 		"generic": {
 			"error": {
 				"onlyforplayers": "§cThis command can only be run by players.",

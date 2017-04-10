@@ -37,6 +37,8 @@ public class MessageConfigurationNodes {
     public static final String REACHED_VOTE_SCORE_LIMIT = COMMAND_ROOT + ".vote.error.reachedlimit";
     public static final String VOTEPOINT_ALREADY_VOTED  = COMMAND_ROOT + ".vote.error.alreadyvoted";
 
+    public static final String RELOAD_COMPLETE          = COMMAND_ROOT + ".reload.complete";
+
     
     public static final String GENERIC_COMMAND_ERROR    = COMMAND_ROOT + ".generic.error";
     public static final String COMMAND_ONLY_FOR_PLAYERS = GENERIC_COMMAND_ERROR + ".onlyforplayers";

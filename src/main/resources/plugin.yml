@@ -35,3 +35,6 @@ permissions:
     signvote.deletevotepoint:
         description: allows a player to delete a votepoint
         default: op
+    signvote.reload:
+        description: allows a player to reload the plugin
+        default: op

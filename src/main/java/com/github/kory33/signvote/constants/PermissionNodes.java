@@ -14,4 +14,6 @@ public class PermissionNodes {
     public static final String DELETE_VOTEPOINT = BASE_NODE + ".deletevotepoint";
 
     public static final String DELETE_SESSION = BASE_NODE + ".deletesession";
+
+    public static final String RELOAD         = BASE_NODE + ".reload";
 }
