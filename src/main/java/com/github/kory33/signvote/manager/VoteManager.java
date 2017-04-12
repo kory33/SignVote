@@ -5,18 +5,21 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import com.github.kory33.signvote.Utils.FileUtils;
 import com.github.kory33.signvote.constants.Formats;
 import com.github.kory33.signvote.exception.VotePointNotVotedException;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class VoteManager {
     private final HashMap<Player, HashMap<Integer, HashSet<String>>> voteData;
@@ -36,8 +39,7 @@ public class VoteManager {
         }
         
         for (File playerVoteDataFile: voteDataDirectory.listFiles()) {
-            String fileContent = String.join("", Files.readAllLines(playerVoteDataFile.toPath()));
-            JSONObject jsonObject = new JSONObject(fileContent);
+            JsonObject jsonObject = (new JsonParser()).parse(Files.newBufferedReader(playerVoteDataFile.toPath())).getAsJsonObject();
             
             String fileName = playerVoteDataFile.getName();
             String playerUUID = fileName.substring(0, fileName.length() - Formats.JSON_EXT.length() - 1);
@@ -50,17 +52,12 @@ public class VoteManager {
             
             HashMap<Integer, HashSet<String>> votedPointsMap = new HashMap<>();
             
-            for (String scoreString: jsonObject.keySet()) {
+            for (Entry<String, JsonElement> scoreEntry: jsonObject.entrySet()) {
                 try {
-                    int score = new Integer(scoreString);
                     HashSet<String> votedVointsNames = new HashSet<>();
-                    for (Object object: jsonObject.getJSONArray(scoreString).toList()) {
-                        votedVointsNames.add((String)object);
-                    }
-                    votedPointsMap.put(score, votedVointsNames);
-                } catch (Exception e) {
-                    continue;
-                }
+                    scoreEntry.getValue().getAsJsonArray().forEach(votepointName -> votedVointsNames.add(votepointName.getAsString()));
+                    votedPointsMap.put(new Integer(scoreEntry.getKey()), votedVointsNames);
+                } catch (Exception exception) {}
             }
 
             this.voteData.put(player, votedPointsMap);
@@ -82,15 +79,8 @@ public class VoteManager {
         for (Player player: this.voteData.keySet()) {
             File playerVoteDataFile = new File(voteDataDirectory, player.getUniqueId().toString() + Formats.JSON_EXT);
             
-            JSONObject jsonObject = new JSONObject();
-            HashMap<Integer, HashSet<String>> playerVotedPointsMap = this.voteData.get(player);
-            
-            for (Integer score: playerVotedPointsMap.keySet()) {
-                JSONArray votedPointsArray = new JSONArray(playerVotedPointsMap.get(score));
-                jsonObject.put(score.toString(), votedPointsArray);
-            }
-            
-            FileUtils.writeJSON(playerVoteDataFile, jsonObject);
+            JsonObject playerVoteData = new Gson().toJsonTree(this.voteData).getAsJsonObject();
+            FileUtils.writeJSON(playerVoteDataFile, playerVoteData);
         }
     }
     

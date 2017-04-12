@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.Set;
 
 import org.bukkit.entity.Player;
-import org.json.JSONObject;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 public class VoteScoreLimits {
     HashMap<Integer, HashMap<String, Integer>> limitMap;
@@ -13,24 +15,10 @@ public class VoteScoreLimits {
      * Construct a VoteScoreLimits from an json data
      * @param jsonObject
      */
-    public VoteScoreLimits(JSONObject jsonObject) {
+    @SuppressWarnings("unchecked")
+    public VoteScoreLimits(JsonObject jsonObject) {
         this.limitMap = new HashMap<>();
-        
-        for (String scoreString: jsonObject.keySet()) {
-            try {
-                int score = new Integer(scoreString);
-                
-                HashMap<String, Integer> permissiveLimitMap = new HashMap<>();
-                JSONObject permLimits = jsonObject.getJSONObject(scoreString);
-                for (String permission: permLimits.keySet()) {
-                    permissiveLimitMap.put(permission, permLimits.getInt(permission));
-                }
-
-                this.limitMap.put(score, permissiveLimitMap);
-            } catch (Exception exception) {
-                continue;
-            }
-        }
+        this.limitMap = (new Gson()).fromJson(jsonObject, this.limitMap.getClass());
     }
     
     /**
@@ -44,8 +32,8 @@ public class VoteScoreLimits {
      * Get the Json representation of this object
      * @return
      */
-    public JSONObject toJson() {
-        return new JSONObject(this.limitMap);
+    public JsonObject toJson() {
+        return new Gson().toJsonTree(this.limitMap).getAsJsonObject();
     }
     
     public void addLimit(int score, String permission, int limit) {

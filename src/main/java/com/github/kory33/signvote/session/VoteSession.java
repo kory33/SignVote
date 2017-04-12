@@ -9,7 +9,6 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
-import org.json.JSONObject;
 
 import com.github.kory33.signvote.Utils.FileUtils;
 import com.github.kory33.signvote.collection.BijectiveHashMap;
@@ -25,6 +24,7 @@ import com.github.kory33.signvote.exception.VotePointAlreadyVotedException;
 import com.github.kory33.signvote.exception.VotePointNotVotedException;
 import com.github.kory33.signvote.manager.VoteManager;
 import com.github.kory33.signvote.model.VotePoint;
+import com.google.gson.JsonObject;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -60,13 +60,13 @@ public class VoteSession {
         // read information of this vote session
         File sessionDataFile = new File(sessionSaveLocation, FilePaths.SESSION_DATA_FILENAME);
 
-        JSONObject sessionConfigJson = (new JSONConfiguration(sessionDataFile)).getJsonObject();
-        JSONObject voteLimits = sessionConfigJson.getJSONObject(VoteSessionDataFileKeys.VOTE_SCORE_LIMITS);
+        JsonObject sessionConfigJson = (new JSONConfiguration(sessionDataFile)).getJsonObject();
+        JsonObject voteLimits = sessionConfigJson.get(VoteSessionDataFileKeys.VOTE_SCORE_LIMITS).getAsJsonObject();
 
         this.voteScoreCountLimits = new VoteScoreLimits(voteLimits);
-        this.name = sessionConfigJson.getString(VoteSessionDataFileKeys.NAME);
+        this.name = sessionConfigJson.get(VoteSessionDataFileKeys.NAME).getAsString();
 
-        this.setOpen(sessionConfigJson.getBoolean(VoteSessionDataFileKeys.IS_OPEN));
+        this.setOpen(sessionConfigJson.get(VoteSessionDataFileKeys.IS_OPEN).getAsBoolean());
     }
     
     /**
@@ -111,14 +111,14 @@ public class VoteSession {
      * Get Json object containing information directly related to this object
      * @return
      */
-    private JSONObject toJson() {
-        JSONObject sessionData = new JSONObject();
+    private JsonObject toJson() {
+        JsonObject jsonObject = new JsonObject();
         
-        sessionData.put(VoteSessionDataFileKeys.NAME, this.name);
-        sessionData.put(VoteSessionDataFileKeys.VOTE_SCORE_LIMITS, this.voteScoreCountLimits.toJson());
-        sessionData.put(VoteSessionDataFileKeys.IS_OPEN, this.isOpen);
+        jsonObject.addProperty(VoteSessionDataFileKeys.NAME, this.name);
+        jsonObject.add(VoteSessionDataFileKeys.VOTE_SCORE_LIMITS, this.voteScoreCountLimits.toJson());
+        jsonObject.addProperty(VoteSessionDataFileKeys.IS_OPEN, this.isOpen);
         
-        return sessionData;
+        return jsonObject;
     }
     
     /**

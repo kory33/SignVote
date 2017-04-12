@@ -23,6 +23,7 @@ public class VoteSessionManager {
         try {
             VoteSession session = new VoteSession(sessionDirectory);
             this.sessionMap.put(session.getName(), session);
+            this.logger.info("Successfully loaded session '" + session.getName() + "'");
         } catch(Exception e) {
             this.logger.log(Level.WARNING, "Error reading the session directory: {0}", sessionDirectory.getName());
         }

@@ -7,12 +7,11 @@ import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.github.kory33.signvote.constants.Formats;
+import com.google.gson.JsonObject;
 
 public class FileUtils {
     public static void deleteFolderRecursively(final File targetDirectory) throws IOException {
@@ -34,10 +33,11 @@ public class FileUtils {
         });
     }
     
-    public static void writeJSON(final File targetFile, JSONObject jsonObject) throws UnsupportedEncodingException, JSONException, IOException {
-        if (!targetFile.exists()) {
-            targetFile.createNewFile();
-        }
-        Files.write(targetFile.toPath(), jsonObject.toString(4).getBytes(Formats.FILE_ENCODING));
+    public static void writeJSON(final File targetFile, JsonObject jsonObject) throws UnsupportedEncodingException, IOException {
+        byte[] writeData = jsonObject.toString().getBytes(Formats.FILE_ENCODING);
+        long start = System.nanoTime();
+        Files.newOutputStream(targetFile.toPath(), StandardOpenOption.CREATE).write(writeData);
+        long end = System.nanoTime();
+        System.out.println("File wrote! Took " + (end - start) + "ns.");
     }
 }

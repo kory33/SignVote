@@ -8,9 +8,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.json.JSONObject;
+
 import com.github.kory33.signvote.constants.VotePointDataFileKeys;
 import com.github.kory33.signvote.session.VoteSession;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import lombok.Getter;
 
@@ -24,15 +26,14 @@ public class VotePoint {
     }
     
     public VotePoint(File votePointFIle) throws IllegalArgumentException, IOException {
-        String fileContent = String.join("", Files.readAllLines(votePointFIle.toPath()));
-        JSONObject jsonObject = new JSONObject(fileContent);
+        JsonObject jsonObject = (new JsonParser()).parse(Files.newBufferedReader(votePointFIle.toPath())).getAsJsonObject();
         
-        this.name = jsonObject.getString(VotePointDataFileKeys.NAME);
+        this.name = jsonObject.get(VotePointDataFileKeys.NAME).getAsString();
         
-        World world = Bukkit.getWorld(jsonObject.getString(VotePointDataFileKeys.VOTE_SIGN_WORLD));
-        int signX = jsonObject.getInt(VotePointDataFileKeys.VOTE_SIGN_LOC_X);
-        int signY = jsonObject.getInt(VotePointDataFileKeys.VOTE_SIGN_LOC_Y);
-        int signZ = jsonObject.getInt(VotePointDataFileKeys.VOTE_SIGN_LOC_Z);
+        World world = Bukkit.getWorld(jsonObject.get(VotePointDataFileKeys.VOTE_SIGN_WORLD).getAsString());
+        int signX = jsonObject.get(VotePointDataFileKeys.VOTE_SIGN_LOC_X).getAsInt();
+        int signY = jsonObject.get(VotePointDataFileKeys.VOTE_SIGN_LOC_Y).getAsInt();
+        int signZ = jsonObject.get(VotePointDataFileKeys.VOTE_SIGN_LOC_Z).getAsInt();
         
         if (world == null) {
             throw new IllegalArgumentException("Invalid file given! (world name missing)");
@@ -50,14 +51,14 @@ public class VotePoint {
      * Get the json-serialized data of this object.
      * @return
      */
-    public JSONObject toJson() {
-        JSONObject jsonObject = new JSONObject();
+    public JsonObject toJson() {
+        JsonObject jsonObject = new JsonObject();
         
-        jsonObject.put(VotePointDataFileKeys.NAME, this.name);
-        jsonObject.put(VotePointDataFileKeys.VOTE_SIGN_WORLD, this.voteSign.getWorld().getName());
-        jsonObject.put(VotePointDataFileKeys.VOTE_SIGN_LOC_X, this.voteSign.getX());
-        jsonObject.put(VotePointDataFileKeys.VOTE_SIGN_LOC_Y, this.voteSign.getY());
-        jsonObject.put(VotePointDataFileKeys.VOTE_SIGN_LOC_Z, this.voteSign.getZ());
+        jsonObject.addProperty(VotePointDataFileKeys.NAME, this.name);
+        jsonObject.addProperty(VotePointDataFileKeys.VOTE_SIGN_WORLD, this.voteSign.getWorld().getName());
+        jsonObject.addProperty(VotePointDataFileKeys.VOTE_SIGN_LOC_X, this.voteSign.getX());
+        jsonObject.addProperty(VotePointDataFileKeys.VOTE_SIGN_LOC_Y, this.voteSign.getY());
+        jsonObject.addProperty(VotePointDataFileKeys.VOTE_SIGN_LOC_Z, this.voteSign.getZ());
 
         return jsonObject;
     }

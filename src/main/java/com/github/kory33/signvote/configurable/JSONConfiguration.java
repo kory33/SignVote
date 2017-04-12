@@ -7,13 +7,14 @@ import java.text.MessageFormat;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
-import org.json.JSONException;
-import org.json.JSONObject;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import lombok.Getter;
 
 public class JSONConfiguration {
-    @Getter private JSONObject jsonObject;
+    @Getter private JsonObject jsonObject;
     
     /**
      * Constructs the text configuration instance.
@@ -21,18 +22,21 @@ public class JSONConfiguration {
      * @throws IOException when failed to read data from the given file.
      */
     public JSONConfiguration(File configFile) throws IOException {
-        String fileContent = String.join("", Files.readAllLines(configFile.toPath()));
-        this.jsonObject = new JSONObject(fileContent);
+        this.jsonObject = (new JsonParser()).parse(Files.newBufferedReader(configFile.toPath())).getAsJsonObject();
     }
     
-    public Object fetchKeyObject(String joinedKey, String delimeter) throws JSONException {
+    public Object fetchKeyObject(String joinedKey, String delimeter) {
         String[] keys = joinedKey.split(delimeter);
-        JSONObject object = this.jsonObject;
+        JsonObject element = this.jsonObject;
         
         for (int index = 0; index < keys.length - 1; index++) {
-            object = object.getJSONObject(keys[index]);
+            element = element.get(keys[index]).getAsJsonObject();
+            
+            if (element == null) {
+                return null;
+            }
         }
-        return object.get(keys[keys.length - 1]);
+        return element.get(keys[keys.length - 1]).getAsJsonObject();
     }
     
     /**
