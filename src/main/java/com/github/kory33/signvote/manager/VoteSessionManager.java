@@ -78,13 +78,13 @@ public class VoteSessionManager {
         // purge non-existent sessions
         Stream<File> nonExistentSessionDirs = FileUtils.getFileListStream(sessionSaveDirectory)
                 .filter(file -> this.sessionMap.get(file.getName()) == null);
+        CompletableFuture.runAsync(() -> nonExistentSessionDirs.forEach(FileUtils::deleteFolderRecursively));
         
-        CompletableFuture.runAsync(() -> nonExistentSessionDirs.forEach(dir -> FileUtils.deleteFolderRecursively(dir)));
-        
+        // save all the session data
         sessionMap.getInverse().keySet()
-            .stream()
-            .parallel()
-            .forEach(session -> this.saveSession(session));
+                .stream()
+                .parallel()
+                .forEach(this::saveSession);
     }
 
     /**

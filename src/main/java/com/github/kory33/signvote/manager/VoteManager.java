@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.CompletableFuture;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -16,9 +16,7 @@ import com.github.kory33.signvote.constants.Formats;
 import com.github.kory33.signvote.exception.VotePointNotVotedException;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
-import com.github.kory33.signvote.utils.FileUtils;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -31,6 +29,7 @@ public class VoteManager {
      * @param voteDataDirectory
      * @throws IOException
      */
+    @SuppressWarnings("unchecked")
     public VoteManager(File voteDataDirectory, VoteSession parentSession) throws IOException {
         this.parentSession = parentSession;
         this.voteData = new HashMap<>();
@@ -52,37 +51,21 @@ public class VoteManager {
             }
             
             HashMap<Integer, HashSet<String>> votedPointsMap = new HashMap<>();
-            
-            for (Entry<String, JsonElement> scoreEntry: jsonObject.entrySet()) {
-                try {
-                    HashSet<String> votedVointsNames = new HashSet<>();
-                    scoreEntry.getValue().getAsJsonArray().forEach(votepointName -> votedVointsNames.add(votepointName.getAsString()));
-                    votedPointsMap.put(new Integer(scoreEntry.getKey()), votedVointsNames);
-                } catch (Exception exception) {}
-            }
-
-            this.voteData.put(player, votedPointsMap);
+            this.voteData.put(player, new Gson().fromJson(jsonObject, votedPointsMap.getClass()));
         }
     }
-
+    
     /**
-     * Save the vote data under the given directory.
-     * @param voteDataDirectory
-     * @throws IOException
+     * Get the players' vote data, as a map of Player to JsonObject
+     * @return
      */
-    public void saveTo(File voteDataDirectory) throws IOException {
-        if (!voteDataDirectory.exists()) {
-            voteDataDirectory.mkdirs();
-        }else if (!voteDataDirectory.isDirectory()) {
-            throw new IOException("Directory has to be specified for save location!");
+    public Map<Player, JsonObject> getPlayersVoteData() {
+        Map<Player, JsonObject> map = new HashMap<>();
+        for (Entry<Player, HashMap<Integer, HashSet<String>>> playerData: this.voteData.entrySet()) {
+            JsonObject jsonObject = new Gson().toJsonTree(playerData.getValue()).getAsJsonObject();
+            map.put(playerData.getKey(), jsonObject);
         }
-        
-        this.voteData.keySet().stream().parallel().forEach(player -> {
-            File playerVoteDataFile = new File(voteDataDirectory, player.getUniqueId().toString() + Formats.JSON_EXT);
-            JsonObject playerVoteData = new Gson().toJsonTree(this.voteData).getAsJsonObject();
-            
-            CompletableFuture.runAsync(() -> FileUtils.writeJSON(playerVoteDataFile, playerVoteData));
-        });
+        return map;
     }
     
     /**

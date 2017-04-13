@@ -40,6 +40,14 @@ public class FileUtils {
     
     public static void writeJSON(final File targetFile, JsonObject jsonObject) {
         try {
+            if (!targetFile.exists()) {
+                File parent = targetFile.getParentFile();
+                if (!parent.exists()) {
+                    parent.mkdirs();
+                }
+                targetFile.createNewFile();
+            }
+            
             byte[] writeData = jsonObject.toString().getBytes(Formats.FILE_ENCODING);
             Files.newOutputStream(targetFile.toPath(), StandardOpenOption.CREATE).write(writeData);
         } catch (IOException exception) {

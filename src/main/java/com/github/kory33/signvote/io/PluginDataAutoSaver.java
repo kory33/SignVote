@@ -1,5 +1,9 @@
 package com.github.kory33.signvote.io;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import org.bukkit.Bukkit;
 
 import com.github.kory33.signvote.core.SignVote;
@@ -12,15 +16,19 @@ public class PluginDataAutoSaver {
     
     private boolean isTaskScheduled;
 
+    private final ExecutorService saveTaskExecutor;
+    
     private void scheduleNextAutoSaveTask() {
+        CompletableFuture.runAsync(() -> PluginDataAutoSaver.this.plugin.saveSessionData(), PluginDataAutoSaver.this.saveTaskExecutor);
+        PluginDataAutoSaver.this.plugin.getLogger().info("Session data is being saved asynchronously...");
+        
         this.nextAutoSaveTaskId = Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
             @Override
             public void run() {
-                PluginDataAutoSaver.this.plugin.saveSessionData();
-                PluginDataAutoSaver.this.plugin.getLogger().info("Session data has been saved.");
                 PluginDataAutoSaver.this.scheduleNextAutoSaveTask();
             }
         }, this.autosaveIntervalTicks);
+        
         this.isTaskScheduled = true;
     }
     
@@ -46,6 +54,7 @@ public class PluginDataAutoSaver {
     public PluginDataAutoSaver(SignVote plugin, int autosaveInterval) {
         this.plugin = plugin;
         this.autosaveIntervalTicks = autosaveInterval;
+        this.saveTaskExecutor = Executors.newFixedThreadPool(1);
         
         this.scheduleNextAutoSaveTask();
     }

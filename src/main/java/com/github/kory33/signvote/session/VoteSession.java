@@ -136,10 +136,6 @@ public class VoteSession {
         }
         
         File votePointDirectory = new File(sessionSaveLocation, FilePaths.VOTE_POINTS_DIR);
-        if (!votePointDirectory.exists()) {
-            votePointDirectory.mkdirs();
-        }
-
         // purge non-registered votepoint files under the votepoint directory
         Stream<File> nonExistentVpFiles = FileUtils.getFileListStream(votePointDirectory).filter(file -> {
                 String fileName = file.getName();
@@ -152,25 +148,28 @@ public class VoteSession {
             });
         CompletableFuture.runAsync(() -> nonExistentVpFiles.forEach(File::delete));
 
-        long start = System.nanoTime();
-
         // save votepoints
         signMap.getInverse().keySet().stream().parallel()
             .forEach(votePoint -> {
                 File saveTarget = new File(votePointDirectory, votePoint.getName() + Formats.JSON_EXT);
-                CompletableFuture.supplyAsync(() -> votePoint.toJson())
-                    .thenAccept(json -> FileUtils.writeJSON(saveTarget, json));
-                });
+                FileUtils.writeJSON(saveTarget, votePoint.toJson());
+            });
 
-        this.voteManager.saveTo(new File(sessionSaveLocation, FilePaths.VOTE_DATA_DIR));
+        // save vote data
+        File voteDataDirectory = new File(sessionSaveLocation, FilePaths.VOTE_DATA_DIR);
+        this.voteManager.getPlayersVoteData().entrySet().stream()
+            .forEach(entry -> {
+                Player player = entry.getKey();
+                File playerVoteDataFile = new File(voteDataDirectory, player.getUniqueId().toString() + Formats.JSON_EXT);
+
+                JsonObject voteData = entry.getValue();
+                FileUtils.writeJSON(playerVoteDataFile, voteData);
+            });
 
         // write session data
         File sessionDataFile = new File(sessionSaveLocation, FilePaths.SESSION_DATA_FILENAME);
         JsonObject jsonData = this.toJson();
-        CompletableFuture.runAsync(() -> FileUtils.writeJSON(sessionDataFile, jsonData));
-        
-        long end = System.nanoTime();
-        System.out.println("Votepoint save done!(session name: " + this.getName() + ") Took " + (end - start) + "ns.");
+        FileUtils.writeJSON(sessionDataFile, jsonData);
     }
 
     /**
