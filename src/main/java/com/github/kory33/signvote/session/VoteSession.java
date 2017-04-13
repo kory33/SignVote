@@ -10,7 +10,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
-import com.github.kory33.signvote.Utils.FileUtils;
 import com.github.kory33.signvote.collection.BijectiveHashMap;
 import com.github.kory33.signvote.collection.VoteScoreLimits;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
@@ -24,6 +23,7 @@ import com.github.kory33.signvote.exception.VotePointAlreadyVotedException;
 import com.github.kory33.signvote.exception.VotePointNotVotedException;
 import com.github.kory33.signvote.manager.VoteManager;
 import com.github.kory33.signvote.model.VotePoint;
+import com.github.kory33.signvote.utils.FileUtils;
 import com.google.gson.JsonObject;
 
 import lombok.Getter;

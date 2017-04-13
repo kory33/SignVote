@@ -1,4 +1,4 @@
-package com.github.kory33.signvote.Utils;
+package com.github.kory33.signvote.utils;
 
 import java.io.File;
 import java.io.IOException;
