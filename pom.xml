@@ -6,9 +6,11 @@
     <version>0.2.0</version>
     <name>SignVote</name>
     <description>A Bukkit plugin that allows player to vote through signs.</description>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
     <repositories>
         <repository>
             <id>spigot-repo</id>
@@ -40,6 +42,35 @@
     </dependencies>
     <build>
         <plugins>
+            <plugin>
+                <groupId>com.google.code.maven-replacer-plugin</groupId>
+                <artifactId>replacer</artifactId>
+                <version>1.5.3</version>
+                <executions>
+                    <execution>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <file>target/classes/plugin.yml</file>
+                    <delimiters>
+                        <delimiter>@</delimiter>
+                    </delimiters>
+                    <replacements>
+                        <replacement>
+                            <token>project.name</token>
+                            <value>${project.name}</value>
+                        </replacement>
+                        <replacement>
+                            <token>project.version</token>
+                            <value>${project.version}</value>
+                        </replacement>
+                    </replacements>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
