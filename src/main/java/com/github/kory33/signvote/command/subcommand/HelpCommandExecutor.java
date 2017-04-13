@@ -11,6 +11,8 @@ import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigurationNodes;
 import com.github.kory33.signvote.core.SignVote;
 
+import net.md_5.bungee.api.ChatColor;
+
 public class HelpCommandExecutor extends SubCommandExecutor {
     private final JSONConfiguration messageConfiguration;
     private final Map<String, SubCommandExecutor> subCommandExecutorMap;
@@ -31,8 +33,9 @@ public class HelpCommandExecutor extends SubCommandExecutor {
         sender.sendMessage(messageConfiguration.getString(MessageConfigurationNodes.COMMAND_HELP_HEADER));
         
         for (Entry<String, SubCommandExecutor> commandEntry: subCommandExecutorMap.entrySet()) {
-            String commandHelp = messageConfiguration.getString("command." + commandEntry.getKey() + ".help");
-            sender.sendMessage(messagePrefix + commandHelp);
+            String subcommandName = commandEntry.getKey();
+            String commandHelp = messageConfiguration.getString("command." + subcommandName + ".summary");
+            sender.sendMessage(messagePrefix + ChatColor.DARK_AQUA + subcommandName + ChatColor.GREEN + " - " + commandHelp);
         }
         
         return true;
