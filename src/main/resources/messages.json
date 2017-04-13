@@ -1,6 +1,7 @@
 {
+    "prefix": "§6[SignVote]§r ",
 	"command": {
-		"help": "§e/signvote <create|delete|addscore|open|close|vote|unvote|deletevp|reload>\nRun subcommands without arguments to see their help.",
+		"helpheader": "§a----SignVote Help----",
 		"create": {
 			"help": "/signvote create <session name> - create a new session with the given name",
 			"created": "§aSession §6{0} §acreated!",

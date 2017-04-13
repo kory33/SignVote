@@ -7,8 +7,10 @@ package com.github.kory33.signvote.constants;
  *
  */
 public class MessageConfigurationNodes {
+    public static final String MESSAGE_PREFIX = "prefix";
+    
     public static final String COMMAND_ROOT = "command";
-    public static final String COMMAND_HELP = COMMAND_ROOT + ".help";
+    public static final String COMMAND_HELP_HEADER = COMMAND_ROOT + ".helpheader";
     
     public static final String CREATE_COMMAND_HELP      = COMMAND_ROOT + ".create.help";
     public static final String F_SESSION_CREATED        = COMMAND_ROOT + ".create.created";

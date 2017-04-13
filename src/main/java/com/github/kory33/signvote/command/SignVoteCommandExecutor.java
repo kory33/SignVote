@@ -42,7 +42,7 @@ public class SignVoteCommandExecutor implements CommandExecutor{
         commandMaps.put(SubCommands.RELOAD,    new ReloadCommandExecutor(plugin));
         
         this.subCommandExecutorMap = Collections.unmodifiableMap(commandMaps);
-        this.defaultCommandExecutor = new HelpCommandExecutor(plugin);
+        this.defaultCommandExecutor = new HelpCommandExecutor(plugin, this.subCommandExecutorMap);
     }
 
     @Override
