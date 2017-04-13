@@ -8,6 +8,7 @@ import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -25,7 +26,7 @@ public class JSONConfiguration {
         this.jsonObject = (new JsonParser()).parse(Files.newBufferedReader(configFile.toPath())).getAsJsonObject();
     }
     
-    public Object fetchKeyObject(String joinedKey, String delimeter) {
+    public JsonElement fetchKeyObject(String joinedKey, String delimeter) {
         String[] keys = joinedKey.split(delimeter);
         JsonObject element = this.jsonObject;
         
@@ -36,7 +37,7 @@ public class JSONConfiguration {
                 return null;
             }
         }
-        return element.get(keys[keys.length - 1]).getAsJsonObject();
+        return element.get(keys[keys.length - 1]);
     }
     
     /**
@@ -46,7 +47,7 @@ public class JSONConfiguration {
      */
     public String getString(String jsonKey) {
         try {
-            String result = this.fetchKeyObject(jsonKey, "\\.").toString();
+            String result = this.fetchKeyObject(jsonKey, "\\.").getAsString();
             if (result != null) {
                 return result;
             }
