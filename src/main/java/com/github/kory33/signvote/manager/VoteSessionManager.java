@@ -2,8 +2,10 @@ package com.github.kory33.signvote.manager;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import org.bukkit.block.Sign;
 
@@ -74,20 +76,15 @@ public class VoteSessionManager {
      */
     public void saveAllSessions() {
         // purge non-existent sessions
-        for (File sessionDirectory: this.sessionSaveDirectory.listFiles()) {
-            String sessionName = sessionDirectory.getName();
-            if (!this.sessionMap.containsKey(sessionName)) {
-                try {
-                    FileUtils.deleteFolderRecursively(sessionDirectory);
-                } catch (IOException e) {
-                    this.logger.log(Level.SEVERE, "Failed to purge session folder " + sessionName, e);
-                }
-            }
-        }
+        Stream<File> nonExistentSessionDirs = FileUtils.getFileListStream(sessionSaveDirectory)
+                .filter(file -> this.sessionMap.get(file.getName()) == null);
         
-        for (VoteSession session: sessionMap.values()) {
-            this.saveSession(session);
-        }
+        CompletableFuture.runAsync(() -> nonExistentSessionDirs.forEach(dir -> FileUtils.deleteFolderRecursively(dir)));
+        
+        sessionMap.getInverse().keySet()
+            .stream()
+            .parallel()
+            .forEach(session -> this.saveSession(session));
     }
 
     /**

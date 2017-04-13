@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
+import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.block.Sign;
@@ -139,33 +141,36 @@ public class VoteSession {
         }
 
         // purge non-registered votepoint files under the votepoint directory
-        for (File savedVotepointFile: votePointDirectory.listFiles()) {
-            String savedVotepointFileName = savedVotepointFile.getName();
-            if (savedVotepointFileName.length() < 6) {
-                savedVotepointFile.delete();
-                continue;
-            }
+        Stream<File> nonExistentVpFiles = FileUtils.getFileListStream(votePointDirectory).filter(file -> {
+                String fileName = file.getName();
+                int extSubstringLength = Formats.JSON_EXT.length() + 1;
+                if (fileName.length() < extSubstringLength) {
+                    return true;
+                }
+                String sessName = fileName.substring(0, fileName.length() - extSubstringLength);
+                return !this.votePointNameMap.containsKey(sessName);
+            });
+        CompletableFuture.runAsync(() -> nonExistentVpFiles.forEach(File::delete));
 
-            String savedVotepointName = savedVotepointFileName.substring(0,
-                    savedVotepointFileName.length() - Formats.JSON_EXT.length() - 1);
-            
-            // delete the file if the votepoint filename is not a valid votepoint
-            if (!this.votePointNameMap.containsKey(savedVotepointName)) {
-                savedVotepointFile.delete();
-            }
-        }
+        long start = System.nanoTime();
 
         // save votepoints
-        for (VotePoint votePoint: signMap.values()) {
-            File votePointFile = new File(votePointDirectory, votePoint.getName() + Formats.JSON_EXT);
-            FileUtils.writeJSON(votePointFile, votePoint.toJson());
-        }
+        signMap.getInverse().keySet().stream().parallel()
+            .forEach(votePoint -> {
+                File saveTarget = new File(votePointDirectory, votePoint.getName() + Formats.JSON_EXT);
+                CompletableFuture.supplyAsync(() -> votePoint.toJson())
+                    .thenAccept(json -> FileUtils.writeJSON(saveTarget, json));
+                });
 
         this.voteManager.saveTo(new File(sessionSaveLocation, FilePaths.VOTE_DATA_DIR));
 
         // write session data
         File sessionDataFile = new File(sessionSaveLocation, FilePaths.SESSION_DATA_FILENAME);
-        FileUtils.writeJSON(sessionDataFile, this.toJson());
+        JsonObject jsonData = this.toJson();
+        CompletableFuture.runAsync(() -> FileUtils.writeJSON(sessionDataFile, jsonData));
+        
+        long end = System.nanoTime();
+        System.out.println("Votepoint save done!(session name: " + this.getName() + ") Took " + (end - start) + "ns.");
     }
 
     /**

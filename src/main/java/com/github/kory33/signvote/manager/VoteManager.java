@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
+import java.util.concurrent.CompletableFuture;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -76,12 +77,12 @@ public class VoteManager {
             throw new IOException("Directory has to be specified for save location!");
         }
         
-        for (Player player: this.voteData.keySet()) {
+        this.voteData.keySet().stream().parallel().forEach(player -> {
             File playerVoteDataFile = new File(voteDataDirectory, player.getUniqueId().toString() + Formats.JSON_EXT);
-            
             JsonObject playerVoteData = new Gson().toJsonTree(this.voteData).getAsJsonObject();
-            FileUtils.writeJSON(playerVoteDataFile, playerVoteData);
-        }
+            
+            CompletableFuture.runAsync(() -> FileUtils.writeJSON(playerVoteDataFile, playerVoteData));
+        });
     }
     
     /**

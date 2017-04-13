@@ -97,10 +97,7 @@ public class SignVote extends GithubUpdateNotifyPlugin {
     }
     
     public void saveSessionData() {
-        long start = System.nanoTime();
         this.voteSessionManager.saveAllSessions();
-        long end = System.nanoTime();
-        this.getLogger().info("[DEBUG] Saving process took " + (end - start) + " nano seconds.");
     }
     
     @Override
