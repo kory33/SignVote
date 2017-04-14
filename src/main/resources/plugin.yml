@@ -41,3 +41,6 @@ permissions:
     signvote.reload:
         description: allows a player to reload the plugin
         default: op
+    signvote.save:
+        description: allows a player to save plugin data
+        default: op

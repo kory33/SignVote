@@ -63,6 +63,10 @@
 			"summary": "reloads the plugin",
 			"complete": "§aReload complete."
 		},
+		"save": {
+			"summary": "saves all the session data to the plugin folder",
+			"complete": "§aSave complete."
+		},
 		"generic": {
 			"error": {
 				"onlyforplayers": "§cThis command can only be run by players.",

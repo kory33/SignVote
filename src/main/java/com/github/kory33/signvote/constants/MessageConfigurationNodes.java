@@ -45,6 +45,8 @@ public class MessageConfigurationNodes {
     
     public static final String RELOAD_COMPLETE          = COMMAND_ROOT + ".reload.complete";
 
+    public static final String SAVE_COMPLETE            = COMMAND_ROOT + ".save.complete";
+
     
     public static final String GENERIC_COMMAND_ERROR    = COMMAND_ROOT + ".generic.error";
     public static final String COMMAND_ONLY_FOR_PLAYERS = GENERIC_COMMAND_ERROR + ".onlyforplayers";
