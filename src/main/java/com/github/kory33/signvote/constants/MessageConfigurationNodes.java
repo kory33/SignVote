@@ -59,4 +59,13 @@ public class MessageConfigurationNodes {
     public static final String VOTEPOINT_MESSAGE_ROOT   = "votepoint";
     public static final String VOTEPOINT_CREATED        = VOTEPOINT_MESSAGE_ROOT + ".created";
     public static final String F_VOTEPOINT_BREAK        = VOTEPOINT_MESSAGE_ROOT + ".break";
+    
+    public static final String UI_ROOT                  = "ui";
+    public static final String UI_HEADER                = UI_ROOT + ".header";
+    public static final String UI_FOOTER                = UI_ROOT + ".footer";
+    public static final String UI_BUTTON                = UI_ROOT + ".button";
+
+    public static final String VOTE_UI_ROOT             = UI_ROOT + ".vote";
+	public static final String VOTE_UI_HEADING          = VOTE_UI_ROOT + ".heading";
+	public static final String VOTE_UI_SCORE_SELECTION  = VOTE_UI_ROOT + ".scoreselection";
 }

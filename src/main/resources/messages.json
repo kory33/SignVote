@@ -81,5 +81,14 @@
 	"votepoint": {
 		"created": "§aVotepoint created with a name of §6{1} §afor the session §6{0}.",
 		"break": "§eYou are about to break a votepoint.\nType §6/signvote deletevp {0} {1} §eto delete the votepoint."
+	},
+	"ui": {
+	    "header": "----------[SignVote]----------",
+	    "footer": "----------------------------",
+	    "button": "[x] "
+	    "vote": {
+	        "heading": "§3Select a point to vote to §6{0}",
+	        "scoreselection": "§6{0} §a Points(§e${1} §atimes remaining)"
+	    }
 	}
 }

@@ -18,6 +18,9 @@ public abstract class ChatInterface {
 	 * @param player
 	 */
     protected void send(Player player) {
-    	this.constructInterfaceMessages().send(player);
+    	MessageComponent messageComponent = this.constructInterfaceMessages();
+    	if (messageComponent != null) {
+    		messageComponent.send(player);
+    	}
     };
 }
