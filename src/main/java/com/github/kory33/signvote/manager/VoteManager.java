@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -90,29 +91,27 @@ public class VoteManager {
     /**
      * Add the votepoint to which the player has voted
      * @param voter
-     * @param votedScore
+     * @param voteScore
      * @param votePoint
      * @throws IllegalArgumentException when there is a duplicate in the vote
      */
-    public void addVotePointName(Player voter, int votedScore, VotePoint votePoint) throws IllegalArgumentException{
+    public void addVotePointName(Player voter, int voteScore, VotePoint votePoint) throws IllegalArgumentException{
         if (!this.voteData.containsKey(voter)) {
             this.voteData.put(voter, new HashMap<>());
         }
         
         HashMap<Integer, HashSet<String>> votedPointnames = this.voteData.get(voter);
-        if (!votedPointnames.containsKey(votedScore)) {
-            votedPointnames.put(votedScore, new HashSet<>());
+        if (!votedPointnames.containsKey(voteScore)) {
+            votedPointnames.put(voteScore, new HashSet<>());
         }
         
         String votePointName = votePoint.getName();
         
-        for (int score: votedPointnames.keySet()) {
-            if (votedPointnames.get(score).contains(votePointName)) {
-                throw new IllegalArgumentException(votePointName + " is already voted by the player!");
-            }
+        if (this.getVotedScore(voter, votePointName).isPresent()) {
+            throw new IllegalArgumentException(votePointName + " is already voted by the player!");
         }
         
-        votedPointnames.get(votedScore).add(votePoint.getName());
+        votedPointnames.get(voteScore).add(votePoint.getName());
     }
 
     public void removeVote(Player player, VotePoint votePoint) throws VotePointNotVotedException {
@@ -126,6 +125,25 @@ public class VoteManager {
         }
         
         throw new VotePointNotVotedException(player, votePoint, this.parentSession);
+    }
+
+    /**
+     * Get the score a given player has voted to a given name of votepoint.
+     * The returned optional object contains no value if the player has not voted.
+     * @param player
+     * @param votePointName
+     * @return
+     */
+    public Optional<Integer> getVotedScore(Player player, String votePointName) {
+    	return this.getVotedPointsMap(player).entrySet()
+    			.stream()
+    			.filter(entry -> entry.getValue().contains(votePointName))
+    			.map(entry -> entry.getKey())
+    			.findFirst();
+    }
+    
+    public boolean hasVoted(Player player, VotePoint votePoint) {
+    	return this.getVotedScore(player, votePoint.getName()).isPresent();
     }
 }
     

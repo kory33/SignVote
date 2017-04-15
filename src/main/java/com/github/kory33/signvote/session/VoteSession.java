@@ -22,7 +22,6 @@ import com.github.kory33.signvote.constants.VoteSessionDataFileKeys;
 import com.github.kory33.signvote.exception.InvalidVoteScoreException;
 import com.github.kory33.signvote.exception.ScoreCountLimitReachedException;
 import com.github.kory33.signvote.exception.VotePointAlreadyVotedException;
-import com.github.kory33.signvote.exception.VotePointNotVotedException;
 import com.github.kory33.signvote.manager.VoteManager;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.utils.FileUtils;
@@ -271,15 +270,5 @@ public class VoteSession {
         sign.update();
         
         return;
-    }
-
-    /**
-     * Cancel the vote made by the player
-     * @param player
-     * @param votePoint
-     * @throws VotePointNotVotedException
-     */
-    public void unvote(Player player, VotePoint votePoint) throws VotePointNotVotedException {
-        this.voteManager.removeVote(player, votePoint);
     }
 }
