@@ -135,15 +135,15 @@ public class VoteManager {
      * @return
      */
     public Optional<Integer> getVotedScore(Player player, String votePointName) {
-    	return this.getVotedPointsMap(player).entrySet()
-    			.stream()
-    			.filter(entry -> entry.getValue().contains(votePointName))
-    			.map(entry -> entry.getKey())
-    			.findFirst();
+        return this.getVotedPointsMap(player).entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().contains(votePointName))
+                .map(entry -> entry.getKey())
+                .findFirst();
     }
     
     public boolean hasVoted(Player player, VotePoint votePoint) {
-    	return this.getVotedScore(player, votePoint.getName()).isPresent();
+        return this.getVotedScore(player, votePoint.getName()).isPresent();
     }
 }
     

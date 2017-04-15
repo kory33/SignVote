@@ -1,94 +1,94 @@
 {
     "prefix": "§6[SignVote]§r ",
-	"command": {
-		"helpheader": "§2----SignVote Help----\n§eEach command is in a form of /signvote <subcommand>.",
-		"create": {
-			"help": "/signvote create <session name> - create a new session with the given name",
-			"summary": "create a new session with the given name",
-			"created": "§aSession §6{0} §acreated!",
-			"error": {
-			    "sessionexists": "§csession already exists!"
-			}
-		},
-		"delete": {
-			"help": "/signvote deletesess <session name> - delete the specified vote session.",
-			"summary": "delete the specified vote session.",
-			"deleted": "§aSession §6{0} §ahas been successfully §cDELETED"
-		},
-		"deletevp": {
-			"help": "deletevp - delete the specified votepoint",
-			"summary": "delete the specified votepoint",
-			"deleted": "§aVotepoint §6{0} §ais successfully deleted from session §6{1}"
-		},
-		"addscore": {
-			"help": "addscore - create a vote score limit for the given session and permission if provided",
-			"summary": "create a vote score limit for the given session"
-		},
-		"open": {
-			"help": "open - re-open a closed session",
-			"summary": "re-open a closed session",
-			"opened": "§aSession §6{0} §ais set to be §6OPENED",
-			"error": {
-				"alreadyopened": "§aSession §6{0} §ais already §6OPENED"
-			}
-		},
-		"close": {
-			"help": "close - close an opened session",
-			"summary": "close an opened session",
-			"closed": "§aSession §6{0} §ais set to be §6CLOSED",
-			"error": {
-				"alreadycloseed": "§aSession §6{0} §ais already §6CLOSED"
-			}
-		},
-		"vote": {
-			"help": "vote - vote to a given votepoint with a provided score",
-			"summary": "vote to a given votepoint with a provided score",
-			"voteaccepted": "§aYour vote has been accepted.",
-			"error": {
-				"invalidscore": "§cPlease enter a valid vote score.",
-				"reachedlimit": "§cYou can't vote anymore with that score!",
-				"alreadyvoted": "§cYou have already voted to this votepoint."
-			}
-		},
-		"unvote": {
-			"help": "unvote - cancel the vote to a given votepoint",
-			"summary": "cancel the vote to a given votepoint",
-			"unvoted": "§aYour vote to §6{0} §ahas been cancelled.",
-			"error": {
-				"notvoted": "§cYou have not voted to this votepoint."
-			}
-		},
-		"reload": {
-		    "help": "/signvote reload - reloads the plugin",
-			"summary": "reloads the plugin",
-			"complete": "§aReload complete."
-		},
-		"save": {
-			"summary": "saves all the session data to the plugin folder",
-			"complete": "§aSave complete."
-		},
-		"generic": {
-			"error": {
-				"onlyforplayers": "§cThis command can only be run by players.",
-				"nosession": "§cThe provided session does not exist",
-				"novotepoint": "§cThe provided votepoint does not exist",
-				"missingpermission": "§cYou lack permission to do that!",
-				"vpemptyname": "§cPlease enter the name of votepoint",
-				"vpexists": "§cA votepoint with that name already exists!"
-			}
-		}
-	},
-	"votepoint": {
-		"created": "§aVotepoint created with a name of §6{1} §afor the session §6{0}.",
-		"break": "§eYou are about to break a votepoint.\nType §6/signvote deletevp {0} {1} §eto delete the votepoint."
-	},
-	"ui": {
-	    "header": "----------[SignVote]----------",
-	    "footer": "----------------------------",
-	    "button": "[x] "
-	    "vote": {
-	        "heading": "§3Select a point to vote to §6{0}",
-	        "scoreselection": "§6{0} §a Points(§e${1} §atimes remaining)"
-	    }
-	}
+    "command": {
+        "helpheader": "§2----SignVote Help----\n§eEach command is in a form of /signvote <subcommand>.",
+        "create": {
+            "help": "/signvote create <session name> - create a new session with the given name",
+            "summary": "create a new session with the given name",
+            "created": "§aSession §6{0} §acreated!",
+            "error": {
+                "sessionexists": "§csession already exists!"
+            }
+        },
+        "delete": {
+            "help": "/signvote deletesess <session name> - delete the specified vote session.",
+            "summary": "delete the specified vote session.",
+            "deleted": "§aSession §6{0} §ahas been successfully §cDELETED"
+        },
+        "deletevp": {
+            "help": "deletevp - delete the specified votepoint",
+            "summary": "delete the specified votepoint",
+            "deleted": "§aVotepoint §6{0} §ais successfully deleted from session §6{1}"
+        },
+        "addscore": {
+            "help": "addscore - create a vote score limit for the given session and permission if provided",
+            "summary": "create a vote score limit for the given session"
+        },
+        "open": {
+            "help": "open - re-open a closed session",
+            "summary": "re-open a closed session",
+            "opened": "§aSession §6{0} §ais set to be §6OPENED",
+            "error": {
+                "alreadyopened": "§aSession §6{0} §ais already §6OPENED"
+            }
+        },
+        "close": {
+            "help": "close - close an opened session",
+            "summary": "close an opened session",
+            "closed": "§aSession §6{0} §ais set to be §6CLOSED",
+            "error": {
+                "alreadycloseed": "§aSession §6{0} §ais already §6CLOSED"
+            }
+        },
+        "vote": {
+            "help": "vote - vote to a given votepoint with a provided score",
+            "summary": "vote to a given votepoint with a provided score",
+            "voteaccepted": "§aYour vote has been accepted.",
+            "error": {
+                "invalidscore": "§cPlease enter a valid vote score.",
+                "reachedlimit": "§cYou can't vote anymore with that score!",
+                "alreadyvoted": "§cYou have already voted to this votepoint."
+            }
+        },
+        "unvote": {
+            "help": "unvote - cancel the vote to a given votepoint",
+            "summary": "cancel the vote to a given votepoint",
+            "unvoted": "§aYour vote to §6{0} §ahas been cancelled.",
+            "error": {
+                "notvoted": "§cYou have not voted to this votepoint."
+            }
+        },
+        "reload": {
+            "help": "/signvote reload - reloads the plugin",
+            "summary": "reloads the plugin",
+            "complete": "§aReload complete."
+        },
+        "save": {
+            "summary": "saves all the session data to the plugin folder",
+            "complete": "§aSave complete."
+        },
+        "generic": {
+            "error": {
+                "onlyforplayers": "§cThis command can only be run by players.",
+                "nosession": "§cThe provided session does not exist",
+                "novotepoint": "§cThe provided votepoint does not exist",
+                "missingpermission": "§cYou lack permission to do that!",
+                "vpemptyname": "§cPlease enter the name of votepoint",
+                "vpexists": "§cA votepoint with that name already exists!"
+            }
+        }
+    },
+    "votepoint": {
+        "created": "§aVotepoint created with a name of §6{1} §afor the session §6{0}.",
+        "break": "§eYou are about to break a votepoint.\nType §6/signvote deletevp {0} {1} §eto delete the votepoint."
+    },
+    "ui": {
+        "header": "----------[SignVote]----------",
+        "footer": "----------------------------",
+        "button": "[x] "
+        "vote": {
+            "heading": "§3Select a point to vote to §6{0}",
+            "scoreselection": "§6{0} §a Points(§e${1} §atimes remaining)"
+        }
+    }
 }

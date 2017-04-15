@@ -11,16 +11,16 @@ import com.github.ucchyocean.messaging.tellraw.MessageComponent;
  * @author kory33
  */
 public abstract class ChatInterface {
-	protected abstract MessageComponent constructInterfaceMessages();
-	
-	/**
-	 * Construct the user interface and send to the player.
-	 * @param player
-	 */
+    protected abstract MessageComponent constructInterfaceMessages();
+    
+    /**
+     * Construct the user interface and send to the player.
+     * @param player
+     */
     protected void send(Player player) {
-    	MessageComponent messageComponent = this.constructInterfaceMessages();
-    	if (messageComponent != null) {
-    		messageComponent.send(player);
-    	}
+        MessageComponent messageComponent = this.constructInterfaceMessages();
+        if (messageComponent != null) {
+            messageComponent.send(player);
+        }
     };
 }
