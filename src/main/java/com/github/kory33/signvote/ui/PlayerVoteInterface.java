@@ -77,7 +77,6 @@ public class PlayerVoteInterface extends PlayerChatInterface {
             });
         
         messageList.add(footer);
-        
         return new MessageComponent(messageList);
     }
 }

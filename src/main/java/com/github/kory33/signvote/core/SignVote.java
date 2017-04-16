@@ -12,6 +12,7 @@ import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.ConfigNodes;
 import com.github.kory33.signvote.constants.FilePaths;
 import com.github.kory33.signvote.io.PluginDataAutoSaver;
+import com.github.kory33.signvote.listners.PlayerVoteListner;
 import com.github.kory33.signvote.listners.SignListner;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.updatenotificationplugin.bukkit.github.GithubUpdateNotifyPlugin;
@@ -58,6 +59,7 @@ public class SignVote extends GithubUpdateNotifyPlugin {
         this.voteSessionManager = new VoteSessionManager(this.getLogger(), sessionsDir);
         
         new SignListner(this);
+        new PlayerVoteListner(this);
 
         this.commandExecutor = new SignVoteCommandExecutor(this);
         this.getCommand("signvote").setExecutor(this.commandExecutor);

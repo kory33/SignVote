@@ -85,7 +85,7 @@
     "ui": {
         "header": "----------[SignVote]----------",
         "footer": "----------------------------",
-        "button": "[x] "
+        "button": "[x] ",
         "vote": {
             "heading": "§3Select a point to vote to §6{0}",
             "scoreselection": "§6{0} §a Points(§e${1} §atimes remaining)"
