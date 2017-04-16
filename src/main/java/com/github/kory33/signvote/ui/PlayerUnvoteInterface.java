@@ -6,7 +6,6 @@ import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.ucchyocean.messaging.tellraw.MessageComponent;
-import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
 public class PlayerUnvoteInterface extends PlayerChatInterface {
     private final VoteSession session;

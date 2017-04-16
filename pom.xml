@@ -103,6 +103,7 @@
                             <artifactSet>
                                 <includes>
                                     <include>com.github.Kory33:UpdateNotificationPlugin</include>
+                                    <include>com.github.ucchyocean:MessagingUtility</include>
                                 </includes>
                             </artifactSet>
                         </configuration>

@@ -33,14 +33,13 @@ public class PlayerVoteInterface extends PlayerChatInterface {
 
     private MessageParts getHeading() {
         String message = messageConfig.getFormatted(MessageConfigurationNodes.VOTE_UI_HEADING,
-                this.votePoint.getName());
+                this.votePoint.getName()) + "\n";
         return new MessageParts(message);
     }
     
     private MessageParts getVoteButton(int voteScore) {
         MessageParts button = this.getConfigMessagePart(MessageConfigurationNodes.UI_BUTTON);
-        String runCommand = "/signvote vote " + this.session.getName() + " " + this.votePoint.getName() + " "
-                + voteScore;
+        String runCommand = String.join(" ", "/signvote vote", this.session.getName(), this.votePoint.getName(), String.valueOf(voteScore));
         button.setClickEvent(ClickEventType.RUN_COMMAND, runCommand);
         return button;
     }
