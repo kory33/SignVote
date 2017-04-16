@@ -159,6 +159,9 @@ public class VoteSession {
 
         // save vote data
         File voteDataDirectory = new File(sessionSaveLocation, FilePaths.VOTE_DATA_DIR);
+        if (!voteDataDirectory.exists()) {
+            voteDataDirectory.mkdirs();
+        }
         this.voteManager.getPlayersVoteData().entrySet().stream()
             .forEach(entry -> {
                 Player player = entry.getKey();

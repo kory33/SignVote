@@ -86,6 +86,7 @@ public class SignVote extends GithubUpdateNotifyPlugin {
             this.autoSaver.stopAutoSaveTask();
         }
         
+        this.getLogger().info("Saving session data");
         saveSessionData();
     }
     
