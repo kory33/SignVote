@@ -1,5 +1,6 @@
 package com.github.kory33.signvote.listners;
 
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -29,7 +30,12 @@ public class PlayerVoteListner implements Listener {
     
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
     public void onPlayerInteractWithVotePoint(PlayerInteractEvent event) {
-        BlockState state = event.getClickedBlock().getState();
+        Block clickedBlock = event.getClickedBlock();
+        if (clickedBlock == null) {
+            return;
+        }
+        
+        BlockState state = clickedBlock.getState();
         if (!(state instanceof Sign)) {
             return;
         }

@@ -135,6 +135,9 @@ public class VoteSession {
         }
         
         File votePointDirectory = new File(sessionSaveLocation, FilePaths.VOTE_POINTS_DIR);
+        if (!votePointDirectory.exists()) {
+            votePointDirectory.mkdirs();
+        }
         // purge non-registered votepoint files under the votepoint directory
         Stream<File> nonExistentVpFiles = FileUtils.getFileListStream(votePointDirectory).filter(file -> {
                 String fileName = file.getName();
