@@ -43,6 +43,9 @@ public class AddScoreCommandExecutor extends SubCommandExecutor{
             String permission = "default";
             if (!args.isEmpty()) {
                 permission = args.remove(0);
+                if (permission == "op") {
+                    permission = PermissionNodes.VOTE_MORE;
+                }
             }
             
             session.getVoteScoreCountLimits().addLimit(score, permission, limit);

@@ -12,6 +12,7 @@ public class PluginDataAutoSaver {
     private int nextAutoSaveTaskId;
 
     private final long autosaveIntervalTicks;
+    private final boolean shouldLog;
     private final SignVote plugin;
     
     private boolean isTaskScheduled;
@@ -20,7 +21,9 @@ public class PluginDataAutoSaver {
     
     private void scheduleNextAutoSaveTask() {
         CompletableFuture.runAsync(() -> PluginDataAutoSaver.this.plugin.saveSessionData(), PluginDataAutoSaver.this.saveTaskExecutor);
-        PluginDataAutoSaver.this.plugin.getLogger().info("Session data is being saved asynchronously...");
+        if (this.shouldLog) {
+            PluginDataAutoSaver.this.plugin.getLogger().info("Session data is being saved asynchronously...");
+        }
         
         this.nextAutoSaveTaskId = Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
             @Override
@@ -51,10 +54,11 @@ public class PluginDataAutoSaver {
         this.isTaskScheduled = false;
     }
     
-    public PluginDataAutoSaver(SignVote plugin, int autosaveInterval) {
+    public PluginDataAutoSaver(SignVote plugin, int autosaveInterval, boolean shouldLog) {
         this.plugin = plugin;
         this.autosaveIntervalTicks = autosaveInterval;
         this.saveTaskExecutor = Executors.newFixedThreadPool(1);
+        this.shouldLog = shouldLog;
         
         this.scheduleNextAutoSaveTask();
     }

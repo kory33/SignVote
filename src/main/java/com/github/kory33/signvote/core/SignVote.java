@@ -66,7 +66,8 @@ public class SignVote extends GithubUpdateNotifyPlugin {
         
         if (this.configuration.getBoolean(ConfigNodes.IS_AUTOSAVE_ENABLED, false)) {
             int intervalTicks = this.configuration.getInt(ConfigNodes.AUTOSAVE_INTERVAL_TICKS, 2000);
-            this.autoSaver = new PluginDataAutoSaver(this, intervalTicks);
+            boolean shouldLog = this.configuration.getBoolean(ConfigNodes.AUTOSAVE_SHOULD_LOG, false);
+            this.autoSaver = new PluginDataAutoSaver(this, intervalTicks, shouldLog);
         }
         
         this.isEnabled = true;

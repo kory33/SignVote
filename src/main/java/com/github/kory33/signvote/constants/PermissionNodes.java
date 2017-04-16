@@ -4,6 +4,8 @@ public class PermissionNodes {
     private static final String BASE_NODE = "signvote";
     
     public static final String VOTE           = BASE_NODE + ".vote";
+    public static final String VOTE_MORE      = BASE_NODE + ".votemore";
+
     public static final String UNVOTE         = BASE_NODE + ".unvote";
     public static final String CREATE_SIGN    = BASE_NODE + ".createsign";
     public static final String CREATE_SESSION = BASE_NODE + ".createsession";

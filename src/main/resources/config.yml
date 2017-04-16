@@ -1,3 +1,4 @@
 autosave:
     enabled: true
     interval-ticks: 2000
+    enable-log: false
