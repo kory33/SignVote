@@ -55,8 +55,13 @@ public class PlayerVoteInterface extends PlayerChatInterface {
     protected MessageComponent constructInterfaceMessages() {
         HashMap<Integer, Integer> availableVotePoints = this.session.getAvailableVoteCounts(this.targetPlayer);
         if (availableVotePoints.isEmpty()) {
-            (new PlayerNoAvailableVotesInterface(this.targetPlayer)).send();
-            return null;
+            String message = this.messageConfig.getString(MessageConfigurationNodes.MESSAGE_PREFIX) + 
+                    this.messageConfig.getString(MessageConfigurationNodes.VOTE_UI_NONE_AVAILABLE);
+
+            MessageComponent messageComponent = new MessageComponent();
+            messageComponent.addParts(new MessageParts(message));
+            
+            return messageComponent;
         }
 
         MessageParts header = this.getConfigMessagePart(MessageConfigurationNodes.UI_HEADER);

@@ -88,7 +88,8 @@
         "button": "§3[x] §r",
         "vote": {
             "heading": "§aSelect a point to vote to §6{0}",
-            "scoreselection": "§6{0} §aPoints(§e{1} §atimes remaining)"
+            "scoreselection": "§6{0} §aPoints(§e{1} §atimes remaining)",
+            "noavailablevotes": "§eYou have casted all your votes."
         }
     }
 }

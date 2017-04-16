@@ -68,4 +68,5 @@ public class MessageConfigurationNodes {
     public static final String VOTE_UI_ROOT             = UI_ROOT + ".vote";
     public static final String VOTE_UI_HEADING          = VOTE_UI_ROOT + ".heading";
     public static final String VOTE_UI_SCORE_SELECTION  = VOTE_UI_ROOT + ".scoreselection";
+    public static final String VOTE_UI_NONE_AVAILABLE   = VOTE_UI_ROOT + ".noavailablevotes";
 }
