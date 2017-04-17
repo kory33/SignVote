@@ -37,19 +37,20 @@ public class PlayerVoteInterface extends PlayerChatInteractiveInterface {
     }
 
     private void vote(int score) {
-        String errorMessage;
+        String resultMessage;
+
         try {
             this.session.vote(this.targetPlayer, votePoint, score);
-            return;
+            resultMessage = this.messageConfig.getFormatted(MessageConfigurationNodes.VOTED);
         } catch (ScoreCountLimitReachedException exception) {
-            errorMessage = this.messageConfig.getString(MessageConfigurationNodes.REACHED_VOTE_SCORE_LIMIT);
+            resultMessage = this.messageConfig.getString(MessageConfigurationNodes.REACHED_VOTE_SCORE_LIMIT);
         } catch (VotePointAlreadyVotedException exception) {
-            errorMessage = this.messageConfig.getString(MessageConfigurationNodes.VOTEPOINT_ALREADY_VOTED);
+            resultMessage = this.messageConfig.getString(MessageConfigurationNodes.VOTEPOINT_ALREADY_VOTED);
         } catch (InvalidVoteScoreException exception) {
-            errorMessage = this.messageConfig.getString(MessageConfigurationNodes.INVALID_VOTE_SCORE);
+            resultMessage = this.messageConfig.getString(MessageConfigurationNodes.INVALID_VOTE_SCORE);
         }
 
-        this.targetPlayer.sendMessage(errorMessage);
+        this.targetPlayer.sendMessage(resultMessage);
     }
 
     private MessageParts getScoreSelectionLine(int score, int remaining) {
