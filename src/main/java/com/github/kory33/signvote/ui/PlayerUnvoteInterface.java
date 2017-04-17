@@ -10,33 +10,36 @@ import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigurationNodes;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
-import com.github.kory33.signvote.utils.tellraw.TellRawUtility;
 import com.github.ucchyocean.messaging.tellraw.MessageComponent;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
-import lombok.Setter;
-
-public class PlayerUnvoteInterface extends PlayerChatInterface {
+public class PlayerUnvoteInterface extends PlayerChatInteractiveInterface {
     private final VoteSession session;
     private final VotePoint votePoint;
-    private final JSONConfiguration messageConfig;
-    private final RunnableHashTable runnableHashTable;
 
-    @Setter private boolean isValid;
+    private final Runnable unvoteTask;
+    private final Runnable cancelTask;
 
     public PlayerUnvoteInterface(Player player, VoteSession session, VotePoint votePoint,
             JSONConfiguration messageConfig, RunnableHashTable runnableHashTable) {
-        super(player);
+        super(player, messageConfig, runnableHashTable);
 
         this.session = session;
         this.votePoint = votePoint;
-        this.messageConfig = messageConfig;
-        this.runnableHashTable = runnableHashTable;
-        this.isValid = true;
-    }
 
-    private MessageParts getConfigMessagePart(String configurationNode) {
-        return new MessageParts(this.messageConfig.getString(configurationNode));
+        String unvoteCommand = String.join(" ", "/signvote unvote", session.getName(), votePoint.getName());
+        this.unvoteTask = () -> {
+            if (this.isValidSession()) {
+                this.targetPlayer.performCommand(unvoteCommand);
+            }
+            this.setValidSession(false);
+        };
+
+        this.cancelTask = () -> {
+            this.setValidSession(false);
+            String message = this.messageConfig.getString(MessageConfigurationNodes.UI_CANCELLED);
+            this.targetPlayer.sendMessage(message);
+        };
     }
 
     private MessageParts getHeading() {
@@ -52,28 +55,6 @@ public class PlayerUnvoteInterface extends PlayerChatInterface {
         return new MessageParts(message);
     }
 
-    private MessageParts getUnvoteButton() {
-        MessageParts button = this.getConfigMessagePart(MessageConfigurationNodes.UI_BUTTON);
-        String command = String.join(" ", "/signvote unvote", this.session.getName(), this.votePoint.getName());
-        TellRawUtility.bindRunnableToMessageParts(this.runnableHashTable, button, () -> {
-            if (this.isValid) {
-                this.targetPlayer.performCommand(command);
-            }
-            this.setValid(false);
-        });
-        return button;
-    }
-
-    private MessageParts getCancelButton() {
-        MessageParts button = this.getConfigMessagePart(MessageConfigurationNodes.UI_BUTTON);
-        TellRawUtility.bindRunnableToMessageParts(this.runnableHashTable, button, () -> {
-            this.setValid(false);
-            String message = this.messageConfig.getString(MessageConfigurationNodes.UI_CANCELLED);
-            this.targetPlayer.sendMessage(message);
-        });
-        return button;
-    }
-
     @Override
     protected MessageComponent constructInterfaceMessages() {
         MessageParts header = this.getConfigMessagePart(MessageConfigurationNodes.UI_HEADER);
@@ -82,9 +63,9 @@ public class PlayerUnvoteInterface extends PlayerChatInterface {
         ArrayList<MessageParts> messageList = new ArrayList<>();
         messageList.add(header);
         messageList.add(this.getHeading());
-        messageList.add(this.getUnvoteButton());
+        messageList.add(this.getButton(unvoteTask));
         messageList.add(this.getConfigMessagePart(MessageConfigurationNodes.UNVOTE_UI_COMFIRM));
-        messageList.add(this.getCancelButton());
+        messageList.add(this.getButton(cancelTask));
         messageList.add(this.getConfigMessagePart(MessageConfigurationNodes.UI_CANCEL));
         messageList.add(footer);
 
