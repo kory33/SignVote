@@ -18,6 +18,7 @@ import com.github.kory33.signvote.command.subcommand.DeleteVPCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.HelpCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.OpenCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.ReloadCommandExecutor;
+import com.github.kory33.signvote.command.subcommand.RunCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.SaveCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.SubCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.UnvoteCommandExecutor;
@@ -31,7 +32,7 @@ public class SignVoteCommandExecutor implements CommandExecutor{
 
     public SignVoteCommandExecutor(SignVote plugin) {
         HashMap<String, SubCommandExecutor> commandMaps = new HashMap<>();
-        
+
         commandMaps.put(SubCommands.CREATE,    new CreateCommandExecutor(plugin));
         commandMaps.put(SubCommands.ADD_SCORE, new AddScoreCommandExecutor(plugin));
         commandMaps.put(SubCommands.OPEN,      new OpenCommandExecutor(plugin));
@@ -42,22 +43,25 @@ public class SignVoteCommandExecutor implements CommandExecutor{
         commandMaps.put(SubCommands.DELETE,    new DeleteCommandExecutor(plugin));
         commandMaps.put(SubCommands.RELOAD,    new ReloadCommandExecutor(plugin));
         commandMaps.put(SubCommands.SAVE,      new SaveCommandExecutor(plugin));
-        
+
         this.subCommandExecutorMap = Collections.unmodifiableMap(commandMaps);
         this.defaultCommandExecutor = new HelpCommandExecutor(plugin, this.subCommandExecutorMap);
+
+        // Internal command should not be exposed by this.subCommandExecutorMap
+        commandMaps.put(SubCommands.RUN,       new RunCommandExecutor(plugin));
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         ArrayList<String> argList = new ArrayList<>(Arrays.asList(args));
-        
+
         SubCommandExecutor executor = null;
         if (args.length == 0) {
             executor = this.defaultCommandExecutor;
         } else {
             executor = this.subCommandExecutorMap.get(argList.remove(0));
         }
-        
+
         if (executor == null) {
             executor = this.defaultCommandExecutor;
         }
