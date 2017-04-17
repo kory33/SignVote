@@ -45,6 +45,10 @@ public abstract class PlayerChatInteractiveInterface extends PlayerChatInterface
     }
 
     protected void cancelAction() {
+        if (!this.isValidSession) {
+            return;
+        }
+
         this.setValidSession(false);
         String message = this.messageConfig.getString(MessageConfigurationNodes.UI_CANCELLED);
         this.targetPlayer.sendMessage(message);

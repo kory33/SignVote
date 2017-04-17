@@ -60,7 +60,7 @@ public class PlayerVoteListner implements Listener {
         if (session.getVoteManager().hasVoted(clickPlayer, votePoint)) {
             chatInterface = new PlayerUnvoteInterface(clickPlayer, session, votePoint, messageConfig, runnableHashTable);
         } else {
-            chatInterface = new PlayerVoteInterface(clickPlayer, session, votePoint, messageConfig);
+            chatInterface = new PlayerVoteInterface(clickPlayer, session, votePoint, messageConfig, runnableHashTable);
         }
 
         chatInterface.send();

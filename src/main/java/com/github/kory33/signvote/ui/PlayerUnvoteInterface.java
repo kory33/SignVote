@@ -27,6 +27,8 @@ public class PlayerUnvoteInterface extends PlayerChatInteractiveInterface {
         } catch (VotePointNotVotedException e) {
             this.targetPlayer.sendMessage(this.messageConfig.getString(MessageConfigurationNodes.NOT_VOTED));
         }
+
+        this.setValidSession(false);
     }
 
     public PlayerUnvoteInterface(Player player, VoteSession session, VotePoint votePoint,
