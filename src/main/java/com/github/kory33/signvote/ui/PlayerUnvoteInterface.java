@@ -84,7 +84,6 @@ public class PlayerUnvoteInterface extends PlayerChatInterface {
         messageList.add(this.getHeading());
         messageList.add(this.getUnvoteButton());
         messageList.add(this.getConfigMessagePart(MessageConfigurationNodes.UNVOTE_UI_COMFIRM));
-        messageList.add(new MessageParts("\n"));
         messageList.add(this.getCancelButton());
         messageList.add(this.getConfigMessagePart(MessageConfigurationNodes.UI_CANCEL));
         messageList.add(footer);
