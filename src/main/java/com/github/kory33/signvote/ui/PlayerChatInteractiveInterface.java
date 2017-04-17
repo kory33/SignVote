@@ -43,4 +43,10 @@ public abstract class PlayerChatInteractiveInterface extends PlayerChatInterface
         TellRawUtility.bindRunnableToMessageParts(this.runnableHashTable, button, runnable);
         return button;
     }
+
+    protected void cancelAction() {
+        this.setValidSession(false);
+        String message = this.messageConfig.getString(MessageConfigurationNodes.UI_CANCELLED);
+        this.targetPlayer.sendMessage(message);
+    }
 }

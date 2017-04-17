@@ -24,7 +24,7 @@ import com.google.gson.JsonParser;
 public class VoteManager {
     private final HashMap<Player, HashMap<Integer, HashSet<String>>> voteData;
     private final VoteSession parentSession;
-    
+
     /**
      * Construct a VoteManager object from data at given file location
      * @param voteDataDirectory
@@ -38,10 +38,10 @@ public class VoteManager {
         if (!voteDataDirectory.isDirectory()) {
             throw new IOException("Directory has to be specified for save location!");
         }
-        
+
         for (File playerVoteDataFile: voteDataDirectory.listFiles()) {
             JsonObject jsonObject = (new JsonParser()).parse(Files.newBufferedReader(playerVoteDataFile.toPath())).getAsJsonObject();
-            
+
             String fileName = playerVoteDataFile.getName();
             String playerUUID = fileName.substring(0, fileName.length() - Formats.JSON_EXT.length() - 1);
 
@@ -50,12 +50,12 @@ public class VoteManager {
             if (player == null) {
                 continue;
             }
-            
+
             HashMap<Integer, HashSet<String>> votedPointsMap = new HashMap<>();
             this.voteData.put(player, new Gson().fromJson(jsonObject, votedPointsMap.getClass()));
         }
     }
-    
+
     /**
      * Get the players' vote data, as a map of Player to JsonObject
      * @return
@@ -68,7 +68,7 @@ public class VoteManager {
         }
         return map;
     }
-    
+
     /**
      * Construct an empty VoteManager object.
      */
@@ -76,7 +76,7 @@ public class VoteManager {
         this.voteData = new HashMap<>();
         this.parentSession = parentSession;
     }
-    
+
     /**
      * Get the mapping of voted score to a list of voted points' name from a given player.
      */
@@ -84,7 +84,7 @@ public class VoteManager {
         if (!this.voteData.containsKey(player)) {
             this.voteData.put(player, new HashMap<>());
         }
-        
+
         return this.voteData.get(player);
     }
 
@@ -99,18 +99,18 @@ public class VoteManager {
         if (!this.voteData.containsKey(voter)) {
             this.voteData.put(voter, new HashMap<>());
         }
-        
+
         HashMap<Integer, HashSet<String>> votedPointnames = this.voteData.get(voter);
         if (!votedPointnames.containsKey(voteScore)) {
             votedPointnames.put(voteScore, new HashSet<>());
         }
-        
+
         String votePointName = votePoint.getName();
-        
+
         if (this.getVotedScore(voter, votePointName).isPresent()) {
             throw new IllegalArgumentException(votePointName + " is already voted by the player!");
         }
-        
+
         votedPointnames.get(voteScore).add(votePoint.getName());
     }
 
@@ -123,7 +123,7 @@ public class VoteManager {
                 return;
             }
         }
-        
+
         throw new VotePointNotVotedException(player, votePoint, this.parentSession);
     }
 
@@ -141,9 +141,8 @@ public class VoteManager {
                 .map(entry -> entry.getKey())
                 .findFirst();
     }
-    
+
     public boolean hasVoted(Player player, VotePoint votePoint) {
         return this.getVotedScore(player, votePoint.getName()).isPresent();
     }
 }
-    

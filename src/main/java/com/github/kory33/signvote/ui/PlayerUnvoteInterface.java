@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigurationNodes;
+import com.github.kory33.signvote.exception.VotePointNotVotedException;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.ucchyocean.messaging.tellraw.MessageComponent;
@@ -17,8 +18,16 @@ public class PlayerUnvoteInterface extends PlayerChatInteractiveInterface {
     private final VoteSession session;
     private final VotePoint votePoint;
 
-    private final Runnable unvoteTask;
-    private final Runnable cancelTask;
+    private void unVote() {
+        if (!this.isValidSession()) {
+            return;
+        }
+        try {
+            this.session.getVoteManager().removeVote(this.targetPlayer, votePoint);
+        } catch (VotePointNotVotedException e) {
+            this.targetPlayer.sendMessage(this.messageConfig.getString(MessageConfigurationNodes.NOT_VOTED));
+        }
+    }
 
     public PlayerUnvoteInterface(Player player, VoteSession session, VotePoint votePoint,
             JSONConfiguration messageConfig, RunnableHashTable runnableHashTable) {
@@ -26,20 +35,6 @@ public class PlayerUnvoteInterface extends PlayerChatInteractiveInterface {
 
         this.session = session;
         this.votePoint = votePoint;
-
-        String unvoteCommand = String.join(" ", "/signvote unvote", session.getName(), votePoint.getName());
-        this.unvoteTask = () -> {
-            if (this.isValidSession()) {
-                this.targetPlayer.performCommand(unvoteCommand);
-            }
-            this.setValidSession(false);
-        };
-
-        this.cancelTask = () -> {
-            this.setValidSession(false);
-            String message = this.messageConfig.getString(MessageConfigurationNodes.UI_CANCELLED);
-            this.targetPlayer.sendMessage(message);
-        };
     }
 
     private MessageParts getHeading() {
@@ -63,9 +58,9 @@ public class PlayerUnvoteInterface extends PlayerChatInteractiveInterface {
         ArrayList<MessageParts> messageList = new ArrayList<>();
         messageList.add(header);
         messageList.add(this.getHeading());
-        messageList.add(this.getButton(unvoteTask));
+        messageList.add(this.getButton(this::unVote));
         messageList.add(this.getConfigMessagePart(MessageConfigurationNodes.UNVOTE_UI_COMFIRM));
-        messageList.add(this.getButton(cancelTask));
+        messageList.add(this.getButton(this::cancelAction));
         messageList.add(this.getConfigMessagePart(MessageConfigurationNodes.UI_CANCEL));
         messageList.add(footer);
 

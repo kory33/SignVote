@@ -22,6 +22,7 @@ import com.github.kory33.signvote.constants.VoteSessionDataFileKeys;
 import com.github.kory33.signvote.exception.InvalidVoteScoreException;
 import com.github.kory33.signvote.exception.ScoreCountLimitReachedException;
 import com.github.kory33.signvote.exception.VotePointAlreadyVotedException;
+import com.github.kory33.signvote.exception.VotePointNotVotedException;
 import com.github.kory33.signvote.manager.VoteManager;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.utils.FileUtils;
@@ -37,19 +38,19 @@ public class VoteSession {
     @Getter final private VoteScoreLimits voteScoreCountLimits;
     @Getter final private String name;
     @Getter private final VoteManager voteManager;
-    
+
     @Setter @Getter private boolean isOpen;
-    
+
     /**
      * Constructs the vote session from the given session folder
      * @param sessionFolder
      * @throws IllegalArgumentException when the session folder is invalid
-     * @throws IOException 
+     * @throws IOException
      */
     public VoteSession(File sessionSaveLocation) throws IllegalArgumentException, IOException {
         this.signMap = new BijectiveHashMap<>();
         this.votePointNameMap = new BijectiveHashMap<>();
-        
+
         // load all the saved votepoints
         File votePointDirectory = new File(sessionSaveLocation, FilePaths.VOTE_POINTS_DIR);
         for (File votePointFile: votePointDirectory.listFiles()) {
@@ -57,7 +58,7 @@ public class VoteSession {
         }
 
         this.voteManager = new VoteManager(new File(sessionSaveLocation, FilePaths.VOTE_DATA_DIR), this);
-        
+
         // read information of this vote session
         File sessionDataFile = new File(sessionSaveLocation, FilePaths.SESSION_DATA_FILENAME);
 
@@ -69,7 +70,7 @@ public class VoteSession {
 
         this.setOpen(sessionConfigJson.get(VoteSessionDataFileKeys.IS_OPEN).getAsBoolean());
     }
-    
+
     /**
      * Constructs the vote session from its parameters.
      * @param sessionName
@@ -79,10 +80,10 @@ public class VoteSession {
 
         this.voteScoreCountLimits = new VoteScoreLimits();
         this.voteManager = new VoteManager(this);
-        
+
         this.signMap = new BijectiveHashMap<>();
         this.votePointNameMap = new BijectiveHashMap<>();
-        
+
         this.setOpen(true);
     }
 
@@ -100,28 +101,28 @@ public class VoteSession {
     }
 
     /**
-     * 
+     *
      * @param votePoint
      */
     public void addVotePoint(VotePoint votePoint) {
         this.signMap.put(votePoint.getVoteSign(), votePoint);
         this.votePointNameMap.put(votePoint.getName(), votePoint);
     }
-    
+
     /**
      * Get Json object containing information directly related to this object
      * @return
      */
     private JsonObject toJson() {
         JsonObject jsonObject = new JsonObject();
-        
+
         jsonObject.addProperty(VoteSessionDataFileKeys.NAME, this.name);
         jsonObject.add(VoteSessionDataFileKeys.VOTE_SCORE_LIMITS, this.voteScoreCountLimits.toJson());
         jsonObject.addProperty(VoteSessionDataFileKeys.IS_OPEN, this.isOpen);
-        
+
         return jsonObject;
     }
-    
+
     /**
      * Save the session data to the given directory.
      * @param sessionSaveLocation
@@ -133,7 +134,7 @@ public class VoteSession {
         } else if (!sessionSaveLocation.isDirectory()) {
             throw new IOException("Votesession was about to be saved into a file! (" + sessionSaveLocation.getAbsolutePath() + ")");
         }
-        
+
         File votePointDirectory = new File(sessionSaveLocation, FilePaths.VOTE_POINTS_DIR);
         if (!votePointDirectory.exists()) {
             votePointDirectory.mkdirs();
@@ -185,11 +186,11 @@ public class VoteSession {
     public VotePoint getVotePoint(Sign sign) {
         return this.signMap.get(sign);
     }
-    
+
     public VotePoint getVotePoint(String pointName) {
         return this.votePointNameMap.get(pointName);
     }
-    
+
     /**
      * Get a score -> count map of available votes for a given player
      * @param player
@@ -197,28 +198,28 @@ public class VoteSession {
      */
     public HashMap<Integer, Integer> getAvailableVoteCounts(Player player) {
         HashMap<Integer, Integer> availableCounts = this.getReservedVoteCounts(player);
-        
+
         HashMap<Integer, HashSet<String>> votedScores = this.voteManager.getVotedPointsMap(player);
         for (int score: votedScores.keySet()) {
             int votedNum = votedScores.get(score).size();
-            
+
             if (!availableCounts.containsKey(score)) {
                 continue;
             }
-            
+
             int reservedVotes = availableCounts.remove(score);
             int remainingVotes = reservedVotes - votedNum;
-            
+
             if (remainingVotes <= 0) {
                 continue;
             }
-            
+
             availableCounts.put(score, remainingVotes);
         }
-        
+
         return availableCounts;
     }
-    
+
     /**
      * Get a score -> count map of reserved votes for a given player
      * @param player
@@ -226,11 +227,11 @@ public class VoteSession {
      */
     public HashMap<Integer, Integer> getReservedVoteCounts(Player player) {
         HashMap<Integer, Integer> reservedCounts = new HashMap<>();
-        
+
         for (int score: this.voteScoreCountLimits.getVotableScores()) {
             reservedCounts.put(score, this.voteScoreCountLimits.getLimit(score, player));
         }
-        
+
         return reservedCounts;
     }
 
@@ -250,16 +251,26 @@ public class VoteSession {
         if (this.voteScoreCountLimits.getLimit(voteScore, player) <= 0) {
             throw new InvalidVoteScoreException(votePoint, player, voteScore);
         }
-        
+
         if (!this.getReservedVoteCounts(player).containsKey(voteScore)) {
             throw new ScoreCountLimitReachedException(player, votePoint, voteScore);
         }
-        
+
         if (!this.getAvailableVoteCounts(player).containsKey(voteScore)) {
             throw new ScoreCountLimitReachedException(player, votePoint, voteScore);
         }
-        
+
         this.voteManager.addVotePointName(player, voteScore, votePoint);
+    }
+
+    /**
+     * Cancel a vote to the specified votepoint made by a given player.
+     * @param player
+     * @param votePoint
+     * @throws VotePointNotVotedException When the player hasn't voted the votepoint.
+     */
+    public void unvote(Player player, VotePoint votePoint) throws VotePointNotVotedException {
+        this.voteManager.removeVote(player, votePoint);
     }
 
     /**
@@ -269,12 +280,12 @@ public class VoteSession {
     public void deleteVotepoint(VotePoint votePoint) {
         this.votePointNameMap.removeValue(votePoint);
         Sign sign = this.signMap.removeValue(votePoint);
-        
+
         sign.setLine(0, SignTexts.REGISTERED_SIGN_TEXT);
         sign.setLine(1, SignTexts.DELETED);
         sign.setLine(2, "");
         sign.update();
-        
+
         return;
     }
 }

@@ -34,7 +34,6 @@ public class MessageConfigurationNodes {
 
     public static final String VOTE_COMMAND_HELP        = COMMAND_ROOT + ".vote.help";
     public static final String VOTED                    = COMMAND_ROOT + ".vote.voteaccepted";
-    public static final String F_NOT_VOTED              = COMMAND_ROOT + ".vote.notvoted";
 
     public static final String INVALID_VOTE_SCORE       = COMMAND_ROOT + ".vote.error.invalidscore";
     public static final String REACHED_VOTE_SCORE_LIMIT = COMMAND_ROOT + ".vote.error.reachedlimit";
@@ -42,6 +41,7 @@ public class MessageConfigurationNodes {
 
     public static final String UNVOTE_COMMAND_HELP      = COMMAND_ROOT + ".unvote.help";
     public static final String F_UNVOTED                = COMMAND_ROOT + ".unvote.unvoted";
+    public static final String NOT_VOTED                = COMMAND_ROOT + ".unvote.error.notvoted";
 
     public static final String RELOAD_COMPLETE          = COMMAND_ROOT + ".reload.complete";
 
