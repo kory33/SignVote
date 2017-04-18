@@ -37,6 +37,10 @@ public class PlayerVoteInterface extends PlayerChatInteractiveInterface {
     }
 
     private void vote(int score) {
+        if (!this.isValidSession()) {
+            return;
+        }
+
         String resultMessage;
 
         try {

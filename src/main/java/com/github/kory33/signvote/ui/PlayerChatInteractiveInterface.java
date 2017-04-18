@@ -18,6 +18,7 @@ public abstract class PlayerChatInteractiveInterface extends PlayerChatInterface
         super(player);
         this.messageConfig = messageConfiguration;
         this.runnableHashTable = runnableHashTable;
+        this.isValidSession = true;
     }
 
     protected boolean isValidSession() {
