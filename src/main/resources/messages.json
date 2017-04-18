@@ -86,6 +86,8 @@
         "header": "§6----------[SignVote]----------\n§r",
         "footer": "§6----------------------------",
         "button": "§3[x] §r",
+        "cancel": "§eCANCEL\n",
+        "cancelled": "§eOperation cancelled.",
         "vote": {
             "heading": "§aSelect a point to vote to §6{0}",
             "scoreselection": "§6{0} §aPoints(§e{1} §atimes remaining)",

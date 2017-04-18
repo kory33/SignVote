@@ -9,6 +9,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.core.SignVote;
 import com.github.kory33.signvote.manager.VoteSessionManager;
@@ -21,20 +22,22 @@ import com.github.kory33.signvote.ui.PlayerVoteInterface;
 public class PlayerVoteListner implements Listener {
     private final VoteSessionManager voteSessionManager;
     private final JSONConfiguration messageConfig;
+    private final RunnableHashTable runnableHashTable;
 
     public PlayerVoteListner(SignVote plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         this.voteSessionManager = plugin.getVoteSessionManager();
         this.messageConfig = plugin.getMessagesConfiguration();
+        this.runnableHashTable = plugin.getRunnableHashTable();
     }
-    
+
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
     public void onPlayerInteractWithVotePoint(PlayerInteractEvent event) {
         Block clickedBlock = event.getClickedBlock();
         if (clickedBlock == null) {
             return;
         }
-        
+
         BlockState state = clickedBlock.getState();
         if (!(state instanceof Sign)) {
             return;
@@ -45,21 +48,21 @@ public class PlayerVoteListner implements Listener {
         if (session == null) {
             return;
         }
-        
+
         VotePoint votePoint = session.getVotePoint(sign);
         if (votePoint == null) {
             return;
         }
-        
+
         Player clickPlayer = event.getPlayer();
-        
+
         PlayerChatInterface chatInterface;
         if (session.getVoteManager().hasVoted(clickPlayer, votePoint)) {
-            chatInterface = new PlayerUnvoteInterface(clickPlayer, session, votePoint, messageConfig);
+            chatInterface = new PlayerUnvoteInterface(clickPlayer, session, votePoint, messageConfig, runnableHashTable);
         } else {
-            chatInterface = new PlayerVoteInterface(clickPlayer, session, votePoint, messageConfig);
+            chatInterface = new PlayerVoteInterface(clickPlayer, session, votePoint, messageConfig, runnableHashTable);
         }
-        
+
         chatInterface.send();
         event.setCancelled(true);
         return;

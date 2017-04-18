@@ -20,14 +20,14 @@ public class VoteScoreLimits {
         this.limitMap = new HashMap<>();
         this.limitMap = (new Gson()).fromJson(jsonObject, this.limitMap.getClass());
     }
-    
+
     /**
      * Construct an empty VoteScoreLimits object.
      */
     public VoteScoreLimits() {
         this.limitMap = new HashMap<>();
     }
-    
+
     /**
      * Get the Json representation of this object
      * @return
@@ -35,12 +35,12 @@ public class VoteScoreLimits {
     public JsonObject toJson() {
         return new Gson().toJsonTree(this.limitMap).getAsJsonObject();
     }
-    
+
     public void addLimit(int score, String permission, int limit) {
         if (!this.limitMap.containsKey(score)) {
             this.limitMap.put(score, new HashMap<String, Integer>());
         }
-        
+
         HashMap<String, Integer> permissiveLimits = this.limitMap.get(score);
         if(permissiveLimits.containsKey(permission)) {
             throw new IllegalArgumentException(
@@ -48,38 +48,38 @@ public class VoteScoreLimits {
                     ") and permission(" + permission + ") is already set!"
             );
         }
-        
+
         permissiveLimits.put(permission, limit);
     }
-    
+
     public void removeLimit(int score, String permission) {
         if (!this.limitMap.containsKey(score)) {
             return;
         }
-        
+
         HashMap<String, Integer> permissiveLimits = this.limitMap.get(score);
         permissiveLimits.remove(permission);
     }
-    
+
     public int getLimit(int score, Player player) {
         if (!this.limitMap.containsKey(score)) {
             return 0;
         }
-        
+
         HashMap<String, Integer> permissiveLimits = this.limitMap.get(score);
         int maxLimit = 0;
         for (String permission: permissiveLimits.keySet()) {
             if (!player.hasPermission(permission)) {
                 continue;
             }
-            
+
             int limit = permissiveLimits.get(permission);
             maxLimit = Math.max(maxLimit, limit);
         }
-        
+
         return maxLimit;
     }
-    
+
     /**
      * Get all the possible votable scores given that the voter has full permissions
      * @return
