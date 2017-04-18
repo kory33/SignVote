@@ -23,7 +23,7 @@ public class FileUtils {
                     Files.delete(file);
                     return FileVisitResult.CONTINUE;
                 }
-            
+
                 @Override
                 public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
                     if (exc != null) {
@@ -37,7 +37,7 @@ public class FileUtils {
             System.out.println("Error occured while browsing files under " + targetDirectory.toString() + ": " + e.toString());
         }
     }
-    
+
     public static void writeJSON(final File targetFile, JsonObject jsonObject) {
         try {
             if (!targetFile.exists()) {
@@ -47,15 +47,15 @@ public class FileUtils {
                 }
                 targetFile.createNewFile();
             }
-            
+
             byte[] writeData = jsonObject.toString().getBytes(Formats.FILE_ENCODING);
-            Files.newOutputStream(targetFile.toPath(), StandardOpenOption.CREATE).write(writeData);
+            Files.newOutputStream(targetFile.toPath()).write(writeData);
         } catch (IOException exception) {
             System.out.println("Failed to write to file " + targetFile.getAbsolutePath());
             exception.printStackTrace();
         }
     }
-    
+
     public static Stream<File> getFileListStream(File directory) {
         return Arrays.stream(directory.listFiles());
     }

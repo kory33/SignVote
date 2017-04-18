@@ -15,10 +15,22 @@ public class VoteScoreLimits {
      * Construct a VoteScoreLimits from an json data
      * @param jsonObject
      */
-    @SuppressWarnings("unchecked")
     public VoteScoreLimits(JsonObject jsonObject) {
-        this.limitMap = new HashMap<>();
-        this.limitMap = (new Gson()).fromJson(jsonObject, this.limitMap.getClass());
+        HashMap<Integer, HashMap<String, Integer>> limitMap = new HashMap<>();
+        jsonObject.entrySet().stream().forEach(entry -> {
+            try {
+                int limit = Integer.parseInt(entry.getKey());
+                HashMap<String, Integer> permLimits = new HashMap<>();
+                entry.getValue().getAsJsonObject()
+                    .entrySet()
+                    .stream()
+                    .forEach(permLimit -> permLimits.put(permLimit.getKey(), permLimit.getValue().getAsInt()));
+                limitMap.put(limit, permLimits);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        this.limitMap = limitMap;
     }
 
     /**
