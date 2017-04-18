@@ -93,6 +93,9 @@ public class PlayerVoteInterface extends PlayerChatInteractiveInterface {
                 messageList.add(this.getScoreSelectionLine(score, availableVotePoints.get(score)));
             });
 
+        messageList.add(this.getButton(this::cancelAction));
+        messageList.add(this.getConfigMessagePart(MessageConfigurationNodes.UI_CANCEL));
+
         messageList.add(footer);
         return new MessageComponent(messageList);
     }
