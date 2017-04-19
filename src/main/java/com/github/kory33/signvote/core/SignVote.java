@@ -16,6 +16,7 @@ import com.github.kory33.signvote.io.PluginDataAutoSaver;
 import com.github.kory33.signvote.listners.PlayerVoteListner;
 import com.github.kory33.signvote.listners.SignListner;
 import com.github.kory33.signvote.manager.VoteSessionManager;
+import com.github.kory33.signvote.utils.LogUtils;
 import com.github.kory33.updatenotificationplugin.bukkit.github.GithubUpdateNotifyPlugin;
 
 import lombok.Getter;
@@ -61,6 +62,9 @@ public class SignVote extends GithubUpdateNotifyPlugin {
         if (this.runnableHashTable == null) {
             this.runnableHashTable = new RunnableHashTable(this);
         }
+
+        // add filter for /signvote run command
+        LogUtils.addRunCommandFilter();
 
         this.voteSessionManager = new VoteSessionManager(this.getLogger(), sessionsDir);
 
