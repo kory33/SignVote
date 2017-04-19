@@ -44,12 +44,13 @@ public class SignVoteCommandExecutor implements CommandExecutor{
         commandMaps.put(SubCommands.RELOAD,    new ReloadCommandExecutor(plugin));
         commandMaps.put(SubCommands.SAVE,      new SaveCommandExecutor(plugin));
 
-        this.subCommandExecutorMap = Collections.unmodifiableMap(commandMaps);
-        this.defaultCommandExecutor = new HelpCommandExecutor(plugin, this.subCommandExecutorMap);
+        this.defaultCommandExecutor = new HelpCommandExecutor(plugin, new HashMap<>(commandMaps));
 
-        // Internal command should not be exposed by this.subCommandExecutorMap
+        // Internal command should not be exposed to help command
         commandMaps.put(SubCommands.RUN,       new RunCommandExecutor(plugin));
-    }
+
+        this.subCommandExecutorMap = Collections.unmodifiableMap(commandMaps);
+}
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
