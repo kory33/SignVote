@@ -56,7 +56,7 @@ public class PlayerVoteInterface extends PlayerInteractiveChatInterface {
 
         this.targetPlayer.sendMessage(resultMessage);
 
-        this.setValidSession(false);
+        this.revokeSession();
     }
 
     private MessageParts getScoreSelectionLine(int score, int remaining) {

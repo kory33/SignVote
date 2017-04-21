@@ -30,7 +30,7 @@ public class PlayerUnvoteInterface extends PlayerInteractiveChatInterface {
             this.targetPlayer.sendMessage(this.messageConfig.getString(MessageConfigurationNodes.NOT_VOTED));
         }
 
-        this.setValidSession(false);
+        this.revokeSession();
     }
 
     public PlayerUnvoteInterface(Player player, VoteSession session, VotePoint votePoint,
