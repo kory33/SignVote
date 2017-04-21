@@ -9,12 +9,12 @@ import com.github.kory33.signvote.utils.tellraw.TellRawUtility;
 import com.github.ucchyocean.messaging.tellraw.ClickEventType;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
-public abstract class PlayerChatInteractiveInterface extends PlayerChatInterface {
+public abstract class PlayerInteractiveChatInterface extends PlayerChatInterface {
     protected final JSONConfiguration messageConfig;
     protected final RunnableHashTable runnableHashTable;
     private boolean isValidSession;
 
-    public PlayerChatInteractiveInterface(Player player, JSONConfiguration messageConfiguration, RunnableHashTable runnableHashTable) {
+    public PlayerInteractiveChatInterface(Player player, JSONConfiguration messageConfiguration, RunnableHashTable runnableHashTable) {
         super(player);
         this.messageConfig = messageConfiguration;
         this.runnableHashTable = runnableHashTable;

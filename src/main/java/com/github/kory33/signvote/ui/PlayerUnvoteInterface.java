@@ -14,7 +14,7 @@ import com.github.kory33.signvote.session.VoteSession;
 import com.github.ucchyocean.messaging.tellraw.MessageComponent;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
-public class PlayerUnvoteInterface extends PlayerChatInteractiveInterface {
+public class PlayerUnvoteInterface extends PlayerInteractiveChatInterface {
     private final VoteSession session;
     private final VotePoint votePoint;
 
