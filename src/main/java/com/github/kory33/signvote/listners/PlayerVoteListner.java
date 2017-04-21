@@ -12,10 +12,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.core.SignVote;
+import com.github.kory33.signvote.manager.PlayerInteractiveInterfaceManager;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
-import com.github.kory33.signvote.ui.PlayerChatInterface;
+import com.github.kory33.signvote.ui.PlayerInteractiveChatInterface;
 import com.github.kory33.signvote.ui.PlayerUnvoteInterface;
 import com.github.kory33.signvote.ui.PlayerVoteInterface;
 
@@ -23,12 +24,14 @@ public class PlayerVoteListner implements Listener {
     private final VoteSessionManager voteSessionManager;
     private final JSONConfiguration messageConfig;
     private final RunnableHashTable runnableHashTable;
+    private final PlayerInteractiveInterfaceManager interfaceManager;
 
     public PlayerVoteListner(SignVote plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         this.voteSessionManager = plugin.getVoteSessionManager();
         this.messageConfig = plugin.getMessagesConfiguration();
         this.runnableHashTable = plugin.getRunnableHashTable();
+        this.interfaceManager = plugin.getInterfaceManager();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
@@ -56,14 +59,17 @@ public class PlayerVoteListner implements Listener {
 
         Player clickPlayer = event.getPlayer();
 
-        PlayerChatInterface chatInterface;
+        PlayerInteractiveChatInterface chatInterface;
         if (session.getVoteManager().hasVoted(clickPlayer, votePoint)) {
             chatInterface = new PlayerUnvoteInterface(clickPlayer, session, votePoint, messageConfig, runnableHashTable);
         } else {
             chatInterface = new PlayerVoteInterface(clickPlayer, session, votePoint, messageConfig, runnableHashTable);
         }
 
+        this.interfaceManager.registerInterface(chatInterface);
+
         chatInterface.send();
+
         event.setCancelled(true);
         return;
     }

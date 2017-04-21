@@ -19,6 +19,7 @@ import com.github.kory33.signvote.io.PluginDataAutoSaver;
 import com.github.kory33.signvote.io.RunCommandFilter;
 import com.github.kory33.signvote.listners.PlayerVoteListner;
 import com.github.kory33.signvote.listners.SignListner;
+import com.github.kory33.signvote.manager.PlayerInteractiveInterfaceManager;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.updatenotificationplugin.bukkit.github.GithubUpdateNotifyPlugin;
 
@@ -29,6 +30,7 @@ public class SignVote extends GithubUpdateNotifyPlugin {
     @Getter private JSONConfiguration messagesConfiguration;
     @Getter private FileConfiguration configuration;
     @Getter private RunnableHashTable runnableHashTable;
+    @Getter private PlayerInteractiveInterfaceManager interfaceManager;
 
     private static Filter runnableCommandFilter = null;
 
@@ -69,6 +71,11 @@ public class SignVote extends GithubUpdateNotifyPlugin {
         // setup runnable hash table
         if (this.runnableHashTable == null) {
             this.runnableHashTable = new RunnableHashTable(this);
+        }
+
+        // setup player interface manager
+        if (this.interfaceManager == null) {
+            this.interfaceManager = new PlayerInteractiveInterfaceManager();
         }
 
         // add filter for runnable command

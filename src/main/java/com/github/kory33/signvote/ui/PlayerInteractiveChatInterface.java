@@ -31,7 +31,12 @@ public abstract class PlayerInteractiveChatInterface extends PlayerChatInterface
         return this.isValidSession;
     }
 
-    protected void revokeSession() {
+    /**
+     * Nullify the session.
+     * Clear all associated runnables from cache table
+     * and mark the session as invalid.
+     */
+    public void revokeSession() {
         this.isValidSession = false;
         // remove all the bound runnables
         for (long runnableId: this.registeredRunnableIds) {
