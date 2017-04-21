@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Filter;
+import org.apache.logging.log4j.core.Logger;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 
@@ -13,10 +16,10 @@ import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.ConfigNodes;
 import com.github.kory33.signvote.constants.FilePaths;
 import com.github.kory33.signvote.io.PluginDataAutoSaver;
+import com.github.kory33.signvote.io.RunCommandFilter;
 import com.github.kory33.signvote.listners.PlayerVoteListner;
 import com.github.kory33.signvote.listners.SignListner;
 import com.github.kory33.signvote.manager.VoteSessionManager;
-import com.github.kory33.signvote.utils.LogUtils;
 import com.github.kory33.updatenotificationplugin.bukkit.github.GithubUpdateNotifyPlugin;
 
 import lombok.Getter;
@@ -26,6 +29,8 @@ public class SignVote extends GithubUpdateNotifyPlugin {
     @Getter private JSONConfiguration messagesConfiguration;
     @Getter private FileConfiguration configuration;
     @Getter private RunnableHashTable runnableHashTable;
+
+    private static Filter runnableCommandFilter = null;
 
     private boolean isEnabled = false;
     private SignVoteCommandExecutor commandExecutor;
@@ -47,6 +52,7 @@ public class SignVote extends GithubUpdateNotifyPlugin {
     public void onEnable() {
         super.onEnable();
 
+        // load config, abort if failed
         try {
             loadConfigurations();
         } catch(Exception exception) {
@@ -54,26 +60,36 @@ public class SignVote extends GithubUpdateNotifyPlugin {
             return;
         }
 
+        // setup session directory
         File sessionsDir = new File(this.getDataFolder(), FilePaths.SESSION_DIR);
         if (!sessionsDir.exists()) {
             sessionsDir.mkdirs();
         }
 
+        // setup runnable hash table
         if (this.runnableHashTable == null) {
             this.runnableHashTable = new RunnableHashTable(this);
         }
 
-        // add filter for /signvote run command
-        LogUtils.addRunCommandFilter();
+        // add filter for runnable command
+        if (runnableCommandFilter == null) {
+            Filter runCommandFilter = new RunCommandFilter();
+            runnableCommandFilter = runCommandFilter;
+            ((Logger) LogManager.getRootLogger()).addFilter(runCommandFilter);
+        }
 
+        // setup session manager
         this.voteSessionManager = new VoteSessionManager(this.getLogger(), sessionsDir);
 
+        // register listners
         new SignListner(this);
         new PlayerVoteListner(this);
 
+        // register command
         this.commandExecutor = new SignVoteCommandExecutor(this);
         this.getCommand("signvote").setExecutor(this.commandExecutor);
 
+        // setup automatic saving routine
         if (this.configuration.getBoolean(ConfigNodes.IS_AUTOSAVE_ENABLED, false)) {
             int intervalTicks = this.configuration.getInt(ConfigNodes.AUTOSAVE_INTERVAL_TICKS, 2000);
             boolean shouldLog = this.configuration.getBoolean(ConfigNodes.AUTOSAVE_SHOULD_LOG, false);
