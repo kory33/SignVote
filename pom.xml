@@ -24,6 +24,10 @@
             <id>ucchy-github</id>
             <url>https://raw.github.com/ucchyocean/mvn-repo/master</url>
         </repository>
+        <repository>
+            <id>Plugin Metrics</id>
+            <url>http://repo.mcstats.org/content/repositories/public</url>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -53,6 +57,12 @@
             <groupId>com.github.ucchyocean</groupId>
             <artifactId>MessagingUtility</artifactId>
             <version>0.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mcstats.bukkit</groupId>
+            <artifactId>metrics</artifactId>
+            <version>R8-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
     <build>
@@ -110,6 +120,7 @@
                                 <includes>
                                     <include>com.github.Kory33:UpdateNotificationPlugin</include>
                                     <include>com.github.ucchyocean:MessagingUtility</include>
+                                    <include>org.mcstats.*:*</include>
                                 </includes>
                             </artifactSet>
                         </configuration>
