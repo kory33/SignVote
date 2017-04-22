@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
@@ -34,6 +36,8 @@ import lombok.Setter;
 public class VoteSession {
     private final BijectiveHashMap<Sign, VotePoint> signMap;
     private final BijectiveHashMap<String, VotePoint> votePointNameMap;
+
+    private final static Pattern SESSNAME_FROM_FILENAME = Pattern.compile("^(.*)"+ Formats.JSON_EXT +"$");
 
     @Getter final private VoteScoreLimits voteScoreCountLimits;
     @Getter final private String name;
@@ -124,6 +128,25 @@ public class VoteSession {
     }
 
     /**
+     * purge non-registered votepoint files under a given directory.
+     * @param votePointDirectory
+     */
+    private void purgeInvalidVpFiles(File votePointDirectory) {
+        Stream<File> nonExistentVpFiles = FileUtils.getFileListStream(votePointDirectory).filter(file -> {
+                Matcher matcher = SESSNAME_FROM_FILENAME.matcher(file.getName());
+                if (!matcher.find()) {
+                    return true;
+                }
+                return !this.votePointNameMap.containsKey(matcher.group(1));
+            });
+
+        CompletableFuture.runAsync(() -> nonExistentVpFiles.forEach(file -> {
+            System.out.println("Deleting " + file.getName());
+            file.delete();
+        }));
+    }
+
+    /**
      * Save the session data to the given directory.
      * @param sessionSaveLocation
      * @throws IOException when the given location is not a directory.
@@ -135,21 +158,12 @@ public class VoteSession {
             throw new IOException("Votesession was about to be saved into a file! (" + sessionSaveLocation.getAbsolutePath() + ")");
         }
 
+        // initialize votepoint dir
         File votePointDirectory = new File(sessionSaveLocation, FilePaths.VOTE_POINTS_DIR);
         if (!votePointDirectory.exists()) {
             votePointDirectory.mkdirs();
         }
-        // purge non-registered votepoint files under the votepoint directory
-        Stream<File> nonExistentVpFiles = FileUtils.getFileListStream(votePointDirectory).filter(file -> {
-                String fileName = file.getName();
-                int extSubstringLength = Formats.JSON_EXT.length() + 1;
-                if (fileName.length() < extSubstringLength) {
-                    return true;
-                }
-                String sessName = fileName.substring(0, fileName.length() - extSubstringLength);
-                return !this.votePointNameMap.containsKey(sessName);
-            });
-        CompletableFuture.runAsync(() -> nonExistentVpFiles.forEach(File::delete));
+        this.purgeInvalidVpFiles(votePointDirectory);
 
         // save votepoints
         signMap.getInverse().keySet().stream().parallel()
