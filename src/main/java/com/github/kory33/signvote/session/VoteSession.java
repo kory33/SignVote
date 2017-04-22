@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
@@ -19,6 +18,7 @@ import com.github.kory33.signvote.collection.VoteScoreLimits;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.FilePaths;
 import com.github.kory33.signvote.constants.Formats;
+import com.github.kory33.signvote.constants.Patterns;
 import com.github.kory33.signvote.constants.SignTexts;
 import com.github.kory33.signvote.constants.VoteSessionDataFileKeys;
 import com.github.kory33.signvote.exception.InvalidVoteScoreException;
@@ -36,8 +36,6 @@ import lombok.Setter;
 public class VoteSession {
     private final BijectiveHashMap<Sign, VotePoint> signMap;
     private final BijectiveHashMap<String, VotePoint> votePointNameMap;
-
-    private final static Pattern SESSNAME_FROM_FILENAME = Pattern.compile("^(.*)"+ Formats.JSON_EXT +"$");
 
     @Getter final private VoteScoreLimits voteScoreCountLimits;
     @Getter final private String name;
@@ -133,7 +131,7 @@ public class VoteSession {
      */
     private void purgeInvalidVpFiles(File votePointDirectory) {
         Stream<File> nonExistentVpFiles = FileUtils.getFileListStream(votePointDirectory).filter(file -> {
-                Matcher matcher = SESSNAME_FROM_FILENAME.matcher(file.getName());
+                Matcher matcher = Patterns.JSON_FILE_NAME.matcher(file.getName());
                 if (!matcher.find()) {
                     return true;
                 }

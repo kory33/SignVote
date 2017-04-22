@@ -7,13 +7,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
 import java.util.Optional;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import com.github.kory33.signvote.constants.Formats;
+import com.github.kory33.signvote.constants.Patterns;
 import com.github.kory33.signvote.exception.VotePointNotVotedException;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
@@ -42,12 +43,16 @@ public class VoteManager {
         for (File playerVoteDataFile: voteDataDirectory.listFiles()) {
             JsonObject jsonObject = (new JsonParser()).parse(Files.newBufferedReader(playerVoteDataFile.toPath())).getAsJsonObject();
 
-            String fileName = playerVoteDataFile.getName();
-            String playerUUID = fileName.substring(0, fileName.length() - Formats.JSON_EXT.length() - 1);
+            Matcher playerUUIDMatcher = Patterns.JSON_FILE_NAME.matcher(playerVoteDataFile.getName());
+            if (!playerUUIDMatcher.find()) {
+                continue;
+            }
 
+            String playerUUID = playerUUIDMatcher.group(1);
             Player player = Bukkit.getPlayer(UUID.fromString(playerUUID));
 
             if (player == null) {
+                System.out.println("ignoring" + playerVoteDataFile.getName());
                 continue;
             }
 
