@@ -2,6 +2,7 @@ package com.github.kory33.signvote.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -38,17 +39,16 @@ public class FileUtils {
     }
 
     public static void writeJSON(final File targetFile, JsonObject jsonObject) {
-        try {
-            if (!targetFile.exists()) {
-                File parent = targetFile.getParentFile();
-                if (!parent.exists()) {
-                    parent.mkdirs();
-                }
-                targetFile.createNewFile();
+        if (!targetFile.exists()) {
+            File parent = targetFile.getParentFile();
+            if (!parent.exists()) {
+                parent.mkdirs();
             }
+        }
 
+        try(OutputStream oStream = Files.newOutputStream(targetFile.toPath())) {
             byte[] writeData = jsonObject.toString().getBytes(Formats.FILE_ENCODING);
-            Files.newOutputStream(targetFile.toPath()).write(writeData);
+            oStream.write(writeData);
         } catch (IOException exception) {
             System.out.println("Failed to write to file " + targetFile.getAbsolutePath());
             exception.printStackTrace();
