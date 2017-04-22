@@ -77,7 +77,7 @@
                 "nosession": "§cThe provided session does not exist",
                 "novotepoint": "§cThe provided votepoint does not exist",
                 "missingpermission": "§cYou lack permission to do that!",
-                "vpemptyname": "§cPlease enter the name of votepoint",
+                "vpinvalidname": "§cPlease enter a valid name for a votepoint",
                 "vpexists": "§cA votepoint with that name already exists!"
             }
         }

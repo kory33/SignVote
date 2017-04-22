@@ -55,7 +55,7 @@ public class MessageConfigurationNodes {
     public static final String SESSION_DOES_NOT_EXIST   = GENERIC_COMMAND_ERROR + ".nosession";
     public static final String VOTEPOINT_DOES_NOT_EXIST = GENERIC_COMMAND_ERROR + ".novotepoint";
     public static final String MISSING_PERMS            = GENERIC_COMMAND_ERROR + ".missingpermission";
-    public static final String VOTEPOINT_NAME_EMPTY     = GENERIC_COMMAND_ERROR + ".vpemptyname";
+    public static final String VOTEPOINT_NAME_INVALID   = GENERIC_COMMAND_ERROR + ".vpinvalidname";
     public static final String VOTEPOINT_ALREADY_EXISTS = GENERIC_COMMAND_ERROR + ".vpexists";
 
     public static final String VOTEPOINT_MESSAGE_ROOT   = "votepoint";
