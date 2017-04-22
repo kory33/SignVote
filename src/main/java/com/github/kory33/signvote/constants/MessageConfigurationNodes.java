@@ -78,4 +78,10 @@ public class MessageConfigurationNodes {
     public static final String UNVOTE_UI                = UI_ROOT + ".unvote";
     public static final String UNVOTE_UI_HEADING        = UNVOTE_UI + ".heading";
     public static final String UNVOTE_UI_COMFIRM        = UNVOTE_UI + ".comfirm";
+
+    public static final String LIST_UI                  = UI_ROOT + ".list";
+    public static final String LIST_UI_HEADING          = LIST_UI + ".heading";
+    public static final String LIST_UI_LINE_PREFIX      = LIST_UI + ".lineprefix";
+    public static final String LIST_UI_SESSION_OPEN     = LIST_UI + ".state.open";
+    public static final String LIST_UI_SESSION_CLOSED   = LIST_UI + ".state.closed";
 }

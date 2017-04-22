@@ -54,6 +54,10 @@ public class RunCommandFilter extends AbstractFilter implements Filter {
     }
 
     private Result filter(final String text) {
+        if (text == null) {
+            return super.onMismatch;
+        }
+
         final Matcher matcher = matchPattern.matcher(text);
         if (matcher.find()) {
             return super.onMatch;

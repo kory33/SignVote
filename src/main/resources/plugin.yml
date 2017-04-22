@@ -29,6 +29,9 @@ permissions:
     signvote.modifysession:
         description: allows a player to modify the existing session
         default: op
+    signvote.listsession:
+        description: allows a player to obtain the session list
+        default: op
     signvote.opensession:
         description: allows a player to re-open a closed session
         default: op
