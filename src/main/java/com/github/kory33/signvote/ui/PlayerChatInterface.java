@@ -1,5 +1,6 @@
 package com.github.kory33.signvote.ui;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import lombok.Getter;
@@ -13,5 +14,15 @@ public abstract class PlayerChatInterface extends ChatInterface {
 
     public void send() {
         super.send(this.targetPlayer);
+    }
+
+    /**
+     * @deprecated Use {@link PlayerChatInterface#send()} instead.
+     * Any argument passed to this method WILL be ignored and {@link PlayerChatInterface#send()} is then run.
+     */
+    @Override
+    @Deprecated
+    public void send(CommandSender player) {
+        this.send();
     }
 }

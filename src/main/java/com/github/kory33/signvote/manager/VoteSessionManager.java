@@ -16,9 +16,9 @@ import com.github.kory33.signvote.utils.FileUtils;
 
 public class VoteSessionManager {
     private final BijectiveHashMap<String, VoteSession> sessionMap;
-    
+
     private final File sessionSaveDirectory;
-    
+
     private final Logger logger;
 
     private void loadSession(File sessionDirectory) {
@@ -30,10 +30,10 @@ public class VoteSessionManager {
             this.logger.log(Level.SEVERE, "Error reading the session directory: " + sessionDirectory.getName(), e);
         }
     }
-    
+
     public VoteSessionManager(Logger logger, File sessionSaveDirectory) {
         this.sessionMap = new BijectiveHashMap<>();
-        
+
         this.sessionSaveDirectory = sessionSaveDirectory;
         this.logger = logger;
 
@@ -41,11 +41,11 @@ public class VoteSessionManager {
             if (!sessionFolder.isDirectory()) {
                 continue;
             }
-            
+
             this.loadSession(sessionFolder);
         }
     }
-    
+
     public void addSession(VoteSession session) {
         this.sessionMap.put(session.getName(), session);
     }
@@ -58,19 +58,19 @@ public class VoteSessionManager {
         if (!this.sessionMap.getInverse().containsKey(session)) {
             throw new IllegalArgumentException("Non-registered session given!");
         }
-        
+
         File sessionDirectory = new File(this.sessionSaveDirectory, session.getName());
         if (!sessionDirectory.exists()) {
             sessionDirectory.mkdir();
         }
-        
+
         try {
             session.saveTo(sessionDirectory);
         } catch (IOException e) {
             this.logger.log(Level.SEVERE, "Error while saving session: ", e);;
         }
     }
-    
+
     /**
      * Save all the sessions.
      */
@@ -79,7 +79,7 @@ public class VoteSessionManager {
         Stream<File> nonExistentSessionDirs = FileUtils.getFileListStream(sessionSaveDirectory)
                 .filter(file -> this.sessionMap.get(file.getName()) == null);
         CompletableFuture.runAsync(() -> nonExistentSessionDirs.forEach(FileUtils::deleteFolderRecursively));
-        
+
         // save all the session data
         sessionMap.getInverse().keySet()
                 .stream()
@@ -107,10 +107,10 @@ public class VoteSessionManager {
                 return session;
             }
         }
-        
+
         return null;
     }
-    
+
     /**
      * Get the corresponding vote point from sign.
      * @param sign
@@ -119,16 +119,23 @@ public class VoteSessionManager {
     public VotePoint getVotePoint(Sign sign) {
         for (VoteSession session: this.sessionMap.values()) {
             VotePoint votePoint = session.getVotePoint(sign);
-            
+
             if (votePoint != null) {
                 return votePoint;
             }
         }
-        
+
         return null;
     }
 
     public void deleteSession(VoteSession targetVoteSession) {
         this.sessionMap.removeValue(targetVoteSession);
+    }
+
+    /**
+     * Get a stream containing all the registered votesessions.
+     */
+    public Stream<VoteSession> getVoteSessionStream() {
+        return this.sessionMap.getInverse().keySet().stream();
     }
 }

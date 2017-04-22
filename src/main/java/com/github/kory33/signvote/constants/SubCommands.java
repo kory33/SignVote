@@ -5,6 +5,7 @@ public class SubCommands {
 
     public static final String CREATE    = "create";
     public static final String DELETE    = "delete";
+    public static final String LIST      = "list";
     public static final String ADD_SCORE = "addscore";
     public static final String OPEN      = "open";
     public static final String CLOSE     = "close";

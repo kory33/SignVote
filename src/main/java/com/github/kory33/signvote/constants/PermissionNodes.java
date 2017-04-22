@@ -2,7 +2,7 @@ package com.github.kory33.signvote.constants;
 
 public class PermissionNodes {
     private static final String BASE_NODE = "signvote";
-    
+
     public static final String VOTE           = BASE_NODE + ".vote";
     public static final String VOTE_MORE      = BASE_NODE + ".votemore";
 
@@ -21,4 +21,6 @@ public class PermissionNodes {
     public static final String RELOAD         = BASE_NODE + ".reload";
 
     public static final String SAVE           = BASE_NODE + ".save";
+
+    public static final String LIST_SESSION   = BASE_NODE + ".list";
 }

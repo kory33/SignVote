@@ -16,6 +16,7 @@ import com.github.kory33.signvote.command.subcommand.CreateCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.DeleteCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.DeleteVPCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.HelpCommandExecutor;
+import com.github.kory33.signvote.command.subcommand.ListCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.OpenCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.ReloadCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.RunCommandExecutor;
@@ -35,6 +36,7 @@ public class SignVoteCommandExecutor implements CommandExecutor{
 
         commandMaps.put(SubCommands.CREATE,    new CreateCommandExecutor(plugin));
         commandMaps.put(SubCommands.ADD_SCORE, new AddScoreCommandExecutor(plugin));
+        commandMaps.put(SubCommands.LIST,      new ListCommandExecutor(plugin));
         commandMaps.put(SubCommands.OPEN,      new OpenCommandExecutor(plugin));
         commandMaps.put(SubCommands.CLOSE,     new CloseCommandExecutor(plugin));
         commandMaps.put(SubCommands.VOTE,      new VoteCommandExecutor(plugin));
@@ -50,7 +52,7 @@ public class SignVoteCommandExecutor implements CommandExecutor{
         commandMaps.put(SubCommands.RUN,       new RunCommandExecutor(plugin));
 
         this.subCommandExecutorMap = Collections.unmodifiableMap(commandMaps);
-}
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

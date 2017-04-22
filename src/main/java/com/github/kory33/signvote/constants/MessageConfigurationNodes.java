@@ -19,6 +19,8 @@ public class MessageConfigurationNodes {
     public static final String DELETE_SESS_COMMAND_HELP = COMMAND_ROOT + ".delete.help";
     public static final String F_SESSION_DELETED        = COMMAND_ROOT + ".delete.deleted";
 
+    public static final String LIST_COMMAND_HELP        = COMMAND_ROOT + ".list.help";
+
     public static final String DELETE_VP_COMMAND_HELP   = COMMAND_ROOT + ".deletevp.help";
     public static final String F_VOTEPOINT_DELETED      = COMMAND_ROOT + ".deletevp.deleted";
 
