@@ -1,7 +1,5 @@
 package com.github.kory33.signvote.listners;
 
-import java.util.regex.Pattern;
-
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
@@ -11,6 +9,7 @@ import org.bukkit.event.block.SignChangeEvent;
 
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigurationNodes;
+import com.github.kory33.signvote.constants.Patterns;
 import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.constants.SignTexts;
 import com.github.kory33.signvote.core.SignVote;
@@ -19,8 +18,6 @@ import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 
 public class SignListner implements Listener {
-    private static final Pattern PATTERN_VALID_VP_NAME = Pattern.compile("^(\\w|(\\w[^\\\\/]*\\w))$");
-
     private final JSONConfiguration messageConfig;
     private final VoteSessionManager voteSessionManager;
 
@@ -60,7 +57,7 @@ public class SignListner implements Listener {
         }
 
         String pointName = sign.getLine(2);
-        if (!PATTERN_VALID_VP_NAME.matcher(pointName).matches()) {
+        if (!Patterns.PATTERN_VALID_VP_NAME.matcher(pointName).matches()) {
             this.rejectSignCreation(sign, messageConfig.getString(MessageConfigurationNodes.VOTEPOINT_NAME_INVALID));
             return;
         }
