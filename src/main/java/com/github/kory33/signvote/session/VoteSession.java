@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
@@ -177,8 +178,8 @@ public class VoteSession {
         }
         this.voteManager.getPlayersVoteData().entrySet().stream()
             .forEach(entry -> {
-                Player player = entry.getKey();
-                File playerVoteDataFile = new File(voteDataDirectory, player.getUniqueId().toString() + Formats.JSON_EXT);
+                UUID playerUUID = entry.getKey();
+                File playerVoteDataFile = new File(voteDataDirectory, playerUUID.toString() + Formats.JSON_EXT);
 
                 JsonObject voteData = entry.getValue();
                 FileUtils.writeJSON(playerVoteDataFile, voteData);
@@ -211,7 +212,7 @@ public class VoteSession {
     public HashMap<Integer, Integer> getAvailableVoteCounts(Player player) {
         HashMap<Integer, Integer> availableCounts = this.getReservedVoteCounts(player);
 
-        HashMap<Integer, HashSet<String>> votedScores = this.voteManager.getVotedPointsMap(player);
+        HashMap<Integer, HashSet<String>> votedScores = this.voteManager.getVotedPointsMap(player.getUniqueId());
         for (int score: votedScores.keySet()) {
             int votedNum = votedScores.get(score).size();
 
@@ -272,7 +273,7 @@ public class VoteSession {
             throw new ScoreCountLimitReachedException(player, votePoint, voteScore);
         }
 
-        this.voteManager.addVotePointName(player, voteScore, votePoint);
+        this.voteManager.addVotePointData(player, voteScore, votePoint);
     }
 
     /**
