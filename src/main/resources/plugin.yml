@@ -1,6 +1,7 @@
 name: @project.name@
 version: @project.version@
 main: com.github.kory33.signvote.core.SignVote
+softdepend: [MultiWorld]
 description: A Bukkit plugin that allows player to vote through signs.
 
 author: kory33
