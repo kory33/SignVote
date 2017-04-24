@@ -50,20 +50,16 @@ public class VoteScoreLimits {
         return new Gson().toJsonTree(this.limitMap).getAsJsonObject();
     }
 
-    public void addLimit(int score, String permission, int limit) {
+    public void addLimit(int score, String permission, int limit) throws IllegalArgumentException {
         if (!this.limitMap.containsKey(score)) {
             this.limitMap.put(score, new HashMap<String, Integer>());
         }
 
-        HashMap<String, Integer> permissiveLimits = this.limitMap.get(score);
-        if(permissiveLimits.containsKey(permission)) {
-            throw new IllegalArgumentException(
-                    "Limit to the provided score (" + score +
-                    ") and permission(" + permission + ") is already set!"
-            );
+        if (limit != MagicNumbers.VOTELIMIT_INFINITY && limit <= 0) {
+            throw new IllegalArgumentException("Illegal limit supplied: " + limit);
         }
 
-        permissiveLimits.put(permission, limit);
+        this.limitMap.get(score).put(permission, limit);
     }
 
     public void removeLimit(int score, String permission) {

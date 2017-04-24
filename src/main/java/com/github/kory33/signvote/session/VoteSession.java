@@ -24,7 +24,7 @@ import com.github.kory33.signvote.constants.MagicNumbers;
 import com.github.kory33.signvote.constants.Patterns;
 import com.github.kory33.signvote.constants.SignTexts;
 import com.github.kory33.signvote.constants.VoteSessionDataFileKeys;
-import com.github.kory33.signvote.exception.InvalidVoteScoreException;
+import com.github.kory33.signvote.exception.InvalidScoreVotedException;
 import com.github.kory33.signvote.exception.ScoreCountLimitReachedException;
 import com.github.kory33.signvote.exception.VotePointAlreadyVotedException;
 import com.github.kory33.signvote.exception.VotePointNotVotedException;
@@ -268,9 +268,9 @@ public class VoteSession {
      * @throws VotePointAlreadyVotedException when the player has already voted to the votepoint
      */
     public void vote(Player player, VotePoint votePoint, int voteScore)
-            throws ScoreCountLimitReachedException, VotePointAlreadyVotedException, InvalidVoteScoreException {
+            throws ScoreCountLimitReachedException, VotePointAlreadyVotedException, InvalidScoreVotedException {
         if (this.voteScoreCountLimits.getLimit(voteScore, player) == 0) {
-            throw new InvalidVoteScoreException(votePoint, player, voteScore);
+            throw new InvalidScoreVotedException(votePoint, player, voteScore);
         }
 
         if (!this.getReservedVoteCounts(player).containsKey(voteScore)) {

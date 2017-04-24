@@ -25,6 +25,7 @@ public class MessageConfigurationNodes {
     public static final String F_VOTEPOINT_DELETED      = COMMAND_ROOT + ".deletevp.deleted";
 
     public static final String ADD_SCORE_COMMAND_HELP   = COMMAND_ROOT + ".addscore.help";
+    public static final String F_SCORE_LIMIT_ADDED      = COMMAND_ROOT + ".addscore.added";
 
     public static final String OPEN_COMMAND_HELP        = COMMAND_ROOT + ".open.help";
     public static final String F_SESSION_OPENED         = COMMAND_ROOT + ".open.opened";
@@ -57,6 +58,7 @@ public class MessageConfigurationNodes {
     public static final String MISSING_PERMS            = GENERIC_COMMAND_ERROR + ".missingpermission";
     public static final String VOTEPOINT_NAME_INVALID   = GENERIC_COMMAND_ERROR + ".vpinvalidname";
     public static final String VOTEPOINT_ALREADY_EXISTS = GENERIC_COMMAND_ERROR + ".vpexists";
+    public static final String INVALID_NUMBER           = GENERIC_COMMAND_ERROR + ".invalidnumber";
 
     public static final String VOTEPOINT_MESSAGE_ROOT   = "votepoint";
     public static final String VOTEPOINT_CREATED        = VOTEPOINT_MESSAGE_ROOT + ".created";

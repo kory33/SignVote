@@ -6,12 +6,12 @@ import com.github.kory33.signvote.model.VotePoint;
 
 import lombok.Getter;
 
-public class InvalidVoteScoreException extends Exception {
+public class InvalidScoreVotedException extends Exception {
     @Getter private VotePoint targetVotePoint;
     @Getter private Player voter;
     @Getter private Integer voteScore;
     
-    public InvalidVoteScoreException(VotePoint votePoint, Player voter, Integer voteScore) {
+    public InvalidScoreVotedException(VotePoint votePoint, Player voter, Integer voteScore) {
         this.targetVotePoint = votePoint;
         this.voter = voter;
         this.voteScore = voteScore;

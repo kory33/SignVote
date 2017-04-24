@@ -6,6 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import com.github.kory33.signvote.configurable.JSONConfiguration;
+import com.github.kory33.signvote.constants.MagicNumbers;
 import com.github.kory33.signvote.constants.MessageConfigurationNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.core.SignVote;
@@ -33,26 +34,45 @@ public class AddScoreCommandExecutor extends SubCommandExecutor{
             return true;
         }
 
-        try {
-            String voteSessionname = args.remove(0);
-            VoteSession session = this.voteSessionManager.getVoteSession(voteSessionname);
-
-            int score = new Integer(args.remove(0));
-            int limit = new Integer(args.remove(0));
-
-            String permission = PermissionNodes.VOTE;
-            if (!args.isEmpty()) {
-                permission = args.remove(0);
-                if (permission == "op") {
-                    permission = PermissionNodes.VOTE_MORE;
-                }
-            }
-
-            session.getVoteScoreCountLimits().addLimit(score, permission, limit);
-        } catch (Exception exception) {
+        if (args.size() < 3) {
             return false;
         }
 
+        String voteSessionname = args.remove(0);
+        VoteSession session = this.voteSessionManager.getVoteSession(voteSessionname);
+
+        if (session == null) {
+            sender.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.SESSION_DOES_NOT_EXIST));
+            return true;
+        }
+
+        int score, limit;
+        try {
+            score = Integer.parseInt(args.remove(0));
+            limit = Integer.parseInt(args.remove(0));
+        } catch (NumberFormatException e) {
+            sender.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.INVALID_NUMBER));
+            return true;
+        }
+
+        String permission = PermissionNodes.VOTE;
+        if (!args.isEmpty()) {
+            permission = args.remove(0);
+            if (permission == "op") {
+                permission = PermissionNodes.VOTE_MORE;
+            }
+        }
+
+        try {
+            session.getVoteScoreCountLimits().addLimit(score, permission, limit);
+        } catch (IllegalArgumentException e) {
+            sender.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.INVALID_NUMBER));
+            return true;
+        }
+
+        String limitString = limit == MagicNumbers.VOTELIMIT_INFINITY ? "Infinity" : String.valueOf(limit);
+        sender.sendMessage(messageConfiguration.getFormatted(MessageConfigurationNodes.F_SCORE_LIMIT_ADDED,
+                limitString, score, session.getName(), permission));
         return true;
     }
 }

@@ -1,6 +1,7 @@
 package com.github.kory33.signvote.command.subcommand;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -10,7 +11,7 @@ import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigurationNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.core.SignVote;
-import com.github.kory33.signvote.exception.InvalidVoteScoreException;
+import com.github.kory33.signvote.exception.InvalidScoreVotedException;
 import com.github.kory33.signvote.exception.ScoreCountLimitReachedException;
 import com.github.kory33.signvote.exception.VotePointAlreadyVotedException;
 import com.github.kory33.signvote.manager.VoteSessionManager;
@@ -20,12 +21,12 @@ import com.github.kory33.signvote.session.VoteSession;
 public class VoteCommandExecutor extends SubCommandExecutor {
     private final JSONConfiguration messageConfiguration;
     private final VoteSessionManager voteSessionManager;
-    
+
     public VoteCommandExecutor(SignVote plugin) {
         this.messageConfiguration = plugin.getMessagesConfiguration();
         this.voteSessionManager = plugin.getVoteSessionManager();
     }
-    
+
     @Override
     protected String getHelpString() {
         return this.messageConfiguration.getString(MessageConfigurationNodes.VOTE_COMMAND_HELP);
@@ -37,33 +38,33 @@ public class VoteCommandExecutor extends SubCommandExecutor {
             sender.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.COMMAND_ONLY_FOR_PLAYERS));
             return true;
         }
-        
+
         if (!sender.hasPermission(PermissionNodes.VOTE)) {
             sender.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.MISSING_PERMS));
             return true;
         }
-        
+
         if (args.size() != 3) {
             return false;
         }
-        
+
         Player player = (Player) sender;
         String sessionName = args.remove(0);
         String votePointName = args.remove(0);
         String voteScoreString = args.remove(0);
-        
+
         VoteSession session = this.voteSessionManager.getVoteSession(sessionName);
         if (session == null) {
             player.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.SESSION_DOES_NOT_EXIST));
             return true;
         }
-        
+
         VotePoint votePoint = session.getVotePoint(votePointName);
         if (votePoint == null) {
             player.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.VOTEPOINT_DOES_NOT_EXIST));
             return true;
         }
-        
+
         int voteScore;
         try {
             voteScore = Integer.parseInt(voteScoreString);
@@ -72,11 +73,13 @@ public class VoteCommandExecutor extends SubCommandExecutor {
             return true;
         }
 
-        if (session.getReservedVoteCounts(player).get(voteScore) == null) {
+        // if the voter does not have vote score reserved
+        Optional<Integer> reservedVotes = session.getReservedVoteCounts(player).get(voteScore);
+        if (reservedVotes == null || reservedVotes.orElse(-1) == 0) {
             player.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.INVALID_VOTE_SCORE));
             return true;
         }
-        
+
         try {
             session.vote(player, votePoint, voteScore);
             player.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.VOTED));
@@ -84,11 +87,11 @@ public class VoteCommandExecutor extends SubCommandExecutor {
             player.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.REACHED_VOTE_SCORE_LIMIT));
         } catch (VotePointAlreadyVotedException exception) {
             player.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.VOTEPOINT_ALREADY_VOTED));
-        } catch (InvalidVoteScoreException exception) {
+        } catch (InvalidScoreVotedException exception) {
             player.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.INVALID_VOTE_SCORE));
         }
-        
+
         return true;
     }
-    
+
 }

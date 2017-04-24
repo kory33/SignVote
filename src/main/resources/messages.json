@@ -26,7 +26,8 @@
         },
         "addscore": {
             "help": "addscore - create a vote score limit for the given session and permission if provided",
-            "summary": "create a vote score limit for the given session"
+            "summary": "create a vote score limit for the given session",
+            "added": "§aLimit set of §6{0} §avotes with a score of §6{1} §a(session name §6{2}§a, for players having permission §6{3}§a)"
         },
         "open": {
             "help": "open - re-open a closed session",
@@ -78,7 +79,8 @@
                 "novotepoint": "§cThe provided votepoint does not exist",
                 "missingpermission": "§cYou lack permission to do that!",
                 "vpinvalidname": "§cPlease enter a valid name for a votepoint",
-                "vpexists": "§cA votepoint with that name already exists!"
+                "vpexists": "§cA votepoint with that name already exists!",
+                "invalidnumber": "§cPlease enter a valid number!"
             }
         }
     },
