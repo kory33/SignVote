@@ -109,5 +109,8 @@
                 "closed": " §e(closed)"
             }
         }
+    },
+    "generic": {
+        "infinity": "infinity"
     }
 }

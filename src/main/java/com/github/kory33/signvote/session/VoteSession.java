@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
@@ -19,6 +20,7 @@ import com.github.kory33.signvote.collection.VoteScoreLimits;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.FilePaths;
 import com.github.kory33.signvote.constants.Formats;
+import com.github.kory33.signvote.constants.MagicNumbers;
 import com.github.kory33.signvote.constants.Patterns;
 import com.github.kory33.signvote.constants.SignTexts;
 import com.github.kory33.signvote.constants.VoteSessionDataFileKeys;
@@ -209,8 +211,8 @@ public class VoteSession {
      * @param player
      * @return
      */
-    public HashMap<Integer, Integer> getAvailableVoteCounts(Player player) {
-        HashMap<Integer, Integer> availableCounts = this.getReservedVoteCounts(player);
+    public HashMap<Integer, Optional<Integer>> getAvailableVoteCounts(Player player) {
+        HashMap<Integer, Optional<Integer>> availableCounts = this.getReservedVoteCounts(player);
 
         HashMap<Integer, HashSet<String>> votedScores = this.voteManager.getVotedPointsMap(player.getUniqueId());
         for (int score: votedScores.keySet()) {
@@ -220,14 +222,15 @@ public class VoteSession {
                 continue;
             }
 
-            int reservedVotes = availableCounts.remove(score);
-            int remainingVotes = reservedVotes - votedNum;
+            Optional<Integer> reservedVotes = availableCounts.remove(score);
 
-            if (remainingVotes <= 0) {
-                continue;
+            // infinity votes(empty Optional) remains infinity, otherwise Max(reserved - voted) is remaining
+            Optional<Integer> remainingVotes = reservedVotes.map(res -> Math.max(res - votedNum, 0));
+
+            // iff remaining != 0
+            if (remainingVotes.orElse(-1) != 0) {
+                availableCounts.put(score, remainingVotes);
             }
-
-            availableCounts.put(score, remainingVotes);
         }
 
         return availableCounts;
@@ -238,11 +241,16 @@ public class VoteSession {
      * @param player
      * @return
      */
-    public HashMap<Integer, Integer> getReservedVoteCounts(Player player) {
-        HashMap<Integer, Integer> reservedCounts = new HashMap<>();
+    public HashMap<Integer, Optional<Integer>> getReservedVoteCounts(Player player) {
+        HashMap<Integer, Optional<Integer>> reservedCounts = new HashMap<>();
 
         for (int score: this.voteScoreCountLimits.getVotableScores()) {
-            reservedCounts.put(score, this.voteScoreCountLimits.getLimit(score, player));
+            int limit = this.voteScoreCountLimits.getLimit(score, player);
+            if (limit == MagicNumbers.VOTELIMIT_INFINITY) {
+                reservedCounts.put(score, Optional.empty());
+            } else {
+                reservedCounts.put(score, Optional.of(limit));
+            }
         }
 
         return reservedCounts;

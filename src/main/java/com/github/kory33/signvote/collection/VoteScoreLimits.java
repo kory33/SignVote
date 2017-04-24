@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.bukkit.entity.Player;
 
+import com.github.kory33.signvote.constants.MagicNumbers;
 import com.github.kory33.signvote.constants.PermissionNodes;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -87,6 +88,12 @@ public class VoteScoreLimits {
             }
 
             int limit = permissiveLimits.get(permission);
+
+            // return VOTELIMIT_INFINITY if found one
+            if (limit == MagicNumbers.VOTELIMIT_INFINITY) {
+                return limit;
+            }
+
             maxLimit = Math.max(maxLimit, limit);
         }
 

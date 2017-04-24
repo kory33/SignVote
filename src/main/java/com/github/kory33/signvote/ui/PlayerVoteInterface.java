@@ -3,6 +3,7 @@ package com.github.kory33.signvote.ui;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Optional;
 
 import org.bukkit.entity.Player;
 
@@ -59,16 +60,22 @@ public class PlayerVoteInterface extends PlayerInteractiveChatInterface {
         this.revokeSession();
     }
 
-    private MessageParts getScoreSelectionLine(int score, int remaining) {
-        String message = this.messageConfig.getFormatted(MessageConfigurationNodes.VOTE_UI_SCORE_SELECTION, score,
-                remaining);
+    private MessageParts getScoreSelectionLine(int score, Optional<Integer> remaining) {
+        String remainingString;
+        if (remaining.isPresent()) {
+            remainingString = remaining.get().toString();
+        } else {
+            remainingString = this.messageConfig.getString(MessageConfigurationNodes.INFINITY);
+        }
+
+        String message = this.messageConfig.getFormatted(MessageConfigurationNodes.VOTE_UI_SCORE_SELECTION, score, remainingString);
         MessageParts messageLine = new MessageParts(message + "\n");
         return messageLine;
     }
 
     @Override
     protected MessageComponent constructInterfaceMessages() {
-        HashMap<Integer, Integer> availableVotePoints = this.session.getAvailableVoteCounts(this.targetPlayer);
+        HashMap<Integer, Optional<Integer>> availableVotePoints = this.session.getAvailableVoteCounts(this.targetPlayer);
         if (availableVotePoints.isEmpty()) {
             String message = this.messageConfig.getString(MessageConfigurationNodes.MESSAGE_PREFIX) +
                     this.messageConfig.getString(MessageConfigurationNodes.VOTE_UI_NONE_AVAILABLE);

@@ -84,4 +84,7 @@ public class MessageConfigurationNodes {
     public static final String LIST_UI_LINE_PREFIX      = LIST_UI + ".lineprefix";
     public static final String LIST_UI_SESSION_OPEN     = LIST_UI + ".state.open";
     public static final String LIST_UI_SESSION_CLOSED   = LIST_UI + ".state.closed";
+
+    public static final String GENERIC                  = "generic";
+    public static final String INFINITY                 = GENERIC + ".infinity";
 }
