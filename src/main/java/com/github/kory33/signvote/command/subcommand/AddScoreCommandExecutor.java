@@ -20,7 +20,7 @@ public class AddScoreCommandExecutor extends SubCommandExecutor{
         this.messageConfiguration = plugin.getMessagesConfiguration();
         this.voteSessionManager = plugin.getVoteSessionManager();
     }
-    
+
     @Override
     protected String getHelpString() {
         return messageConfiguration.getString(MessageConfigurationNodes.ADD_SCORE_COMMAND_HELP);
@@ -32,27 +32,27 @@ public class AddScoreCommandExecutor extends SubCommandExecutor{
             sender.sendMessage(messageConfiguration.getString(MessageConfigurationNodes.MISSING_PERMS));
             return true;
         }
-        
+
         try {
             String voteSessionname = args.remove(0);
             VoteSession session = this.voteSessionManager.getVoteSession(voteSessionname);
-            
+
             int score = new Integer(args.remove(0));
             int limit = new Integer(args.remove(0));
-            
-            String permission = "default";
+
+            String permission = PermissionNodes.VOTE;
             if (!args.isEmpty()) {
                 permission = args.remove(0);
                 if (permission == "op") {
                     permission = PermissionNodes.VOTE_MORE;
                 }
             }
-            
+
             session.getVoteScoreCountLimits().addLimit(score, permission, limit);
         } catch (Exception exception) {
             return false;
         }
-        
+
         return true;
     }
 }

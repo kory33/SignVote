@@ -261,7 +261,7 @@ public class VoteSession {
      */
     public void vote(Player player, VotePoint votePoint, int voteScore)
             throws ScoreCountLimitReachedException, VotePointAlreadyVotedException, InvalidVoteScoreException {
-        if (this.voteScoreCountLimits.getLimit(voteScore, player) <= 0) {
+        if (this.voteScoreCountLimits.getLimit(voteScore, player) == 0) {
             throw new InvalidVoteScoreException(votePoint, player, voteScore);
         }
 

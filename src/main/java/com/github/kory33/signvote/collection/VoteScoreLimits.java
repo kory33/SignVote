@@ -5,11 +5,12 @@ import java.util.Set;
 
 import org.bukkit.entity.Player;
 
+import com.github.kory33.signvote.constants.PermissionNodes;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 public class VoteScoreLimits {
-    HashMap<Integer, HashMap<String, Integer>> limitMap;
+    private final HashMap<Integer, HashMap<String, Integer>> limitMap;
 
     /**
      * Construct a VoteScoreLimits from an json data
@@ -81,7 +82,7 @@ public class VoteScoreLimits {
         HashMap<String, Integer> permissiveLimits = this.limitMap.get(score);
         int maxLimit = 0;
         for (String permission: permissiveLimits.keySet()) {
-            if (!player.hasPermission(permission)) {
+            if (permission != PermissionNodes.VOTE && !player.hasPermission(permission)) {
                 continue;
             }
 
