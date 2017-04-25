@@ -84,14 +84,17 @@ public abstract class PlayerInteractiveChatInterface extends PlayerChatInterface
     protected ArrayList<MessageParts> getForm(Consumer<String> onPlayerSendString, String name, String value) {
         MessageParts formName = new MessageParts(this.messageConfig.getFormatted(MessageConfigNodes.F_UI_FORM_NAME, name));
 
-        MessageParts defaultDisplay = new MessageParts(this.messageConfig.getString(MessageConfigNodes.UI_FORM_NOTSET));
-        MessageParts formValue = value != null && !value.isEmpty() ? defaultDisplay : new MessageParts(value);
+        if (value != null && !value.isEmpty()) {
+            value = this.messageConfig.getString(MessageConfigNodes.UI_FORM_NOTSET);
+        }
+
+        MessageParts formValue = new MessageParts(this.messageConfig.getFormatted(MessageConfigNodes.F_UI_FORM_VALUE, value));
 
         MessageParts editButton = this.getButton(() -> {
             chatInterceptor.interceptFirstMessageFrom(this.targetPlayer)
                 .thenAccept(onPlayerSendString).thenRun(this::send)
                 .exceptionally((error) -> null);
-        }, this.getConfigMessagePart(MessageConfigNodes.UI_EDIT_BUTTON));
+        }, this.getConfigMessagePart(MessageConfigNodes.UI_FORM_EDIT_BUTTON));
 
 
         ArrayList<MessageParts> form = new ArrayList<>();
