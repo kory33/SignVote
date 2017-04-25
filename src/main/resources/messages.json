@@ -20,17 +20,17 @@
             "summary": "See the list of existing sessions."
         },
         "deletevp": {
-            "help": "deletevp - delete the specified votepoint",
+            "help": "/signvote deletevp <session name> <votepoint name> - delete the specified votepoint",
             "summary": "delete the specified votepoint",
             "deleted": "§aVotepoint §6{0} §ais successfully deleted from session §6{1}"
         },
         "addscore": {
-            "help": "addscore - create a vote score limit for the given session and permission if provided",
+            "help": "/signvote addscore <session name> <score> <limit> [permission] - create a vote score limit for the given session and permission if provided",
             "summary": "create a vote score limit for the given session",
             "added": "§aLimit set of §6{0} §avotes with a score of §6{1} §a(session name §6{2}§a, for players having permission §6{3}§a)"
         },
         "open": {
-            "help": "open - re-open a closed session",
+            "help": "/signvote open <session name> - re-open a closed session",
             "summary": "re-open a closed session",
             "opened": "§aSession §6{0} §ais set to be §6OPENED",
             "error": {
@@ -38,7 +38,7 @@
             }
         },
         "close": {
-            "help": "close - close an opened session",
+            "help": "/signvote close <session name> - close an opened session",
             "summary": "close an opened session",
             "closed": "§aSession §6{0} §ais set to be §6CLOSED",
             "error": {
@@ -46,7 +46,7 @@
             }
         },
         "vote": {
-            "help": "vote - vote to a given votepoint with a provided score",
+            "help": "/signvote vote <session name> <votepoint name> <score> - vote to a given votepoint with a provided score",
             "summary": "vote to a given votepoint with a provided score",
             "voteaccepted": "§aYour vote has been accepted.",
             "error": {
@@ -56,7 +56,7 @@
             }
         },
         "unvote": {
-            "help": "unvote - cancel the vote to a given votepoint",
+            "help": "/signvote unvote <session name> <votepoint name> - cancel the vote to a given votepoint",
             "summary": "cancel the vote to a given votepoint",
             "unvoted": "§aYour vote to §6{0} §ahas been cancelled.",
             "error": {
