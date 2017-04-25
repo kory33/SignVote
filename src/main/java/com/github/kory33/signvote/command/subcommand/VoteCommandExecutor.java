@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.kory33.signvote.configurable.JSONConfiguration;
-import com.github.kory33.signvote.constants.MessageConfigurationNodes;
+import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.core.SignVote;
 import com.github.kory33.signvote.exception.InvalidScoreVotedException;
@@ -29,18 +29,18 @@ public class VoteCommandExecutor extends SubCommandExecutor {
 
     @Override
     protected String getHelpString() {
-        return this.messageConfiguration.getString(MessageConfigurationNodes.VOTE_COMMAND_HELP);
+        return this.messageConfiguration.getString(MessageConfigNodes.VOTE_COMMAND_HELP);
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, ArrayList<String> args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.COMMAND_ONLY_FOR_PLAYERS));
+            sender.sendMessage(this.messageConfiguration.getString(MessageConfigNodes.COMMAND_ONLY_FOR_PLAYERS));
             return true;
         }
 
         if (!sender.hasPermission(PermissionNodes.VOTE)) {
-            sender.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.MISSING_PERMS));
+            sender.sendMessage(this.messageConfiguration.getString(MessageConfigNodes.MISSING_PERMS));
             return true;
         }
 
@@ -55,13 +55,13 @@ public class VoteCommandExecutor extends SubCommandExecutor {
 
         VoteSession session = this.voteSessionManager.getVoteSession(sessionName);
         if (session == null) {
-            player.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.SESSION_DOES_NOT_EXIST));
+            player.sendMessage(this.messageConfiguration.getString(MessageConfigNodes.SESSION_DOES_NOT_EXIST));
             return true;
         }
 
         VotePoint votePoint = session.getVotePoint(votePointName);
         if (votePoint == null) {
-            player.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.VOTEPOINT_DOES_NOT_EXIST));
+            player.sendMessage(this.messageConfiguration.getString(MessageConfigNodes.VOTEPOINT_DOES_NOT_EXIST));
             return true;
         }
 
@@ -69,26 +69,26 @@ public class VoteCommandExecutor extends SubCommandExecutor {
         try {
             voteScore = Integer.parseInt(voteScoreString);
         } catch (Exception exception) {
-            player.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.INVALID_VOTE_SCORE));
+            player.sendMessage(this.messageConfiguration.getString(MessageConfigNodes.INVALID_VOTE_SCORE));
             return true;
         }
 
         // if the voter does not have vote score reserved
         Optional<Integer> reservedVotes = session.getReservedVoteCounts(player).get(voteScore);
         if (reservedVotes == null || reservedVotes.orElse(-1) == 0) {
-            player.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.INVALID_VOTE_SCORE));
+            player.sendMessage(this.messageConfiguration.getString(MessageConfigNodes.INVALID_VOTE_SCORE));
             return true;
         }
 
         try {
             session.vote(player, votePoint, voteScore);
-            player.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.VOTED));
+            player.sendMessage(this.messageConfiguration.getString(MessageConfigNodes.VOTED));
         } catch (ScoreCountLimitReachedException exception) {
-            player.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.REACHED_VOTE_SCORE_LIMIT));
+            player.sendMessage(this.messageConfiguration.getString(MessageConfigNodes.REACHED_VOTE_SCORE_LIMIT));
         } catch (VotePointAlreadyVotedException exception) {
-            player.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.VOTEPOINT_ALREADY_VOTED));
+            player.sendMessage(this.messageConfiguration.getString(MessageConfigNodes.VOTEPOINT_ALREADY_VOTED));
         } catch (InvalidScoreVotedException exception) {
-            player.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.INVALID_VOTE_SCORE));
+            player.sendMessage(this.messageConfiguration.getString(MessageConfigNodes.INVALID_VOTE_SCORE));
         }
 
         return true;

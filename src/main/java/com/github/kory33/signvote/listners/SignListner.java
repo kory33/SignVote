@@ -8,7 +8,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 
 import com.github.kory33.signvote.configurable.JSONConfiguration;
-import com.github.kory33.signvote.constants.MessageConfigurationNodes;
+import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.Patterns;
 import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.constants.SignTexts;
@@ -44,7 +44,7 @@ public class SignListner implements Listener {
         }
 
         if(!sign.getPlayer().hasPermission(PermissionNodes.CREATE_SIGN)) {
-            this.rejectSignCreation(sign, messageConfig.getString(MessageConfigurationNodes.MISSING_PERMS));
+            this.rejectSignCreation(sign, messageConfig.getString(MessageConfigNodes.MISSING_PERMS));
             return;
         }
 
@@ -52,18 +52,18 @@ public class SignListner implements Listener {
         VoteSession session = this.voteSessionManager.getVoteSession(sessionName);
 
         if (session == null) {
-            this.rejectSignCreation(sign, messageConfig.getString(MessageConfigurationNodes.SESSION_DOES_NOT_EXIST));
+            this.rejectSignCreation(sign, messageConfig.getString(MessageConfigNodes.SESSION_DOES_NOT_EXIST));
             return;
         }
 
         String pointName = sign.getLine(2);
         if (!Patterns.PATTERN_VALID_VP_NAME.matcher(pointName).matches()) {
-            this.rejectSignCreation(sign, messageConfig.getString(MessageConfigurationNodes.VOTEPOINT_NAME_INVALID));
+            this.rejectSignCreation(sign, messageConfig.getString(MessageConfigNodes.VOTEPOINT_NAME_INVALID));
             return;
         }
 
         if (session.getVotePoint(pointName) != null) {
-            this.rejectSignCreation(sign, messageConfig.getString(MessageConfigurationNodes.VOTEPOINT_ALREADY_EXISTS));
+            this.rejectSignCreation(sign, messageConfig.getString(MessageConfigNodes.VOTEPOINT_ALREADY_EXISTS));
             return;
         }
 
@@ -72,7 +72,7 @@ public class SignListner implements Listener {
 
         sign.setLine(0, SignTexts.REGISTERED_SIGN_TEXT);
 
-        sign.getPlayer().sendMessage(messageConfig.getFormatted(MessageConfigurationNodes.VOTEPOINT_CREATED, sessionName, votePoint.getName()));
+        sign.getPlayer().sendMessage(messageConfig.getFormatted(MessageConfigNodes.VOTEPOINT_CREATED, sessionName, votePoint.getName()));
     }
 
     @EventHandler
@@ -93,7 +93,7 @@ public class SignListner implements Listener {
         String votepointName = votePoint.getName();
 
         event.setCancelled(true);
-        event.getPlayer().sendMessage(messageConfig.getFormatted(MessageConfigurationNodes.F_VOTEPOINT_BREAK,
+        event.getPlayer().sendMessage(messageConfig.getFormatted(MessageConfigNodes.F_VOTEPOINT_BREAK,
                 sessionName, votepointName));
     }
 }

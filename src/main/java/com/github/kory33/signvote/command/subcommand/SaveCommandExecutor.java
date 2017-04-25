@@ -8,7 +8,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import com.github.kory33.signvote.configurable.JSONConfiguration;
-import com.github.kory33.signvote.constants.MessageConfigurationNodes;
+import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.core.SignVote;
 
@@ -29,12 +29,12 @@ public class SaveCommandExecutor extends SubCommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, ArrayList<String> args) {
         if (!sender.hasPermission(PermissionNodes.SAVE)) {
-            sender.sendMessage(messageConfiguration.getString(MessageConfigurationNodes.MISSING_PERMS));
+            sender.sendMessage(messageConfiguration.getString(MessageConfigNodes.MISSING_PERMS));
         }
         
         CompletableFuture.runAsync(this.plugin::saveSessionData).thenRun(() -> {
             Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, () -> {
-                sender.sendMessage(messageConfiguration.getString(MessageConfigurationNodes.SAVE_COMPLETE));
+                sender.sendMessage(messageConfiguration.getString(MessageConfigNodes.SAVE_COMPLETE));
             });
         });
         

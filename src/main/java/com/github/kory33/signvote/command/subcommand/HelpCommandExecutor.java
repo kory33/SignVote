@@ -8,7 +8,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import com.github.kory33.signvote.configurable.JSONConfiguration;
-import com.github.kory33.signvote.constants.MessageConfigurationNodes;
+import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.core.SignVote;
 
 import net.md_5.bungee.api.ChatColor;
@@ -29,8 +29,8 @@ public class HelpCommandExecutor extends SubCommandExecutor {
     
     @Override
     public boolean onCommand(CommandSender sender, Command command, ArrayList<String> args) {
-        String messagePrefix = messageConfiguration.getString(MessageConfigurationNodes.MESSAGE_PREFIX);
-        sender.sendMessage(messageConfiguration.getString(MessageConfigurationNodes.COMMAND_HELP_HEADER));
+        String messagePrefix = messageConfiguration.getString(MessageConfigNodes.MESSAGE_PREFIX);
+        sender.sendMessage(messageConfiguration.getString(MessageConfigNodes.COMMAND_HELP_HEADER));
         
         for (Entry<String, SubCommandExecutor> commandEntry: subCommandExecutorMap.entrySet()) {
             String subcommandName = commandEntry.getKey();

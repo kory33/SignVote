@@ -6,7 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import com.github.kory33.signvote.configurable.JSONConfiguration;
-import com.github.kory33.signvote.constants.MessageConfigurationNodes;
+import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.core.SignVote;
 import com.github.kory33.signvote.manager.VoteSessionManager;
@@ -23,13 +23,13 @@ public class CloseCommandExecutor extends SubCommandExecutor {
 
     @Override
     protected String getHelpString() {
-        return this.messageConfiguration.getString(MessageConfigurationNodes.CLOSE_COMMAND_HELP);
+        return this.messageConfiguration.getString(MessageConfigNodes.CLOSE_COMMAND_HELP);
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, ArrayList<String> args) {
         if (!sender.hasPermission(PermissionNodes.CLOSE_SESSION)) {
-            sender.sendMessage(messageConfiguration.getString(MessageConfigurationNodes.MISSING_PERMS));
+            sender.sendMessage(messageConfiguration.getString(MessageConfigNodes.MISSING_PERMS));
             return true;
         }
 
@@ -41,17 +41,17 @@ public class CloseCommandExecutor extends SubCommandExecutor {
         VoteSession targetVoteSession = this.voteSessionManager.getVoteSession(closeTargetSessionName);
         
         if (targetVoteSession == null) {
-            sender.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.SESSION_DOES_NOT_EXIST));
+            sender.sendMessage(this.messageConfiguration.getString(MessageConfigNodes.SESSION_DOES_NOT_EXIST));
             return true;
         }
         
         if (!targetVoteSession.isOpen()) {
-            sender.sendMessage(this.messageConfiguration.getFormatted(MessageConfigurationNodes.F_SESSION_ALREADY_CLOSED, closeTargetSessionName));
+            sender.sendMessage(this.messageConfiguration.getFormatted(MessageConfigNodes.F_SESSION_ALREADY_CLOSED, closeTargetSessionName));
             return true;
         }
         
         targetVoteSession.setOpen(false);
-        String completionMessage = this.messageConfiguration.getFormatted(MessageConfigurationNodes.F_SESSION_CLOSED, closeTargetSessionName);
+        String completionMessage = this.messageConfiguration.getFormatted(MessageConfigNodes.F_SESSION_CLOSED, closeTargetSessionName);
         sender.sendMessage(completionMessage);
         return true;
     }

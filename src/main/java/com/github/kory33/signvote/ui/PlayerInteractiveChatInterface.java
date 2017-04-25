@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
-import com.github.kory33.signvote.constants.MessageConfigurationNodes;
+import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.utils.tellraw.TellRawUtility;
 import com.github.ucchyocean.messaging.tellraw.ClickEventType;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
@@ -49,13 +49,13 @@ public abstract class PlayerInteractiveChatInterface extends PlayerChatInterface
     }
 
     protected MessageParts getButton(String command) {
-        MessageParts button = this.getConfigMessagePart(MessageConfigurationNodes.UI_BUTTON);
+        MessageParts button = this.getConfigMessagePart(MessageConfigNodes.UI_BUTTON);
         button.setClickEvent(ClickEventType.RUN_COMMAND, command);
         return button;
     }
 
     protected MessageParts getButton(Runnable runnable) {
-        MessageParts button = this.getConfigMessagePart(MessageConfigurationNodes.UI_BUTTON);
+        MessageParts button = this.getConfigMessagePart(MessageConfigNodes.UI_BUTTON);
         long runnableId = TellRawUtility.bindRunnableToMessageParts(this.runnableHashTable, button, runnable);
         this.registeredRunnableIds.add(runnableId);
         return button;
@@ -67,7 +67,7 @@ public abstract class PlayerInteractiveChatInterface extends PlayerChatInterface
         }
 
         this.revokeSession();
-        String message = this.messageConfig.getString(MessageConfigurationNodes.UI_CANCELLED);
+        String message = this.messageConfig.getString(MessageConfigNodes.UI_CANCELLED);
         this.targetPlayer.sendMessage(message);
     }
 }

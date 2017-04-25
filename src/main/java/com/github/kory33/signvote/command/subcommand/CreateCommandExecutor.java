@@ -8,7 +8,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import com.github.kory33.signvote.configurable.JSONConfiguration;
-import com.github.kory33.signvote.constants.MessageConfigurationNodes;
+import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.core.SignVote;
 import com.github.kory33.signvote.manager.VoteSessionManager;
@@ -28,7 +28,7 @@ public class CreateCommandExecutor extends SubCommandExecutor{
     @Override
     public boolean onCommand(CommandSender sender, Command command, ArrayList<String> args) {
         if (!sender.hasPermission(PermissionNodes.CREATE_SESSION)) {
-            sender.sendMessage(messageConfiguration.getString(MessageConfigurationNodes.MISSING_PERMS));
+            sender.sendMessage(messageConfiguration.getString(MessageConfigNodes.MISSING_PERMS));
             return true;
         }
         
@@ -39,7 +39,7 @@ public class CreateCommandExecutor extends SubCommandExecutor{
         String voteSessionName = args.remove(0);
 
         if (this.voteSessionManager.getVoteSession(voteSessionName) != null) {
-            sender.sendMessage(messageConfiguration.getString(MessageConfigurationNodes.SESSION_ALREADY_EXISTS));
+            sender.sendMessage(messageConfiguration.getString(MessageConfigNodes.SESSION_ALREADY_EXISTS));
             return true;
         }
         
@@ -50,12 +50,12 @@ public class CreateCommandExecutor extends SubCommandExecutor{
             return false;
         }
         
-        sender.sendMessage(messageConfiguration.getFormatted(MessageConfigurationNodes.F_SESSION_CREATED, voteSessionName));
+        sender.sendMessage(messageConfiguration.getFormatted(MessageConfigNodes.F_SESSION_CREATED, voteSessionName));
         return true;
     }
 
     @Override
     protected String getHelpString() {
-        return messageConfiguration.getString(MessageConfigurationNodes.CREATE_COMMAND_HELP);
+        return messageConfiguration.getString(MessageConfigNodes.CREATE_COMMAND_HELP);
     }
 }

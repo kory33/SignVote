@@ -6,7 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import com.github.kory33.signvote.configurable.JSONConfiguration;
-import com.github.kory33.signvote.constants.MessageConfigurationNodes;
+import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.core.SignVote;
 import com.github.kory33.signvote.manager.VoteSessionManager;
@@ -24,7 +24,7 @@ public class DeleteVPCommandExecutor extends SubCommandExecutor {
     
     @Override
     protected String getHelpString() {
-        return this.messageConfiguration.getString(MessageConfigurationNodes.DELETE_VP_COMMAND_HELP);
+        return this.messageConfiguration.getString(MessageConfigNodes.DELETE_VP_COMMAND_HELP);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class DeleteVPCommandExecutor extends SubCommandExecutor {
         }
         
         if (!sender.hasPermission(PermissionNodes.DELETE_VOTEPOINT)) {
-            sender.sendMessage(messageConfiguration.getString(MessageConfigurationNodes.MISSING_PERMS));
+            sender.sendMessage(messageConfiguration.getString(MessageConfigNodes.MISSING_PERMS));
         }
         
         String sessionName = args.remove(0);
@@ -42,17 +42,17 @@ public class DeleteVPCommandExecutor extends SubCommandExecutor {
         
         VoteSession session = this.voteSessionManager.getVoteSession(sessionName);
         if (session == null) {
-            sender.sendMessage(messageConfiguration.getString(MessageConfigurationNodes.SESSION_DOES_NOT_EXIST));
+            sender.sendMessage(messageConfiguration.getString(MessageConfigNodes.SESSION_DOES_NOT_EXIST));
             return true;
         }
         
         VotePoint votePoint = session.getVotePoint(votepointName);
         if (votePoint == null) {
-            sender.sendMessage(messageConfiguration.getString(MessageConfigurationNodes.VOTEPOINT_DOES_NOT_EXIST));
+            sender.sendMessage(messageConfiguration.getString(MessageConfigNodes.VOTEPOINT_DOES_NOT_EXIST));
         }
         
         session.deleteVotepoint(votePoint);
-        sender.sendMessage(messageConfiguration.getFormatted(MessageConfigurationNodes.F_VOTEPOINT_DELETED, sessionName,
+        sender.sendMessage(messageConfiguration.getFormatted(MessageConfigNodes.F_VOTEPOINT_DELETED, sessionName,
                 votepointName));
         
         return true;

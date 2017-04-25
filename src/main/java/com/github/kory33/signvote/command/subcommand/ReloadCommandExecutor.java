@@ -6,7 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import com.github.kory33.signvote.configurable.JSONConfiguration;
-import com.github.kory33.signvote.constants.MessageConfigurationNodes;
+import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.core.SignVote;
 
@@ -27,12 +27,12 @@ public class ReloadCommandExecutor extends SubCommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, ArrayList<String> args) {
         if (!sender.hasPermission(PermissionNodes.RELOAD)) {
-            sender.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.MISSING_PERMS));
+            sender.sendMessage(this.messageConfiguration.getString(MessageConfigNodes.MISSING_PERMS));
             return true;
         }
         
         this.plugin.reload();
-        sender.sendMessage(this.messageConfiguration.getString(MessageConfigurationNodes.RELOAD_COMPLETE));
+        sender.sendMessage(this.messageConfiguration.getString(MessageConfigNodes.RELOAD_COMPLETE));
         return true;
     }
 }

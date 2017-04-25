@@ -6,7 +6,7 @@ package com.github.kory33.signvote.constants;
  * @author kory
  *
  */
-public class MessageConfigurationNodes {
+public class MessageConfigNodes {
     public static final String MESSAGE_PREFIX = "prefix";
 
     public static final String COMMAND_ROOT = "command";
@@ -88,5 +88,5 @@ public class MessageConfigurationNodes {
     public static final String LIST_UI_SESSION_CLOSED   = LIST_UI + ".state.closed";
 
     public static final String GENERIC                  = "generic";
-    public static final String INFINITY                 = GENERIC + ".infinity";
+    public static final String INFINITE                 = GENERIC + ".infinite";
 }

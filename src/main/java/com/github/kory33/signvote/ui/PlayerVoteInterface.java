@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
-import com.github.kory33.signvote.constants.MessageConfigurationNodes;
+import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.exception.InvalidScoreVotedException;
 import com.github.kory33.signvote.exception.ScoreCountLimitReachedException;
 import com.github.kory33.signvote.exception.VotePointAlreadyVotedException;
@@ -32,7 +32,7 @@ public class PlayerVoteInterface extends PlayerInteractiveChatInterface {
     }
 
     private MessageParts getHeading() {
-        String message = messageConfig.getFormatted(MessageConfigurationNodes.VOTE_UI_HEADING,
+        String message = messageConfig.getFormatted(MessageConfigNodes.VOTE_UI_HEADING,
                 this.votePoint.getName()) + "\n";
         return new MessageParts(message);
     }
@@ -46,13 +46,13 @@ public class PlayerVoteInterface extends PlayerInteractiveChatInterface {
 
         try {
             this.session.vote(this.targetPlayer, votePoint, score);
-            resultMessage = this.messageConfig.getFormatted(MessageConfigurationNodes.VOTED);
+            resultMessage = this.messageConfig.getFormatted(MessageConfigNodes.VOTED);
         } catch (ScoreCountLimitReachedException exception) {
-            resultMessage = this.messageConfig.getString(MessageConfigurationNodes.REACHED_VOTE_SCORE_LIMIT);
+            resultMessage = this.messageConfig.getString(MessageConfigNodes.REACHED_VOTE_SCORE_LIMIT);
         } catch (VotePointAlreadyVotedException exception) {
-            resultMessage = this.messageConfig.getString(MessageConfigurationNodes.VOTEPOINT_ALREADY_VOTED);
+            resultMessage = this.messageConfig.getString(MessageConfigNodes.VOTEPOINT_ALREADY_VOTED);
         } catch (InvalidScoreVotedException exception) {
-            resultMessage = this.messageConfig.getString(MessageConfigurationNodes.INVALID_VOTE_SCORE);
+            resultMessage = this.messageConfig.getString(MessageConfigNodes.INVALID_VOTE_SCORE);
         }
 
         this.targetPlayer.sendMessage(resultMessage);
@@ -65,10 +65,10 @@ public class PlayerVoteInterface extends PlayerInteractiveChatInterface {
         if (remaining.isPresent()) {
             remainingString = remaining.get().toString();
         } else {
-            remainingString = this.messageConfig.getString(MessageConfigurationNodes.INFINITY);
+            remainingString = this.messageConfig.getString(MessageConfigNodes.INFINITE);
         }
 
-        String message = this.messageConfig.getFormatted(MessageConfigurationNodes.VOTE_UI_SCORE_SELECTION, score, remainingString);
+        String message = this.messageConfig.getFormatted(MessageConfigNodes.VOTE_UI_SCORE_SELECTION, score, remainingString);
         MessageParts messageLine = new MessageParts(message + "\n");
         return messageLine;
     }
@@ -77,8 +77,8 @@ public class PlayerVoteInterface extends PlayerInteractiveChatInterface {
     protected MessageComponent constructInterfaceMessages() {
         HashMap<Integer, Optional<Integer>> availableVotePoints = this.session.getAvailableVoteCounts(this.targetPlayer);
         if (availableVotePoints.isEmpty()) {
-            String message = this.messageConfig.getString(MessageConfigurationNodes.MESSAGE_PREFIX) +
-                    this.messageConfig.getString(MessageConfigurationNodes.VOTE_UI_NONE_AVAILABLE);
+            String message = this.messageConfig.getString(MessageConfigNodes.MESSAGE_PREFIX) +
+                    this.messageConfig.getString(MessageConfigNodes.VOTE_UI_NONE_AVAILABLE);
 
             MessageComponent messageComponent = new MessageComponent();
             messageComponent.addParts(new MessageParts(message));
@@ -86,8 +86,8 @@ public class PlayerVoteInterface extends PlayerInteractiveChatInterface {
             return messageComponent;
         }
 
-        MessageParts header = this.getConfigMessagePart(MessageConfigurationNodes.UI_HEADER);
-        MessageParts footer = this.getConfigMessagePart(MessageConfigurationNodes.UI_FOOTER);
+        MessageParts header = this.getConfigMessagePart(MessageConfigNodes.UI_HEADER);
+        MessageParts footer = this.getConfigMessagePart(MessageConfigNodes.UI_FOOTER);
 
         ArrayList<MessageParts> messageList = new ArrayList<>();
         messageList.add(header);
@@ -103,7 +103,7 @@ public class PlayerVoteInterface extends PlayerInteractiveChatInterface {
             });
 
         messageList.add(this.getButton(this::cancelAction));
-        messageList.add(this.getConfigMessagePart(MessageConfigurationNodes.UI_CANCEL));
+        messageList.add(this.getConfigMessagePart(MessageConfigNodes.UI_CANCEL));
 
         messageList.add(footer);
         return new MessageComponent(messageList);

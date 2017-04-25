@@ -7,7 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import com.github.kory33.signvote.configurable.JSONConfiguration;
-import com.github.kory33.signvote.constants.MessageConfigurationNodes;
+import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.core.SignVote;
 import com.github.kory33.signvote.manager.VoteSessionManager;
@@ -26,13 +26,13 @@ public class ListCommandExecutor extends SubCommandExecutor {
 
     @Override
     protected String getHelpString() {
-        return messageConfig.getString(MessageConfigurationNodes.LIST_COMMAND_HELP);
+        return messageConfig.getString(MessageConfigNodes.LIST_COMMAND_HELP);
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, ArrayList<String> args) {
         if (!sender.hasPermission(PermissionNodes.LIST_SESSION)) {
-            sender.sendMessage(messageConfig.getString(MessageConfigurationNodes.MISSING_PERMS));
+            sender.sendMessage(messageConfig.getString(MessageConfigNodes.MISSING_PERMS));
             return true;
         }
 
