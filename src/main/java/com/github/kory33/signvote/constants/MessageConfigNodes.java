@@ -71,6 +71,7 @@ public class MessageConfigNodes {
     public static final String UI_BUTTON                = UI_ROOT + ".button";
     public static final String UI_CANCEL                = UI_ROOT + ".cancel";
     public static final String UI_CANCELLED             = UI_ROOT + ".cancelled";
+    public static final String UI_EDIT_BUTTON           = UI_ROOT + ".editbutton";
 
     public static final String VOTE_UI_ROOT             = UI_ROOT + ".vote";
     public static final String VOTE_UI_HEADING          = VOTE_UI_ROOT + ".heading";
@@ -86,6 +87,9 @@ public class MessageConfigNodes {
     public static final String LIST_UI_LINE_PREFIX      = LIST_UI + ".lineprefix";
     public static final String LIST_UI_SESSION_OPEN     = LIST_UI + ".state.open";
     public static final String LIST_UI_SESSION_CLOSED   = LIST_UI + ".state.closed";
+
+    public static final String UI_FORM_ROOT             = UI_ROOT + ".form";
+    public static final String UI_FORM_NAME_PREFIX      = UI_FORM_ROOT + ".prefix";
 
     public static final String GENERIC                  = "generic";
     public static final String INFINITE                 = GENERIC + ".infinite";

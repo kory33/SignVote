@@ -92,6 +92,7 @@
         "header": "§6----------[SignVote]----------\n§r",
         "footer": "§6----------------------------",
         "button": "§3[x] §r",
+        "editbutton": " §3[edit]§r",
         "cancel": "§eCANCEL\n",
         "cancelled": "§eOperation cancelled.",
         "vote": {
@@ -110,6 +111,9 @@
                 "open": " §a(open)",
                 "closed": " §e(closed)"
             }
+        },
+        "form": {
+            "prefix": "§6"
         }
     },
     "generic": {

@@ -25,6 +25,7 @@ public class PlayerVoteListner implements Listener {
     private final JSONConfiguration messageConfig;
     private final RunnableHashTable runnableHashTable;
     private final PlayerInteractiveInterfaceManager interfaceManager;
+    private final PlayerChatInterceptor chatInterceptor;
 
     public PlayerVoteListner(SignVote plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -32,6 +33,7 @@ public class PlayerVoteListner implements Listener {
         this.messageConfig = plugin.getMessagesConfiguration();
         this.runnableHashTable = plugin.getRunnableHashTable();
         this.interfaceManager = plugin.getInterfaceManager();
+        this.chatInterceptor = plugin.getChatInterceptor();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
@@ -61,9 +63,9 @@ public class PlayerVoteListner implements Listener {
 
         PlayerInteractiveChatInterface chatInterface;
         if (session.getVoteManager().hasVoted(clickPlayer, votePoint)) {
-            chatInterface = new PlayerUnvoteInterface(clickPlayer, session, votePoint, messageConfig, runnableHashTable);
+            chatInterface = new PlayerUnvoteInterface(clickPlayer, session, votePoint, messageConfig, runnableHashTable, chatInterceptor);
         } else {
-            chatInterface = new PlayerVoteInterface(clickPlayer, session, votePoint, messageConfig, runnableHashTable);
+            chatInterface = new PlayerVoteInterface(clickPlayer, session, votePoint, messageConfig, runnableHashTable, chatInterceptor);
         }
 
         this.interfaceManager.registerInterface(chatInterface);

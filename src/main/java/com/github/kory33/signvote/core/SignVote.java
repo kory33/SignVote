@@ -18,6 +18,7 @@ import com.github.kory33.signvote.constants.ConfigNodes;
 import com.github.kory33.signvote.constants.FilePaths;
 import com.github.kory33.signvote.io.PluginDataAutoSaver;
 import com.github.kory33.signvote.io.RunCommandFilter;
+import com.github.kory33.signvote.listners.PlayerChatInterceptor;
 import com.github.kory33.signvote.listners.PlayerVoteListner;
 import com.github.kory33.signvote.listners.SignListner;
 import com.github.kory33.signvote.manager.PlayerInteractiveInterfaceManager;
@@ -32,6 +33,7 @@ public class SignVote extends GithubUpdateNotifyPlugin {
     @Getter private FileConfiguration configuration;
     @Getter private RunnableHashTable runnableHashTable;
     @Getter private PlayerInteractiveInterfaceManager interfaceManager;
+    @Getter private PlayerChatInterceptor chatInterceptor;
 
     private static Filter runnableCommandFilter = null;
     private static Metrics metricsInstance = null;
@@ -104,6 +106,7 @@ public class SignVote extends GithubUpdateNotifyPlugin {
         this.voteSessionManager = new VoteSessionManager(this.getLogger(), sessionsDir);
 
         // register listners
+        this.chatInterceptor = new PlayerChatInterceptor(this);
         new SignListner(this);
         new PlayerVoteListner(this);
 

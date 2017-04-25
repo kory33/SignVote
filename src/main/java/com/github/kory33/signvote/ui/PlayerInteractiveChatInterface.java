@@ -1,13 +1,16 @@
 package com.github.kory33.signvote.ui;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import org.bukkit.entity.Player;
 
 import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
+import com.github.kory33.signvote.listners.PlayerChatInterceptor;
 import com.github.kory33.signvote.utils.tellraw.TellRawUtility;
 import com.github.ucchyocean.messaging.tellraw.ClickEventType;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
@@ -19,12 +22,17 @@ public abstract class PlayerInteractiveChatInterface extends PlayerChatInterface
 
     private final Set<Long> registeredRunnableIds;
 
-    public PlayerInteractiveChatInterface(Player player, JSONConfiguration messageConfiguration, RunnableHashTable runnableHashTable) {
+    private final PlayerChatInterceptor chatInterceptor;
+
+    public PlayerInteractiveChatInterface(Player player, JSONConfiguration messageConfiguration,
+            RunnableHashTable runnableHashTable, PlayerChatInterceptor chatInterceptor) {
         super(player);
         this.messageConfig = messageConfiguration;
         this.runnableHashTable = runnableHashTable;
         this.isValidSession = true;
         this.registeredRunnableIds = new HashSet<>();
+
+        this.chatInterceptor = chatInterceptor;
     }
 
     protected boolean isValidSession() {
@@ -54,11 +62,41 @@ public abstract class PlayerInteractiveChatInterface extends PlayerChatInterface
         return button;
     }
 
-    protected MessageParts getButton(Runnable runnable) {
-        MessageParts button = this.getConfigMessagePart(MessageConfigNodes.UI_BUTTON);
+    protected MessageParts getButton(Runnable runnable, MessageParts button) {
         long runnableId = TellRawUtility.bindRunnableToMessageParts(this.runnableHashTable, button, runnable);
         this.registeredRunnableIds.add(runnableId);
         return button;
+    }
+
+    protected MessageParts getButton(Runnable runnable) {
+        MessageParts button = this.getConfigMessagePart(MessageConfigNodes.UI_BUTTON);
+        return this.getButton(runnable, button);
+    }
+
+    /**
+     * Get an arraylist representing a form to which the target player can input string data.
+     * @param onPlayerSendString
+     * @param name
+     * @param displayValue
+     * @param defaultDisplayValue
+     * @return
+     */
+    protected ArrayList<MessageParts> getForm(Consumer<String> onPlayerSendString, String name, String displayValue, String defaultDisplayValue) {
+        ArrayList<MessageParts> form = new ArrayList<>();
+
+        // setup title part
+        form.add(this.getConfigMessagePart(MessageConfigNodes.UI_FORM_NAME_PREFIX));
+        form.add(new MessageParts(name));
+
+        // setup edit button
+        form.add(this.getButton(() -> {
+            chatInterceptor.interceptFirstMessageFrom(this.targetPlayer)
+                .thenAccept(onPlayerSendString).thenRun(this::send)
+                .exceptionally((error) -> null);
+        }, this.getConfigMessagePart(MessageConfigNodes.UI_EDIT_BUTTON)));
+
+        form.add(new MessageParts(""));
+        return form;
     }
 
     protected void cancelAction() {
