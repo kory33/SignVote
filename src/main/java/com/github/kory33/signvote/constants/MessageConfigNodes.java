@@ -89,7 +89,8 @@ public class MessageConfigNodes {
     public static final String LIST_UI_SESSION_CLOSED   = LIST_UI + ".state.closed";
 
     public static final String UI_FORM_ROOT             = UI_ROOT + ".form";
-    public static final String UI_FORM_NAME_PREFIX      = UI_FORM_ROOT + ".prefix";
+    public static final String F_UI_FORM_NAME           = UI_FORM_ROOT + ".name";
+    public static final String UI_FORM_NOTSET           = UI_FORM_ROOT + ".notset";
 
     public static final String GENERIC                  = "generic";
     public static final String INFINITE                 = GENERIC + ".infinite";

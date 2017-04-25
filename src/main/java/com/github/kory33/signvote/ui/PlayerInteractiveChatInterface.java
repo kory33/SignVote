@@ -81,21 +81,26 @@ public abstract class PlayerInteractiveChatInterface extends PlayerChatInterface
      * @param defaultDisplayValue
      * @return
      */
-    protected ArrayList<MessageParts> getForm(Consumer<String> onPlayerSendString, String name, String displayValue, String defaultDisplayValue) {
-        ArrayList<MessageParts> form = new ArrayList<>();
+    protected ArrayList<MessageParts> getForm(Consumer<String> onPlayerSendString, String name, String value) {
+        MessageParts formName = new MessageParts(this.messageConfig.getFormatted(MessageConfigNodes.F_UI_FORM_NAME, name));
 
-        // setup title part
-        form.add(this.getConfigMessagePart(MessageConfigNodes.UI_FORM_NAME_PREFIX));
-        form.add(new MessageParts(name));
+        MessageParts defaultDisplay = new MessageParts(this.messageConfig.getString(MessageConfigNodes.UI_FORM_NOTSET));
+        MessageParts formValue = value != null && !value.isEmpty() ? defaultDisplay : new MessageParts(value);
 
-        // setup edit button
-        form.add(this.getButton(() -> {
+        MessageParts editButton = this.getButton(() -> {
             chatInterceptor.interceptFirstMessageFrom(this.targetPlayer)
                 .thenAccept(onPlayerSendString).thenRun(this::send)
                 .exceptionally((error) -> null);
-        }, this.getConfigMessagePart(MessageConfigNodes.UI_EDIT_BUTTON)));
+        }, this.getConfigMessagePart(MessageConfigNodes.UI_EDIT_BUTTON));
 
-        form.add(new MessageParts(""));
+
+        ArrayList<MessageParts> form = new ArrayList<>();
+
+        form.add(formName);
+        form.add(formValue);
+        form.add(editButton);
+        form.add(new MessageParts("\n"));
+
         return form;
     }
 
