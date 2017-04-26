@@ -9,6 +9,7 @@ import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MagicNumbers;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
+import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.listners.PlayerChatInterceptor;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.ucchyocean.messaging.tellraw.MessageComponent;
@@ -38,8 +39,48 @@ public class PlayerAddscoreInterface extends PlayerInteractiveChatInterface {
         return this.voteLimit.toString();
     }
 
+    private void addScoreLimit() {
+        if (score == null) {
+            targetPlayer.sendMessage(messageConfig.getString(MessageConfigNodes.ADDSCORE_UI_SCORE_NOT_SET));
+            return;
+        }
+
+        if (voteLimit == null) {
+            voteLimit = MagicNumbers.VOTELIMIT_INFINITY;
+        }
+
+        String convertedPermission = permission;
+        if (permission == null || permission.isEmpty()) {
+            convertedPermission = PermissionNodes.VOTE;
+        } else if (permission == "op") {
+            convertedPermission = PermissionNodes.VOTE_MORE;
+        } else {
+            convertedPermission = permission;
+        }
+
+        this.session.getVoteScoreCountLimits().addLimit(score, convertedPermission, voteLimit);
+
+        String limitString = voteLimit == MagicNumbers.VOTELIMIT_INFINITY ? "Infinity" : String.valueOf(voteLimit);
+        this.targetPlayer.sendMessage(messageConfig.getFormatted(MessageConfigNodes.F_SCORE_LIMIT_ADDED,
+                limitString, score, session.getName(), convertedPermission));
+
+        this.revokeSession();
+    }
+
     private MessageParts getHeading() {
         return new MessageParts(messageConfig.getFormatted(MessageConfigNodes.ADDSCORE_UI_HEADING, this.session.getName()));
+    }
+
+    private boolean validateLimitInput(String input) {
+        try {
+            int limit = NumberUtils.createInteger(input);
+            if (limit != MagicNumbers.VOTELIMIT_INFINITY && limit <= 0) {
+                return false;
+            }
+            return true;
+        } catch (NumberFormatException exception) {
+            return false;
+        }
     }
 
     @Override
@@ -56,7 +97,7 @@ public class PlayerAddscoreInterface extends PlayerInteractiveChatInterface {
 
         ArrayList<MessageParts> limitForm = super.getForm(
                 input -> this.voteLimit = NumberUtils.createInteger(input),
-                NumberUtils::isNumber,
+                this::validateLimitInput,
                 this.messageConfig.getString(MessageConfigNodes.ADDSCORE_UI_LIMIT),
                 this.getVoteLimitString()
             );
@@ -68,12 +109,16 @@ public class PlayerAddscoreInterface extends PlayerInteractiveChatInterface {
                 this.permission
             );
 
+        MessageParts submitButton = this.getButton(this::addScoreLimit,
+                this.getConfigMessagePart(MessageConfigNodes.ADDSCORE_UI_SUBMIT));
+
         ArrayList<MessageParts> messageParts = new ArrayList<>();
         messageParts.add(header);
         messageParts.add(this.getHeading());
         messageParts.addAll(scoreForm);
         messageParts.addAll(limitForm);
         messageParts.addAll(permissionForm);
+        messageParts.add(submitButton);
         messageParts.add(footer);
         return new MessageComponent(messageParts);
     }

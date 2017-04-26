@@ -115,7 +115,9 @@
             "heading": "§aEnter data for a vote limit to add to §6{0}:\n",
             "score": "Score",
             "limit": "Limit",
-            "permission": "Permission"
+            "permission": "Permission",
+            "scorenotset": "§cYou cannot leave score blanc.",
+            "submit": "§3[Comfirm and submit]§r\n"
         },
         "form": {
             "name": "§6{0} : ",
