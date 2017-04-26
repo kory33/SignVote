@@ -111,7 +111,7 @@ public abstract class PlayerInteractiveChatInterface extends PlayerChatInterface
     protected ArrayList<MessageParts> getForm(Consumer<String> onPlayerSendString, Predicate<String> validator, String name, String value) {
         MessageParts formName = new MessageParts(this.messageConfig.getFormatted(MessageConfigNodes.F_UI_FORM_NAME, name));
 
-        if (value != null && !value.isEmpty()) {
+        if (value == null || value.isEmpty()) {
             value = this.messageConfig.getString(MessageConfigNodes.UI_FORM_NOTSET);
         }
         MessageParts formValue = new MessageParts(this.messageConfig.getFormatted(MessageConfigNodes.F_UI_FORM_VALUE, value));

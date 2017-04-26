@@ -111,13 +111,19 @@
                 "closed": " §e(closed)"
             }
         },
+        "addscore": {
+            "heading": "§aEnter data for a vote limit to add to §6{0}:\n",
+            "score": "Score",
+            "limit": "Limit",
+            "permission": "Permission"
+        },
         "form": {
             "name": "§6{0} : ",
             "value": "§b{0}",
             "editbutton": " §3[edit]§r",
             "notset": "(not set)",
-            "prompt": "§3Enter a value for field §6{0}:",
-            "invalidinput", "§cInvalid input received.\n§3Try again:"
+            "prompt": "§bEnter a value for field §6{0}:",
+            "invalidinput": "§cInvalid input received.\n§3Try again:"
         }
     },
     "generic": {
