@@ -31,18 +31,27 @@ public class PlayerChatInterceptor implements Listener {
         }
 
         future.complete(event.getMessage());
+        event.setCancelled(false);
     }
 
     @EventHandler
     public void onPlayerExit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
+        this.cancelAnyInterception(event.getPlayer(), "Player has quit.");
+    }
+
+    /**
+     * Cancel chat interception task associated with a given player, if there exists any.
+     * @param player
+     * @param cancelReason
+     */
+    public void cancelAnyInterception(Player player, String cancelReason) {
         CompletableFuture<String> future = this.interceptionFutureMap.remove(player);
 
         if (future == null) {
             return;
         }
 
-        future.completeExceptionally(new ChatInterceptionCancelledException("Player has quit."));
+        future.completeExceptionally(new ChatInterceptionCancelledException(cancelReason));
     }
 
     /**
@@ -53,10 +62,8 @@ public class PlayerChatInterceptor implements Listener {
     public CompletableFuture<String> interceptFirstMessageFrom(Player sourcePlayer) {
         CompletableFuture<String> future = new CompletableFuture<>();
 
-        if (this.interceptionFutureMap.containsKey(sourcePlayer)) {
-            CompletableFuture<String> oldFuture = this.interceptionFutureMap.remove(sourcePlayer);
-            oldFuture.completeExceptionally(new ChatInterceptionCancelledException("New interception scheduled."));
-        }
+        // cancel previous interception
+        this.cancelAnyInterception(sourcePlayer, "New interception scheduled.");
 
         this.interceptionFutureMap.put(sourcePlayer, future);
         return future;

@@ -52,6 +52,7 @@ public abstract class PlayerInteractiveChatInterface extends PlayerChatInterface
         for (long runnableId: this.registeredRunnableIds) {
             this.runnableHashTable.cancelTask(runnableId);
         }
+        this.chatInterceptor.cancelAnyInterception(this.targetPlayer, "UI session has been revoked.");
     }
 
     protected MessageParts getConfigMessagePart(String configurationNode) {
