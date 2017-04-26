@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import org.bukkit.entity.Player;
 
@@ -22,7 +23,7 @@ public abstract class PlayerInteractiveChatInterface extends PlayerChatInterface
 
     private final Set<Long> registeredRunnableIds;
 
-    private final PlayerChatInterceptor chatInterceptor;
+    protected final PlayerChatInterceptor chatInterceptor;
 
     public PlayerInteractiveChatInterface(Player player, JSONConfiguration messageConfiguration,
             RunnableHashTable runnableHashTable, PlayerChatInterceptor chatInterceptor) {
@@ -73,6 +74,33 @@ public abstract class PlayerInteractiveChatInterface extends PlayerChatInterface
         return this.getButton(runnable, button);
     }
 
+    private void promptInput(String formName) {
+        String message = this.messageConfig.getFormatted(MessageConfigNodes.F_UI_FORM_PROMPT, formName);
+        this.targetPlayer.sendMessage(message);
+    }
+
+    private void notifyInvalidInput() {
+        String message = this.messageConfig.getString(MessageConfigNodes.F_UI_FORM_INVALID_INPUT);
+        this.targetPlayer.sendMessage(message);
+    }
+
+    private Runnable getFormInputFlow(Consumer<String> onPlayerSendString, Predicate<String> validator, String formName) {
+        return () -> {
+            this.promptInput(formName);
+            chatInterceptor.interceptFirstMessageFrom(this.targetPlayer)
+                .thenAccept(input -> {
+                    if (!validator.test(input)) {
+                        this.notifyInvalidInput();
+                        this.getFormInputFlow(onPlayerSendString, validator, formName).run();
+                        return;
+                    }
+                    onPlayerSendString.accept(input);
+                    this.send();
+                })
+                .exceptionally((error) -> null);
+        };
+    }
+
     /**
      * Get an arraylist representing a form to which the target player can input string data.
      * @param onPlayerSendString
@@ -81,21 +109,16 @@ public abstract class PlayerInteractiveChatInterface extends PlayerChatInterface
      * @param defaultDisplayValue
      * @return
      */
-    protected ArrayList<MessageParts> getForm(Consumer<String> onPlayerSendString, String name, String value) {
+    protected ArrayList<MessageParts> getForm(Consumer<String> onPlayerSendString, Predicate<String> validator, String name, String value) {
         MessageParts formName = new MessageParts(this.messageConfig.getFormatted(MessageConfigNodes.F_UI_FORM_NAME, name));
 
         if (value != null && !value.isEmpty()) {
             value = this.messageConfig.getString(MessageConfigNodes.UI_FORM_NOTSET);
         }
-
         MessageParts formValue = new MessageParts(this.messageConfig.getFormatted(MessageConfigNodes.F_UI_FORM_VALUE, value));
 
-        MessageParts editButton = this.getButton(() -> {
-            chatInterceptor.interceptFirstMessageFrom(this.targetPlayer)
-                .thenAccept(onPlayerSendString).thenRun(this::send)
-                .exceptionally((error) -> null);
-        }, this.getConfigMessagePart(MessageConfigNodes.UI_FORM_EDIT_BUTTON));
-
+        Runnable formInputFlow = this.getFormInputFlow(onPlayerSendString, validator, name);
+        MessageParts editButton = this.getButton(formInputFlow, this.getConfigMessagePart(MessageConfigNodes.UI_FORM_EDIT_BUTTON));
 
         ArrayList<MessageParts> form = new ArrayList<>();
 

@@ -92,6 +92,8 @@ public class MessageConfigNodes {
     public static final String F_UI_FORM_VALUE          = UI_FORM_ROOT + ".value";
     public static final String UI_FORM_NOTSET           = UI_FORM_ROOT + ".notset";
     public static final String UI_FORM_EDIT_BUTTON      = UI_FORM_ROOT + ".editbutton";
+    public static final String F_UI_FORM_PROMPT         = UI_FORM_ROOT + ".prompt";
+    public static final String F_UI_FORM_INVALID_INPUT  = UI_FORM_ROOT + ".invalidinput";
 
     public static final String GENERIC                  = "generic";
     public static final String INFINITE                 = GENERIC + ".infinite";
