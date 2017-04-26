@@ -31,7 +31,7 @@ public class PlayerChatInterceptor implements Listener {
         }
 
         future.complete(event.getMessage());
-        event.setCancelled(false);
+        event.setCancelled(true);
     }
 
     @EventHandler
