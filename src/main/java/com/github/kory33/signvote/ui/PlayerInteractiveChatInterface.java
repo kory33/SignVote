@@ -42,16 +42,23 @@ public abstract class PlayerInteractiveChatInterface extends PlayerChatInterface
     }
 
     /**
+     * Revoke all runnables bound to this interface.
+     */
+    private void revokeAllRunnables() {
+        // remove all the bound runnables
+        for (long runnableId: this.registeredRunnableIds) {
+            this.runnableHashTable.cancelTask(runnableId);
+        }
+    }
+
+    /**
      * Nullify the session.
      * Clear all associated runnables from cache table
      * and mark the session as invalid.
      */
     public void revokeSession() {
         this.isValidSession = false;
-        // remove all the bound runnables
-        for (long runnableId: this.registeredRunnableIds) {
-            this.runnableHashTable.cancelTask(runnableId);
-        }
+        this.revokeAllRunnables();
         this.chatInterceptor.cancelAnyInterception(this.targetPlayer, "UI session has been revoked.");
     }
 
@@ -117,6 +124,7 @@ public abstract class PlayerInteractiveChatInterface extends PlayerChatInterface
         MessageParts formValue = new MessageParts(this.messageConfig.getFormatted(MessageConfigNodes.F_UI_FORM_VALUE, value));
 
         MessageParts editButton = this.getButton(() -> {
+            this.revokeAllRunnables();
             this.promptInput(name);
             this.getInputToForm(onPlayerSendString, validator, name);
         }, this.getConfigMessagePart(MessageConfigNodes.UI_FORM_EDIT_BUTTON));
