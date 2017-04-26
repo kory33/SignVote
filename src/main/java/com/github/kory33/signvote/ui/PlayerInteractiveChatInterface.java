@@ -19,7 +19,7 @@ import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
 public abstract class PlayerInteractiveChatInterface extends PlayerChatInterface {
     protected final JSONConfiguration messageConfig;
-    protected final RunnableHashTable runnableHashTable;
+    private final RunnableHashTable runnableHashTable;
     private boolean isValidSession;
 
     private final Set<Long> registeredRunnableIds;

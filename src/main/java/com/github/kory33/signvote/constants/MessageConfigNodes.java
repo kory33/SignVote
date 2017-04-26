@@ -87,6 +87,12 @@ public class MessageConfigNodes {
     public static final String LIST_UI_SESSION_OPEN     = LIST_UI + ".state.open";
     public static final String LIST_UI_SESSION_CLOSED   = LIST_UI + ".state.closed";
 
+    public static final String ADDSCORE_UI              = UI_ROOT + ".addscore";
+    public static final String ADDSCORE_UI_HEADING      = ADDSCORE_UI + ".heading";
+    public static final String ADDSCORE_UI_SCORE        = ADDSCORE_UI + ".score";
+    public static final String ADDSCORE_UI_LIMIT        = ADDSCORE_UI + ".limit";
+    public static final String ADDSCORE_UI_PERMISSION   = ADDSCORE_UI + ".permission";
+
     public static final String UI_FORM_ROOT             = UI_ROOT + ".form";
     public static final String F_UI_FORM_NAME           = UI_FORM_ROOT + ".name";
     public static final String F_UI_FORM_VALUE          = UI_FORM_ROOT + ".value";
