@@ -3,6 +3,7 @@ package com.github.kory33.signvote.ui;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -80,25 +81,22 @@ public abstract class PlayerInteractiveChatInterface extends PlayerChatInterface
     }
 
     private void notifyInvalidInput() {
-        String message = this.messageConfig.getString(MessageConfigNodes.F_UI_FORM_INVALID_INPUT);
+        String message = this.messageConfig.getString(MessageConfigNodes.UI_FORM_INVALID_INPUT);
         this.targetPlayer.sendMessage(message);
     }
 
-    private Runnable getFormInputFlow(Consumer<String> onPlayerSendString, Predicate<String> validator, String formName) {
-        return () -> {
-            this.promptInput(formName);
-            chatInterceptor.interceptFirstMessageFrom(this.targetPlayer)
+    private CompletableFuture<Void> getInputToForm(Consumer<String> onPlayerSendString, Predicate<String> validator, String formName) {
+        return chatInterceptor.interceptFirstMessageFrom(this.targetPlayer)
                 .thenAccept(input -> {
                     if (!validator.test(input)) {
                         this.notifyInvalidInput();
-                        this.getFormInputFlow(onPlayerSendString, validator, formName).run();
+                        this.getInputToForm(onPlayerSendString, validator, formName);
                         return;
                     }
                     onPlayerSendString.accept(input);
                     this.send();
                 })
                 .exceptionally((error) -> null);
-        };
     }
 
     /**
@@ -117,8 +115,10 @@ public abstract class PlayerInteractiveChatInterface extends PlayerChatInterface
         }
         MessageParts formValue = new MessageParts(this.messageConfig.getFormatted(MessageConfigNodes.F_UI_FORM_VALUE, value));
 
-        Runnable formInputFlow = this.getFormInputFlow(onPlayerSendString, validator, name);
-        MessageParts editButton = this.getButton(formInputFlow, this.getConfigMessagePart(MessageConfigNodes.UI_FORM_EDIT_BUTTON));
+        MessageParts editButton = this.getButton(() -> {
+            this.promptInput(name);
+            this.getInputToForm(onPlayerSendString, validator, name);
+        }, this.getConfigMessagePart(MessageConfigNodes.UI_FORM_EDIT_BUTTON));
 
         ArrayList<MessageParts> form = new ArrayList<>();
 

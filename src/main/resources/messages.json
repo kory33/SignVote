@@ -115,7 +115,9 @@
             "name": "§6{0} : ",
             "value": "§b{0}",
             "editbutton": " §3[edit]§r",
-            "notset": "(not set)"
+            "notset": "(not set)",
+            "prompt": "§3Enter a value for field §6{0}:",
+            "invalidinput", "§cInvalid input received.\n§3Try again:"
         }
     },
     "generic": {
