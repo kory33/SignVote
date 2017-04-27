@@ -95,11 +95,25 @@ public class VoteManager {
     /**
      * Get the mapping of voted score to a list of voted points' name from a given player.
      */
-    public HashMap<Integer, HashSet<String>> getVotedPointsMap(UUID uuid) {
+    private HashMap<Integer, HashSet<String>> getVotedPointsMap(UUID uuid) {
         if (!this.voteData.containsKey(uuid)) {
             this.voteData.put(uuid, new HashMap<>());
         }
         return this.voteData.get(uuid);
+    }
+
+    /**
+     * Get the mapping of [vote score] to the [number of times the score has been voted by the player]
+     * @param uuid UUID of the player
+     * @return A map containing vote scores as keys and vote counts(with the score of corresponding key) as values
+     */
+    public HashMap<Integer, Integer> getVotedPointsCount(UUID uuid) {
+        HashMap<Integer, HashSet<String>> votePointsMap = this.getVotedPointsMap(uuid);
+
+        HashMap<Integer, Integer> voteCounts = new HashMap<>();
+        votePointsMap.forEach((score, voteSet) -> voteCounts.put(score, voteSet.size()));
+
+        return voteCounts;
     }
 
     /**

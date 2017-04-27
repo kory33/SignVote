@@ -3,7 +3,6 @@ package com.github.kory33.signvote.session;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -214,12 +213,11 @@ public class VoteSession {
     public HashMap<Integer, Optional<Integer>> getAvailableVoteCounts(Player player) {
         HashMap<Integer, Optional<Integer>> availableCounts = this.getReservedVoteCounts(player);
 
-        HashMap<Integer, HashSet<String>> votedScores = this.voteManager.getVotedPointsMap(player.getUniqueId());
-        for (int score: votedScores.keySet()) {
-            int votedNum = votedScores.get(score).size();
+        HashMap<Integer, Integer> votedScoreCounts = this.voteManager.getVotedPointsCount(player.getUniqueId());
 
+        votedScoreCounts.forEach((score, votedNum) -> {
             if (!availableCounts.containsKey(score)) {
-                continue;
+                return;
             }
 
             Optional<Integer> reservedVotes = availableCounts.remove(score);
@@ -231,7 +229,7 @@ public class VoteSession {
             if (remainingVotes.orElse(-1) != 0) {
                 availableCounts.put(score, remainingVotes);
             }
-        }
+        });
 
         return availableCounts;
     }
