@@ -182,6 +182,28 @@ public class VoteManager {
     }
 
     /**
+     * Remove all the votes associated with the given votepoint.
+     * @param votePoint
+     */
+    public void removeAllVotes(VotePoint votePoint) {
+        HashSet<Vote> votes = this.votePointVotes.get(votePoint);
+
+        // purge votepoint names present in voteData
+        votes.forEach(vote -> {
+            try {
+                this.voteData.get(vote.getVoterUuid()).get(vote.getScore()).remove(votePoint.getName());
+            } catch (NullPointerException exception) {
+                // NPE should be thrown If and Only If
+                // voteData and votePointVotes are not synchronized correctly
+                exception.printStackTrace();
+            }
+        });
+
+        // clear votePointVotes
+        this.votePointVotes.remove(votePoint);
+    }
+
+    /**
      * Get a set of votes casted to the given votepoint.
      * @param votePoint
      * @return

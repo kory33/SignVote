@@ -298,6 +298,8 @@ public class VoteSession {
      * @param votePoint
      */
     public void deleteVotepoint(VotePoint votePoint) {
+        this.voteManager.removeAllVotes(votePoint);
+
         this.votePointNameMap.removeValue(votePoint);
         Sign sign = this.signMap.removeValue(votePoint);
 
