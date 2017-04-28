@@ -62,7 +62,7 @@ public class UnvoteCommandExecutor extends SubCommandExecutor {
         }
 
         try {
-            session.getVoteManager().removeVote(player, votePoint);
+            session.getVoteManager().removeVote(player.getUniqueId(), votePoint);
             player.sendMessage(this.messageConfiguration.getFormatted(MessageConfigNodes.F_UNVOTED, votePointName));
         } catch (VotePointNotVotedException exception) {
             player.sendMessage(this.messageConfiguration.getFormatted(MessageConfigNodes.NOT_VOTED, votePointName));

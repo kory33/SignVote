@@ -12,7 +12,6 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 import com.github.kory33.signvote.constants.Patterns;
 import com.github.kory33.signvote.exception.VotePointAlreadyVotedException;
@@ -136,19 +135,7 @@ public class VoteManager {
 
     /**
      * Add a vote data related to the score and the votepoint to which the player has voted
-     * @param voter
-     * @param voteScore
-     * @param votePoint
-     * @deprecated Use {@link #addVotePointData(UUID, int, VotePoint)} instead.
-     * @throws IllegalArgumentException when there is a duplicate in the vote
-     */
-    public void addVotePointData(Player voter, int voteScore, VotePoint votePoint) throws VotePointAlreadyVotedException {
-        this.addVotePointData(voter.getUniqueId(), voteScore, votePoint);
-    }
-
-    /**
-     * Add a vote data related to the score and the votepoint to which the player has voted
-     * @param voter
+     * @param voterUUID
      * @param voteScore
      * @param votePoint
      * @throws IllegalArgumentException when there is a duplicate in the vote
@@ -178,19 +165,7 @@ public class VoteManager {
 
     /**
      * Remove a vote casted by the given player to the given votepoint.
-     * @param player
-     * @param votePoint
-     * @deprecated Use {@link #removeVote(UUID, VotePoint)} instead
-     * @throws VotePointNotVotedException
-     */
-    @Deprecated
-    public void removeVote(Player player, VotePoint votePoint) throws VotePointNotVotedException {
-        this.removeVote(player.getUniqueId(), votePoint);
-    }
-
-    /**
-     * Remove a vote casted by the given player to the given votepoint.
-     * @param player
+     * @param playerUUID
      * @param votePoint
      * @throws VotePointNotVotedException
      */
@@ -228,20 +203,7 @@ public class VoteManager {
     /**
      * Get the score a given player has voted to a given name of votepoint.
      * The returned optional object contains no value if the player has not voted.
-     * @param player
-     * @param votePointName
-     * @deprecated Use {@link #getVotedScore(UUID, String)} instead.
-     * @return
-     */
-    @Deprecated
-    public Optional<Integer> getVotedScore(Player player, String votePointName) {
-        return this.getVotedScore(player.getUniqueId(), votePointName);
-    }
-
-    /**
-     * Get the score a given player has voted to a given name of votepoint.
-     * The returned optional object contains no value if the player has not voted.
-     * @param player
+     * @param playerUUID
      * @param votePointName
      * @return
      */
@@ -255,19 +217,7 @@ public class VoteManager {
 
     /**
      * Check if the given player has voted to the specified votepoint.
-     * @param player
-     * @param votePoint
-     * @deprecated Use {@link #hasVoted(UUID, VotePoint)} instead
-     * @return
-     */
-    @Deprecated
-    public boolean hasVoted(Player player, VotePoint votePoint) {
-        return this.getVotedScore(player, votePoint.getName()).isPresent();
-    }
-
-    /**
-     * Check if the given player has voted to the specified votepoint.
-     * @param player
+     * @param playerUUID
      * @param votePoint
      * @return
      */

@@ -280,7 +280,7 @@ public class VoteSession {
             throw new ScoreCountLimitReachedException(player, votePoint, voteScore);
         }
 
-        this.voteManager.addVotePointData(player, voteScore, votePoint);
+        this.voteManager.addVotePointData(player.getUniqueId(), voteScore, votePoint);
     }
 
     /**
@@ -290,7 +290,7 @@ public class VoteSession {
      * @throws VotePointNotVotedException When the player hasn't voted the votepoint.
      */
     public void unvote(Player player, VotePoint votePoint) throws VotePointNotVotedException {
-        this.voteManager.removeVote(player, votePoint);
+        this.voteManager.removeVote(player.getUniqueId(), votePoint);
     }
 
     /**

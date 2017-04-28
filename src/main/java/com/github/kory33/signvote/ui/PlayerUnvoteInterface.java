@@ -24,7 +24,7 @@ public class PlayerUnvoteInterface extends PlayerInteractiveChatInterface {
             return;
         }
         try {
-            this.session.getVoteManager().removeVote(this.targetPlayer, votePoint);
+            this.session.getVoteManager().removeVote(this.targetPlayer.getUniqueId(), votePoint);
             targetPlayer.sendMessage(
                     this.messageConfig.getFormatted(MessageConfigNodes.F_UNVOTED, this.votePoint.getName()));
         } catch (VotePointNotVotedException e) {
@@ -44,7 +44,8 @@ public class PlayerUnvoteInterface extends PlayerInteractiveChatInterface {
 
     private MessageParts getHeading() {
         String votePointName = this.votePoint.getName();
-        Optional<Integer> optionalVotedScore = this.session.getVoteManager().getVotedScore(this.targetPlayer, votePointName);
+        Optional<Integer> optionalVotedScore = this.session.getVoteManager()
+                .getVotedScore(this.targetPlayer.getUniqueId(), votePointName);
         if (!optionalVotedScore.isPresent()) {
             throw new IllegalStateException("Player Unvote Interface has been invoked against a non-voted votepoint!");
         }
