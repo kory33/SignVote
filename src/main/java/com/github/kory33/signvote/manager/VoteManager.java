@@ -62,10 +62,8 @@ public class VoteManager {
     }
 
     private void loadPlayerVoteData(UUID playerUUID, JsonObject jsonObject) {
-        HashMap<Integer, HashSet<String>> votedPointsMap = new HashMap<>();
         jsonObject.entrySet().stream().forEach(entry -> {
             int score = Integer.parseInt(entry.getKey());
-            HashSet<String> votePointNameSet = new HashSet<>();
 
             entry.getValue().getAsJsonArray().forEach(elem -> {
                 VotePoint votePoint = this.parentSession.getVotePoint(elem.getAsString());
@@ -73,18 +71,13 @@ public class VoteManager {
                     return;
                 }
 
-                votePointNameSet.add(votePoint.getName());
-
-                if (!votePointVotes.containsKey(votePoint)) {
-                    votePointVotes.put(votePoint, new HashSet<>());
+                try {
+                    this.addVotePointData(playerUUID, score, votePoint);
+                } catch (VotePointAlreadyVotedException e) {
+                    return;
                 }
-                votePointVotes.get(votePoint).add(new Vote(score, playerUUID));
             });
-            votedPointsMap.put(score, votePointNameSet);
-
         });
-
-        this.voteData.put(playerUUID, votedPointsMap);
     }
 
     /**
