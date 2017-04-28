@@ -207,6 +207,25 @@ public class VoteSession {
     }
 
     /**
+     * Rename the votepoint to a given name.
+     * @param votePoint
+     * @param newName
+     */
+    public void renameVotePoint(String oldName, String newName) throws IllegalArgumentException{
+        VotePoint target = this.votePointNameMap.get(oldName);
+        if (target == null) {
+            new IllegalArgumentException("No votepoint with that name exists.");
+        }
+
+        if (this.votePointNameMap.containsKey(newName)) {
+            new IllegalArgumentException("A votepoint with name of \"" + newName + "\" already exists.");
+        }
+
+        target.setName(newName);
+        voteManager.refreshVotePointName(target, oldName);
+    }
+
+    /**
      * Get a score -> count map of available votes for a given player
      * @param player
      * @return

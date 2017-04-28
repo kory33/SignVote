@@ -239,4 +239,20 @@ public class VoteManager {
     public boolean hasVoted(UUID playerUUID, VotePoint votePoint) {
         return this.getVotedScore(playerUUID, votePoint.getName()).isPresent();
     }
+
+    /**
+     * Refresh the votepoint name from the oldName to the newName.
+     * This method SHOULD NOT be invoked except from VoteSession.
+     * This method MUST be called after change in votepoint name to be effective.
+     * @param votePoint
+     * @param oldName
+     */
+    public void refreshVotePointName(VotePoint votePoint, String oldName) {
+        HashSet<Vote> votes = this.getVotes(votePoint);
+        votes.forEach(vote -> {
+            HashSet<String> votedPoints = this.voteData.get(vote.getVoterUuid()).get(vote.getScore());
+            votedPoints.remove(oldName);
+            votedPoints.add(votePoint.toString());
+        });
+    }
 }

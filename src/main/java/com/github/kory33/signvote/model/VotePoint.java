@@ -17,9 +17,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import lombok.Getter;
+import lombok.Setter;
 
 public class VotePoint {
-    @Getter private String name;
+    @Setter @Getter private String name;
     @Getter private Sign voteSign;
 
     public VotePoint(String name, Sign voteSign, VoteSession parentSession) {
