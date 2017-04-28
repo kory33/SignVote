@@ -12,11 +12,12 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import com.github.kory33.signvote.constants.Patterns;
+import com.github.kory33.signvote.exception.VotePointAlreadyVotedException;
 import com.github.kory33.signvote.exception.VotePointNotVotedException;
+import com.github.kory33.signvote.model.Vote;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 import com.google.gson.Gson;
@@ -25,6 +26,7 @@ import com.google.gson.JsonParser;
 
 public class VoteManager {
     private final HashMap<UUID, HashMap<Integer, HashSet<String>>> voteData;
+    private final HashMap<VotePoint, HashSet<Vote>> votePointVotes;
     private final VoteSession parentSession;
 
     /**
@@ -35,6 +37,7 @@ public class VoteManager {
     public VoteManager(File voteDataDirectory, VoteSession parentSession) throws IOException {
         this.parentSession = parentSession;
         this.voteData = new HashMap<>();
+        this.votePointVotes = new HashMap<>();
 
         if (!voteDataDirectory.isDirectory()) {
             throw new IOException("Directory has to be specified for save location!");
@@ -50,25 +53,39 @@ public class VoteManager {
 
             String playerUUID = playerUUIDMatcher.group(1);
             UUID uuid = UUID.fromString(playerUUID);
-            OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
-
-            if (!player.hasPlayedBefore()) {
+            if (!Bukkit.getOfflinePlayer(uuid).hasPlayedBefore()) {
                 System.out.println("ignoring" + playerVoteDataFile.getName());
                 continue;
             }
 
-            HashMap<Integer, HashSet<String>> votedPointsMap = new HashMap<>();
-            jsonObject.entrySet().stream().forEach(entry -> {
-                int score = Integer.parseInt(entry.getKey());
-                HashSet<String> votePointNameSet = new HashSet<>();
-                entry.getValue().getAsJsonArray().forEach(elem -> {
-                    votePointNameSet.add(elem.getAsString());
-                });
-                votedPointsMap.put(score, votePointNameSet);
-            });
-
-            this.voteData.put(uuid, votedPointsMap);
+            this.loadPlayerVoteData(uuid, jsonObject);
         }
+    }
+
+    private void loadPlayerVoteData(UUID playerUuid, JsonObject jsonObject) {
+        HashMap<Integer, HashSet<String>> votedPointsMap = new HashMap<>();
+        jsonObject.entrySet().stream().forEach(entry -> {
+            int score = Integer.parseInt(entry.getKey());
+            HashSet<String> votePointNameSet = new HashSet<>();
+
+            entry.getValue().getAsJsonArray().forEach(elem -> {
+                VotePoint votePoint = this.parentSession.getVotePoint(elem.getAsString());
+                if (votePoint == null) {
+                    return;
+                }
+
+                votePointNameSet.add(votePoint.getName());
+
+                if (!votePointVotes.containsKey(votePoint)) {
+                    votePointVotes.put(votePoint, new HashSet<>());
+                }
+                votePointVotes.get(votePoint).add(new Vote(score, playerUuid));
+            });
+            votedPointsMap.put(score, votePointNameSet);
+
+        });
+
+        this.voteData.put(playerUuid, votedPointsMap);
     }
 
     /**
@@ -90,6 +107,7 @@ public class VoteManager {
     public VoteManager(VoteSession parentSession) {
         this.voteData = new HashMap<>();
         this.parentSession = parentSession;
+        this.votePointVotes = new HashMap<>();
     }
 
     /**
@@ -123,10 +141,13 @@ public class VoteManager {
      * @param votePoint
      * @throws IllegalArgumentException when there is a duplicate in the vote
      */
-    public void addVotePointData(Player voter, int voteScore, VotePoint votePoint) throws IllegalArgumentException{
+    public void addVotePointData(Player voter, int voteScore, VotePoint votePoint) throws VotePointAlreadyVotedException {
         UUID voterUUID = voter.getUniqueId();
         if (!this.voteData.containsKey(voterUUID)) {
             this.voteData.put(voterUUID, new HashMap<>());
+        }
+        if (!this.votePointVotes.containsKey(votePoint)) {
+            this.votePointVotes.put(votePoint, new HashSet<>());
         }
 
         HashMap<Integer, HashSet<String>> votedPointnames = this.voteData.get(voterUUID);
@@ -137,23 +158,48 @@ public class VoteManager {
         String votePointName = votePoint.getName();
 
         if (this.getVotedScore(voter, votePointName).isPresent()) {
-            throw new IllegalArgumentException(votePointName + " is already voted by the player!");
+            throw new VotePointAlreadyVotedException(voter, votePoint);
         }
 
         votedPointnames.get(voteScore).add(votePoint.getName());
+        this.votePointVotes.get(votePoint).add(new Vote(voteScore, voter.getUniqueId()));
     }
 
+    /**
+     * Remove a vote casted by the given player to the given votepoint.
+     * @param player
+     * @param votePoint
+     * @throws VotePointNotVotedException
+     */
     public void removeVote(Player player, VotePoint votePoint) throws VotePointNotVotedException {
         HashMap<Integer, HashSet<String>> playerVotes = this.getVotedPointsMap(player.getUniqueId());
 
         for (Integer voteScore: playerVotes.keySet()) {
             HashSet<String> votedPoints = playerVotes.get(voteScore);
             if (votedPoints.remove(votePoint.getName())) {
+                break;
+            }
+        }
+        for (Vote vote: this.votePointVotes.get(votePoint)) {
+            if (vote.getVoterUuid() == player.getUniqueId()) {
+                this.votePointVotes.get(votePoint).remove(vote);
                 return;
             }
         }
 
         throw new VotePointNotVotedException(player, votePoint, this.parentSession);
+    }
+
+    /**
+     * Get a set of votes casted to the given votepoint.
+     * @param votePoint
+     * @return
+     */
+    public HashSet<Vote> getVotes(VotePoint votePoint) {
+        if (!this.votePointVotes.containsKey(votePoint)) {
+            return new HashSet<>();
+        }
+        return this.votePointVotes.get(votePoint);
     }
 
     /**

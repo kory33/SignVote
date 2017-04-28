@@ -55,14 +55,6 @@ public class VoteSession {
         this.signMap = new BijectiveHashMap<>();
         this.votePointNameMap = new BijectiveHashMap<>();
 
-        // load all the saved votepoints
-        File votePointDirectory = new File(sessionSaveLocation, FilePaths.VOTE_POINTS_DIR);
-        for (File votePointFile: votePointDirectory.listFiles()) {
-            this.addVotePoint(votePointFile);
-        }
-
-        this.voteManager = new VoteManager(new File(sessionSaveLocation, FilePaths.VOTE_DATA_DIR), this);
-
         // read information of this vote session
         File sessionDataFile = new File(sessionSaveLocation, FilePaths.SESSION_DATA_FILENAME);
 
@@ -73,6 +65,15 @@ public class VoteSession {
         this.name = sessionConfigJson.get(VoteSessionDataFileKeys.NAME).getAsString();
 
         this.setOpen(sessionConfigJson.get(VoteSessionDataFileKeys.IS_OPEN).getAsBoolean());
+
+        // load all the saved votepoints
+        File votePointDirectory = new File(sessionSaveLocation, FilePaths.VOTE_POINTS_DIR);
+        for (File votePointFile: votePointDirectory.listFiles()) {
+            this.addVotePoint(votePointFile);
+        }
+
+        // initialize vote manager
+        this.voteManager = new VoteManager(new File(sessionSaveLocation, FilePaths.VOTE_DATA_DIR), this);
     }
 
     /**
