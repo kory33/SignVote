@@ -1,5 +1,7 @@
 package com.github.kory33.signvote.exception;
 
+import java.util.UUID;
+
 import org.bukkit.entity.Player;
 
 import com.github.kory33.signvote.model.VotePoint;
@@ -8,12 +10,24 @@ import com.github.kory33.signvote.session.VoteSession;
 import lombok.Getter;
 
 public class VotePointNotVotedException extends Exception {
-    @Getter Player voter;
+    @Getter UUID voterUUID;
     @Getter VotePoint votePoint;
     @Getter VoteSession session;
-    
+
+    /**
+     * @deprecated Use {@link #VotePointNotVotedException(UUID, VotePoint, VoteSession)} instead
+     * @param voter
+     * @param votePoint
+     * @param session
+     */
     public VotePointNotVotedException(Player voter, VotePoint votePoint, VoteSession session) {
-        this.voter = voter;
+        this.voterUUID = voter.getUniqueId();
+        this.votePoint = votePoint;
+        this.session = session;
+    }
+
+    public VotePointNotVotedException(UUID voterUUID, VotePoint votePoint, VoteSession session) {
+        this.voterUUID = voterUUID;
         this.votePoint = votePoint;
         this.session = session;
     }

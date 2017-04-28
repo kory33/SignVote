@@ -62,7 +62,7 @@ public class VoteManager {
         }
     }
 
-    private void loadPlayerVoteData(UUID playerUuid, JsonObject jsonObject) {
+    private void loadPlayerVoteData(UUID playerUUID, JsonObject jsonObject) {
         HashMap<Integer, HashSet<String>> votedPointsMap = new HashMap<>();
         jsonObject.entrySet().stream().forEach(entry -> {
             int score = Integer.parseInt(entry.getKey());
@@ -79,13 +79,13 @@ public class VoteManager {
                 if (!votePointVotes.containsKey(votePoint)) {
                     votePointVotes.put(votePoint, new HashSet<>());
                 }
-                votePointVotes.get(votePoint).add(new Vote(score, playerUuid));
+                votePointVotes.get(votePoint).add(new Vote(score, playerUUID));
             });
             votedPointsMap.put(score, votePointNameSet);
 
         });
 
-        this.voteData.put(playerUuid, votedPointsMap);
+        this.voteData.put(playerUUID, votedPointsMap);
     }
 
     /**
@@ -139,10 +139,21 @@ public class VoteManager {
      * @param voter
      * @param voteScore
      * @param votePoint
+     * @deprecated Use {@link #addVotePointData(UUID, int, VotePoint)} instead.
      * @throws IllegalArgumentException when there is a duplicate in the vote
      */
     public void addVotePointData(Player voter, int voteScore, VotePoint votePoint) throws VotePointAlreadyVotedException {
-        UUID voterUUID = voter.getUniqueId();
+        this.addVotePointData(voter.getUniqueId(), voteScore, votePoint);
+    }
+
+    /**
+     * Add a vote data related to the score and the votepoint to which the player has voted
+     * @param voter
+     * @param voteScore
+     * @param votePoint
+     * @throws IllegalArgumentException when there is a duplicate in the vote
+     */
+    public void addVotePointData(UUID voterUUID, int voteScore, VotePoint votePoint) throws VotePointAlreadyVotedException {
         if (!this.voteData.containsKey(voterUUID)) {
             this.voteData.put(voterUUID, new HashMap<>());
         }
@@ -157,12 +168,24 @@ public class VoteManager {
 
         String votePointName = votePoint.getName();
 
-        if (this.getVotedScore(voter, votePointName).isPresent()) {
-            throw new VotePointAlreadyVotedException(voter, votePoint);
+        if (this.getVotedScore(voterUUID, votePointName).isPresent()) {
+            throw new VotePointAlreadyVotedException(voterUUID, votePoint);
         }
 
         votedPointnames.get(voteScore).add(votePoint.getName());
-        this.votePointVotes.get(votePoint).add(new Vote(voteScore, voter.getUniqueId()));
+        this.votePointVotes.get(votePoint).add(new Vote(voteScore, voterUUID));
+    }
+
+    /**
+     * Remove a vote casted by the given player to the given votepoint.
+     * @param player
+     * @param votePoint
+     * @deprecated Use {@link #removeVote(UUID, VotePoint)} instead
+     * @throws VotePointNotVotedException
+     */
+    @Deprecated
+    public void removeVote(Player player, VotePoint votePoint) throws VotePointNotVotedException {
+        this.removeVote(player.getUniqueId(), votePoint);
     }
 
     /**
@@ -171,8 +194,8 @@ public class VoteManager {
      * @param votePoint
      * @throws VotePointNotVotedException
      */
-    public void removeVote(Player player, VotePoint votePoint) throws VotePointNotVotedException {
-        HashMap<Integer, HashSet<String>> playerVotes = this.getVotedPointsMap(player.getUniqueId());
+    public void removeVote(UUID playerUUID, VotePoint votePoint) throws VotePointNotVotedException {
+        HashMap<Integer, HashSet<String>> playerVotes = this.getVotedPointsMap(playerUUID);
 
         for (Integer voteScore: playerVotes.keySet()) {
             HashSet<String> votedPoints = playerVotes.get(voteScore);
@@ -181,13 +204,13 @@ public class VoteManager {
             }
         }
         for (Vote vote: this.votePointVotes.get(votePoint)) {
-            if (vote.getVoterUuid() == player.getUniqueId()) {
+            if (vote.getVoterUuid() == playerUUID) {
                 this.votePointVotes.get(votePoint).remove(vote);
                 return;
             }
         }
 
-        throw new VotePointNotVotedException(player, votePoint, this.parentSession);
+        throw new VotePointNotVotedException(playerUUID, votePoint, this.parentSession);
     }
 
     /**
@@ -207,17 +230,48 @@ public class VoteManager {
      * The returned optional object contains no value if the player has not voted.
      * @param player
      * @param votePointName
+     * @deprecated Use {@link #getVotedScore(UUID, String)} instead.
      * @return
      */
+    @Deprecated
     public Optional<Integer> getVotedScore(Player player, String votePointName) {
-        return this.getVotedPointsMap(player.getUniqueId()).entrySet()
+        return this.getVotedScore(player.getUniqueId(), votePointName);
+    }
+
+    /**
+     * Get the score a given player has voted to a given name of votepoint.
+     * The returned optional object contains no value if the player has not voted.
+     * @param player
+     * @param votePointName
+     * @return
+     */
+    public Optional<Integer> getVotedScore(UUID playerUUID, String votePointName) {
+        return this.getVotedPointsMap(playerUUID).entrySet()
                 .stream()
                 .filter(entry -> entry.getValue().contains(votePointName))
                 .map(entry -> entry.getKey())
                 .findFirst();
     }
 
+    /**
+     * Check if the given player has voted to the specified votepoint.
+     * @param player
+     * @param votePoint
+     * @deprecated Use {@link #hasVoted(UUID, VotePoint)} instead
+     * @return
+     */
+    @Deprecated
     public boolean hasVoted(Player player, VotePoint votePoint) {
         return this.getVotedScore(player, votePoint.getName()).isPresent();
+    }
+
+    /**
+     * Check if the given player has voted to the specified votepoint.
+     * @param player
+     * @param votePoint
+     * @return
+     */
+    public boolean hasVoted(UUID playerUUID, VotePoint votePoint) {
+        return this.getVotedScore(playerUUID, votePoint.getName()).isPresent();
     }
 }
