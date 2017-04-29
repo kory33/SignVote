@@ -266,7 +266,9 @@ public class VoteSession {
             int limit = this.voteScoreCountLimits.getLimit(score, player);
             if (limit == MagicNumbers.VOTELIMIT_INFINITY) {
                 reservedCounts.put(score, Optional.empty());
-            } else {
+                continue;
+            }
+            if (limit > 0) {
                 reservedCounts.put(score, Optional.of(limit));
             }
         }
