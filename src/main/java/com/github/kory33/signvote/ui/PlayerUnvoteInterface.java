@@ -1,10 +1,10 @@
 package com.github.kory33.signvote.ui;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 import org.bukkit.entity.Player;
 
+import com.github.kory33.messaging.tellraw.MessagePartsList;
 import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
@@ -61,15 +61,15 @@ public class PlayerUnvoteInterface extends PlayerInteractiveChatInterface {
         MessageParts header = this.getConfigMessagePart(MessageConfigNodes.UI_HEADER);
         MessageParts footer = this.getConfigMessagePart(MessageConfigNodes.UI_FOOTER);
 
-        ArrayList<MessageParts> messageList = new ArrayList<>();
-        messageList.add(header);
-        messageList.add(this.getHeading());
-        messageList.add(this.getButton(this::unVote));
-        messageList.add(this.getConfigMessagePart(MessageConfigNodes.UNVOTE_UI_COMFIRM));
-        messageList.add(this.getButton(this::cancelAction));
-        messageList.add(this.getConfigMessagePart(MessageConfigNodes.UI_CANCEL));
-        messageList.add(footer);
+        MessagePartsList messagePartsList = new MessagePartsList();
+        messagePartsList.add(header);
+        messagePartsList.add(this.getHeading());
+        messagePartsList.add(this.getButton(this::unVote));
+        messagePartsList.add(this.getConfigMessagePart(MessageConfigNodes.UNVOTE_UI_COMFIRM));
+        messagePartsList.add(this.getButton(this::cancelAction));
+        messagePartsList.add(this.getConfigMessagePart(MessageConfigNodes.UI_CANCEL));
+        messagePartsList.add(footer);
 
-        return new MessageComponent(messageList);
+        return new MessageComponent(messagePartsList);
     }
 }

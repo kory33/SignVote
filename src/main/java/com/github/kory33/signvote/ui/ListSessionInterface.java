@@ -1,8 +1,8 @@
 package com.github.kory33.signvote.ui;
 
-import java.util.ArrayList;
 import java.util.stream.Stream;
 
+import com.github.kory33.messaging.tellraw.MessagePartsList;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.session.VoteSession;
@@ -32,7 +32,7 @@ public class ListSessionInterface extends ChatInterface {
             sessionState = messageConfig.getString(MessageConfigNodes.LIST_UI_SESSION_CLOSED);
         }
 
-        return prefix + sessionName + sessionState + "\n";
+        return prefix + sessionName + sessionState;
     }
 
     @Override
@@ -42,16 +42,16 @@ public class ListSessionInterface extends ChatInterface {
 
         MessageParts heading = this.getConfigMessagePart(MessageConfigNodes.LIST_UI_HEADING);
 
-        ArrayList<MessageParts> messageList = new ArrayList<>();
-        messageList.add(header);
-        messageList.add(heading);
+        MessagePartsList messagePartsList = new MessagePartsList();
+        messagePartsList.add(header);
+        messagePartsList.add(heading);
 
         this.sessionStream
             .map(session -> new MessageParts(this.getSessionInfoLine(session)))
-            .forEach(messageList::add);
+            .forEach(messagePartsList::addLine);
 
-        messageList.add(footer);
+        messagePartsList.add(footer);
 
-        return new MessageComponent(messageList);
+        return new MessageComponent(messagePartsList);
     }
 }

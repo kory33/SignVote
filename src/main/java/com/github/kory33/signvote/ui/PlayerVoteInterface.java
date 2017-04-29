@@ -1,12 +1,12 @@
 package com.github.kory33.signvote.ui;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Optional;
 
 import org.bukkit.entity.Player;
 
+import com.github.kory33.messaging.tellraw.MessagePartsList;
 import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
@@ -90,23 +90,23 @@ public class PlayerVoteInterface extends PlayerInteractiveChatInterface {
         MessageParts header = this.getConfigMessagePart(MessageConfigNodes.UI_HEADER);
         MessageParts footer = this.getConfigMessagePart(MessageConfigNodes.UI_FOOTER);
 
-        ArrayList<MessageParts> messageList = new ArrayList<>();
-        messageList.add(header);
-        messageList.add(this.getHeading());
+        MessagePartsList messagePartsList = new MessagePartsList();
+        messagePartsList.add(header);
+        messagePartsList.add(this.getHeading());
 
         availableVotePoints
             .keySet()
             .stream()
             .sorted(Comparator.reverseOrder())
             .forEach(score -> {
-                messageList.add(this.getButton(() -> this.vote(score)));
-                messageList.add(this.getScoreSelectionLine(score, availableVotePoints.get(score)));
+                messagePartsList.add(this.getButton(() -> this.vote(score)));
+                messagePartsList.add(this.getScoreSelectionLine(score, availableVotePoints.get(score)));
             });
 
-        messageList.add(this.getButton(this::cancelAction));
-        messageList.add(this.getConfigMessagePart(MessageConfigNodes.UI_CANCEL));
+        messagePartsList.add(this.getButton(this::cancelAction));
+        messagePartsList.add(this.getConfigMessagePart(MessageConfigNodes.UI_CANCEL));
 
-        messageList.add(footer);
-        return new MessageComponent(messageList);
+        messagePartsList.add(footer);
+        return new MessageComponent(messagePartsList);
     }
 }

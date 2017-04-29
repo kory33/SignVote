@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.entity.Player;
 
+import com.github.kory33.messaging.tellraw.MessagePartsList;
 import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MagicNumbers;
@@ -112,14 +113,14 @@ public class PlayerAddscoreInterface extends PlayerInteractiveChatInterface {
         MessageParts submitButton = this.getButton(this::addScoreLimit,
                 this.getConfigMessagePart(MessageConfigNodes.ADDSCORE_UI_SUBMIT));
 
-        ArrayList<MessageParts> messageParts = new ArrayList<>();
-        messageParts.add(header);
-        messageParts.add(this.getHeading());
-        messageParts.addAll(scoreForm);
-        messageParts.addAll(limitForm);
-        messageParts.addAll(permissionForm);
-        messageParts.add(submitButton);
-        messageParts.add(footer);
-        return new MessageComponent(messageParts);
+        MessagePartsList messagePartsList = new MessagePartsList();
+        messagePartsList.add(header);
+        messagePartsList.add(this.getHeading());
+        messagePartsList.addAll(scoreForm);
+        messagePartsList.addAll(limitForm);
+        messagePartsList.addAll(permissionForm);
+        messagePartsList.add(submitButton);
+        messagePartsList.add(footer);
+        return new MessageComponent(messagePartsList);
     }
 }
