@@ -89,10 +89,10 @@
         "break": "§eYou are about to break a votepoint.\nType §6/signvote deletevp {0} {1} §eto delete the votepoint."
     },
     "ui": {
-        "header": "§6----------[SignVote]----------\n§r",
+        "header": "§6----------[SignVote]----------§r",
         "footer": "§6----------------------------",
         "button": "§3[x] §r",
-        "cancel": "§eCANCEL\n",
+        "cancel": "§eCANCEL",
         "cancelled": "§eOperation cancelled.",
         "vote": {
             "heading": "§aSelect a point to vote to §6{0}",
@@ -101,10 +101,10 @@
         },
         "unvote": {
             "heading": "§aYou have already voted to §6{0} §awith a score of §6{1}.\n§eClick the button below to CANCEL this vote.",
-            "comfirm": "§cComfirm the vote to be cancelled.\n"
+            "comfirm": "§cComfirm the vote to be cancelled."
         },
         "list": {
-            "heading": "§bList of existing sesions:\n",
+            "heading": "§bList of existing sesions:",
             "lineprefix": "§6",
             "state": {
                 "open": " §a(open)",
@@ -112,12 +112,12 @@
             }
         },
         "addscore": {
-            "heading": "§aEnter data for a vote limit to add to §6{0}:\n",
+            "heading": "§aEnter data for a vote limit to add to §6{0}:",
             "score": "Score",
             "limit": "Limit",
             "permission": "Permission",
             "scorenotset": "§cYou cannot leave score blanc.",
-            "submit": "§3[Comfirm and submit]§r\n"
+            "submit": "§3[Comfirm and submit]§r"
         },
         "form": {
             "name": "§6{0} : ",

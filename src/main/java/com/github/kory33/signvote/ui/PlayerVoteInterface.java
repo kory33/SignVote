@@ -34,7 +34,7 @@ public class PlayerVoteInterface extends PlayerInteractiveChatInterface {
 
     private MessageParts getHeading() {
         String message = messageConfig.getFormatted(MessageConfigNodes.VOTE_UI_HEADING,
-                this.votePoint.getName()) + "\n";
+                this.votePoint.getName());
         return new MessageParts(message);
     }
 
@@ -61,7 +61,7 @@ public class PlayerVoteInterface extends PlayerInteractiveChatInterface {
         this.revokeSession();
     }
 
-    private MessageParts getScoreSelectionLine(int score, Optional<Integer> remaining) {
+    private String getScoreSelectionLine(int score, Optional<Integer> remaining) {
         String remainingString;
         if (remaining.isPresent()) {
             remainingString = remaining.get().toString();
@@ -69,9 +69,7 @@ public class PlayerVoteInterface extends PlayerInteractiveChatInterface {
             remainingString = this.messageConfig.getString(MessageConfigNodes.INFINITE);
         }
 
-        String message = this.messageConfig.getFormatted(MessageConfigNodes.VOTE_UI_SCORE_SELECTION, score, remainingString);
-        MessageParts messageLine = new MessageParts(message + "\n");
-        return messageLine;
+        return this.messageConfig.getFormatted(MessageConfigNodes.VOTE_UI_SCORE_SELECTION, score, remainingString);
     }
 
     @Override
@@ -91,8 +89,8 @@ public class PlayerVoteInterface extends PlayerInteractiveChatInterface {
         MessageParts footer = this.getConfigMessagePart(MessageConfigNodes.UI_FOOTER);
 
         MessagePartsList messagePartsList = new MessagePartsList();
-        messagePartsList.add(header);
-        messagePartsList.add(this.getHeading());
+        messagePartsList.addLine(header);
+        messagePartsList.addLine(this.getHeading());
 
         availableVotePoints
             .keySet()
@@ -100,11 +98,11 @@ public class PlayerVoteInterface extends PlayerInteractiveChatInterface {
             .sorted(Comparator.reverseOrder())
             .forEach(score -> {
                 messagePartsList.add(this.getButton(() -> this.vote(score)));
-                messagePartsList.add(this.getScoreSelectionLine(score, availableVotePoints.get(score)));
+                messagePartsList.addLine(this.getScoreSelectionLine(score, availableVotePoints.get(score)));
             });
 
         messagePartsList.add(this.getButton(this::cancelAction));
-        messagePartsList.add(this.getConfigMessagePart(MessageConfigNodes.UI_CANCEL));
+        messagePartsList.addLine(this.getConfigMessagePart(MessageConfigNodes.UI_CANCEL));
 
         messagePartsList.add(footer);
         return new MessageComponent(messagePartsList);

@@ -43,8 +43,8 @@ public class ListSessionInterface extends ChatInterface {
         MessageParts heading = this.getConfigMessagePart(MessageConfigNodes.LIST_UI_HEADING);
 
         MessagePartsList messagePartsList = new MessagePartsList();
-        messagePartsList.add(header);
-        messagePartsList.add(heading);
+        messagePartsList.addLine(header);
+        messagePartsList.addLine(heading);
 
         this.sessionStream
             .map(session -> new MessageParts(this.getSessionInfoLine(session)))

@@ -42,7 +42,7 @@ public class PlayerUnvoteInterface extends PlayerInteractiveChatInterface {
         this.votePoint = votePoint;
     }
 
-    private MessageParts getHeading() {
+    private String getHeading() {
         String votePointName = this.votePoint.getName();
         Optional<Integer> optionalVotedScore = this.session.getVoteManager()
                 .getVotedScore(this.targetPlayer.getUniqueId(), votePointName);
@@ -52,8 +52,7 @@ public class PlayerUnvoteInterface extends PlayerInteractiveChatInterface {
 
         int votedScore = optionalVotedScore.get();
 
-        String message = messageConfig.getFormatted(MessageConfigNodes.UNVOTE_UI_HEADING, votePointName, votedScore) + "\n";
-        return new MessageParts(message);
+        return messageConfig.getFormatted(MessageConfigNodes.UNVOTE_UI_HEADING, votePointName, votedScore);
     }
 
     @Override
@@ -62,12 +61,12 @@ public class PlayerUnvoteInterface extends PlayerInteractiveChatInterface {
         MessageParts footer = this.getConfigMessagePart(MessageConfigNodes.UI_FOOTER);
 
         MessagePartsList messagePartsList = new MessagePartsList();
-        messagePartsList.add(header);
-        messagePartsList.add(this.getHeading());
+        messagePartsList.addLine(header);
+        messagePartsList.addLine(this.getHeading());
         messagePartsList.add(this.getButton(this::unVote));
-        messagePartsList.add(this.getConfigMessagePart(MessageConfigNodes.UNVOTE_UI_COMFIRM));
+        messagePartsList.addLine(this.getConfigMessagePart(MessageConfigNodes.UNVOTE_UI_COMFIRM));
         messagePartsList.add(this.getButton(this::cancelAction));
-        messagePartsList.add(this.getConfigMessagePart(MessageConfigNodes.UI_CANCEL));
+        messagePartsList.addLine(this.getConfigMessagePart(MessageConfigNodes.UI_CANCEL));
         messagePartsList.add(footer);
 
         return new MessageComponent(messagePartsList);

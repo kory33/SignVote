@@ -114,12 +114,12 @@ public class PlayerAddscoreInterface extends PlayerInteractiveChatInterface {
                 this.getConfigMessagePart(MessageConfigNodes.ADDSCORE_UI_SUBMIT));
 
         MessagePartsList messagePartsList = new MessagePartsList();
-        messagePartsList.add(header);
-        messagePartsList.add(this.getHeading());
+        messagePartsList.addLine(header);
+        messagePartsList.addLine(this.getHeading());
         messagePartsList.addAll(scoreForm);
         messagePartsList.addAll(limitForm);
         messagePartsList.addAll(permissionForm);
-        messagePartsList.add(submitButton);
+        messagePartsList.addLine(submitButton);
         messagePartsList.add(footer);
         return new MessageComponent(messagePartsList);
     }
