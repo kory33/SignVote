@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>github.kory33</groupId>
     <artifactId>SignVote</artifactId>
-    <version>0.3.0-alpha</version>
+    <version>0.3.0-beta</version>
     <name>SignVote</name>
     <description>A Bukkit plugin that allows player to vote through signs.</description>
 
