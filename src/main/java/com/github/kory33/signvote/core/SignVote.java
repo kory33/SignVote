@@ -7,9 +7,9 @@ import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.Logger;
+import org.bstats.Metrics;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
-import org.mcstats.Metrics;
 
 import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.command.SignVoteCommandExecutor;
@@ -36,7 +36,6 @@ public class SignVote extends GithubUpdateNotifyPlugin {
     @Getter private PlayerChatInterceptor chatInterceptor;
 
     private static Filter runnableCommandFilter = null;
-    private static Metrics metricsInstance = null;
 
     private boolean isEnabled = false;
     private SignVoteCommandExecutor commandExecutor;
@@ -55,16 +54,8 @@ public class SignVote extends GithubUpdateNotifyPlugin {
     }
 
     private void enableMetrics() {
-        if (metricsInstance != null) {
-            return;
-        }
-
-        try {
-            metricsInstance = new Metrics(this);
-            metricsInstance.start();
-        } catch (IOException e) {
-            this.getLogger().log(Level.WARNING, "Failed to submit mcstats statistics", e);
-        }
+        @SuppressWarnings("unused")
+        Metrics metrics = new Metrics(this);
     }
 
     @Override
