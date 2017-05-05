@@ -1,7 +1,5 @@
 package com.github.kory33.signvote.ui;
 
-import java.util.ArrayList;
-
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.entity.Player;
 
@@ -13,7 +11,6 @@ import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.listners.PlayerChatInterceptor;
 import com.github.kory33.signvote.session.VoteSession;
-import com.github.ucchyocean.messaging.tellraw.MessageComponent;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
 public class PlayerAddscoreInterface extends PlayerFormChatInterface {
@@ -85,25 +82,22 @@ public class PlayerAddscoreInterface extends PlayerFormChatInterface {
     }
 
     @Override
-    protected MessageComponent constructInterfaceMessages() {
-        MessageParts header = this.getFormattedMessagePart(MessageConfigNodes.UI_HEADER);
-        MessageParts footer = this.getFormattedMessagePart(MessageConfigNodes.UI_FOOTER);
-
-        ArrayList<MessageParts> scoreForm = super.getForm(
+    protected MessagePartsList getBodyMessages() {
+        MessagePartsList scoreForm = super.getForm(
                 input -> this.score = NumberUtils.createInteger(input),
                 NumberUtils::isNumber,
                 this.messageConfig.getString(MessageConfigNodes.ADDSCORE_UI_SCORE),
                 score == null ? null : score.toString()
             );
 
-        ArrayList<MessageParts> limitForm = super.getForm(
+        MessagePartsList limitForm = super.getForm(
                 input -> this.voteLimit = NumberUtils.createInteger(input),
                 this::validateLimitInput,
                 this.messageConfig.getString(MessageConfigNodes.ADDSCORE_UI_LIMIT),
                 this.getVoteLimitString()
             );
 
-        ArrayList<MessageParts> permissionForm = super.getForm(
+        MessagePartsList permissionForm = super.getForm(
                 input -> this.permission = input,
                 input -> true,
                 this.messageConfig.getString(MessageConfigNodes.ADDSCORE_UI_PERMISSION),
@@ -114,13 +108,11 @@ public class PlayerAddscoreInterface extends PlayerFormChatInterface {
                 this.getFormattedMessagePart(MessageConfigNodes.ADDSCORE_UI_SUBMIT));
 
         MessagePartsList messagePartsList = new MessagePartsList();
-        messagePartsList.addLine(header);
         messagePartsList.addLine(this.getHeading());
         messagePartsList.addAll(scoreForm);
         messagePartsList.addAll(limitForm);
         messagePartsList.addAll(permissionForm);
         messagePartsList.addLine(submitButton);
-        messagePartsList.add(footer);
-        return new MessageComponent(messagePartsList);
+        return messagePartsList;
     }
 }

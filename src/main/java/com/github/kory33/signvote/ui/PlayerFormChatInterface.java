@@ -1,12 +1,12 @@
 package com.github.kory33.signvote.ui;
 
-import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import org.bukkit.entity.Player;
 
+import com.github.kory33.messaging.tellraw.MessagePartsList;
 import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
@@ -70,7 +70,7 @@ public abstract class PlayerFormChatInterface extends PlayerClickableChatInterfa
      * @param defaultDisplayValue
      * @return
      */
-    protected ArrayList<MessageParts> getForm(Consumer<String> onPlayerSendString, Predicate<String> validator, String name, String value) {
+    protected MessagePartsList getForm(Consumer<String> onPlayerSendString, Predicate<String> validator, String name, String value) {
         MessageParts formName = this.getFormattedMessagePart(MessageConfigNodes.F_UI_FORM_NAME, name);
 
         if (value == null || value.isEmpty()) {
@@ -84,12 +84,12 @@ public abstract class PlayerFormChatInterface extends PlayerClickableChatInterfa
             this.getInputToForm(onPlayerSendString, validator, name);
         }, this.getFormattedMessagePart(MessageConfigNodes.UI_FORM_EDIT_BUTTON));
 
-        ArrayList<MessageParts> form = new ArrayList<>();
+        MessagePartsList form = new MessagePartsList();
 
         form.add(formName);
         form.add(formValue);
         form.add(editButton);
-        form.add(new MessageParts("\n"));
+        form.addLine("");
 
         return form;
     }

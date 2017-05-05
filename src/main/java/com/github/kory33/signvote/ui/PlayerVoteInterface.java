@@ -15,7 +15,6 @@ import com.github.kory33.signvote.exception.ScoreCountLimitReachedException;
 import com.github.kory33.signvote.exception.VotePointAlreadyVotedException;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
-import com.github.ucchyocean.messaging.tellraw.MessageComponent;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
 public class PlayerVoteInterface extends PlayerClickableChatInterface {
@@ -72,23 +71,18 @@ public class PlayerVoteInterface extends PlayerClickableChatInterface {
     }
 
     @Override
-    protected MessageComponent constructInterfaceMessages() {
+    protected MessagePartsList getBodyMessages() {
         HashMap<Integer, Optional<Integer>> availableVotePoints = this.session.getAvailableVoteCounts(this.targetPlayer);
         if (availableVotePoints.isEmpty()) {
-            String message = this.messageConfig.getString(MessageConfigNodes.MESSAGE_PREFIX) +
-                    this.messageConfig.getString(MessageConfigNodes.VOTE_UI_NONE_AVAILABLE);
+            String message = this.messageConfig.getString(MessageConfigNodes.VOTE_UI_NONE_AVAILABLE);
 
-            MessageComponent messageComponent = new MessageComponent();
-            messageComponent.addParts(new MessageParts(message));
+            MessagePartsList messagePartsList = new MessagePartsList();
 
-            return messageComponent;
+            messagePartsList.addLine(message);
+            return messagePartsList;
         }
 
-        MessageParts header = this.getFormattedMessagePart(MessageConfigNodes.UI_HEADER);
-        MessageParts footer = this.getFormattedMessagePart(MessageConfigNodes.UI_FOOTER);
-
         MessagePartsList messagePartsList = new MessagePartsList();
-        messagePartsList.addLine(header);
         messagePartsList.addLine(this.getHeading());
 
         availableVotePoints
@@ -103,7 +97,6 @@ public class PlayerVoteInterface extends PlayerClickableChatInterface {
         messagePartsList.add(this.getButton(this::cancelAction));
         messagePartsList.addLine(this.getFormattedMessagePart(MessageConfigNodes.UI_CANCEL));
 
-        messagePartsList.add(footer);
-        return new MessageComponent(messagePartsList);
+        return messagePartsList;
     }
 }

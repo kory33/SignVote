@@ -5,11 +5,13 @@ import java.util.Set;
 
 import org.bukkit.entity.Player;
 
+import com.github.kory33.messaging.tellraw.MessagePartsList;
 import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.utils.tellraw.TellRawUtility;
 import com.github.ucchyocean.messaging.tellraw.ClickEventType;
+import com.github.ucchyocean.messaging.tellraw.MessageComponent;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
 /**
@@ -93,5 +95,25 @@ public abstract class PlayerClickableChatInterface extends PlayerChatInterface {
         this.revokeSession();
         String message = this.messageConfig.getString(MessageConfigNodes.UI_CANCELLED);
         this.targetPlayer.sendMessage(message);
+    }
+
+    /**
+     * Get the body of the chat interface.
+     * Returned body is enclosed by a header and a footer and is finally sent to the player.
+     * @return
+     */
+    protected abstract MessagePartsList getBodyMessages();
+
+    @Override
+    protected MessageComponent constructInterfaceMessages() {
+        MessageParts header = this.getFormattedMessagePart(MessageConfigNodes.UI_HEADER);
+        MessageParts footer = this.getFormattedMessagePart(MessageConfigNodes.UI_FOOTER);
+
+        MessagePartsList messagePartsList = new MessagePartsList();
+        messagePartsList.addLine(header);
+        messagePartsList.addAll(this.getBodyMessages());
+        messagePartsList.addLine(footer);
+
+        return new MessageComponent(messagePartsList);
     }
 }

@@ -11,8 +11,6 @@ import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.exception.VotePointNotVotedException;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
-import com.github.ucchyocean.messaging.tellraw.MessageComponent;
-import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
 public class PlayerUnvoteInterface extends PlayerClickableChatInterface {
     private final VoteSession session;
@@ -55,19 +53,14 @@ public class PlayerUnvoteInterface extends PlayerClickableChatInterface {
     }
 
     @Override
-    protected MessageComponent constructInterfaceMessages() {
-        MessageParts header = this.getFormattedMessagePart(MessageConfigNodes.UI_HEADER);
-        MessageParts footer = this.getFormattedMessagePart(MessageConfigNodes.UI_FOOTER);
-
+    protected MessagePartsList getBodyMessages() {
         MessagePartsList messagePartsList = new MessagePartsList();
-        messagePartsList.addLine(header);
         messagePartsList.addLine(this.getHeading());
         messagePartsList.add(this.getButton(this::unVote));
         messagePartsList.addLine(this.getFormattedMessagePart(MessageConfigNodes.UNVOTE_UI_COMFIRM));
         messagePartsList.add(this.getButton(this::cancelAction));
         messagePartsList.addLine(this.getFormattedMessagePart(MessageConfigNodes.UI_CANCEL));
-        messagePartsList.add(footer);
 
-        return new MessageComponent(messagePartsList);
+        return messagePartsList;
     }
 }
