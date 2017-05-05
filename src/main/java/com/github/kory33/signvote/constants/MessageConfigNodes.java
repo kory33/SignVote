@@ -46,6 +46,10 @@ public class MessageConfigNodes {
     public static final String F_UNVOTED                = COMMAND_ROOT + ".unvote.unvoted";
     public static final String NOT_VOTED                = COMMAND_ROOT + ".unvote.error.notvoted";
 
+    public static final String STATS_COMMAND_HELP       = COMMAND_ROOT + ".stats.help";
+    public static final String STATS_MISSING_TYPE       = COMMAND_ROOT + ".stats.missingtype";
+    public static final String STATS_INVALID_TYPE       = COMMAND_ROOT + ".stats.invalidtype";
+
     public static final String RELOAD_COMPLETE          = COMMAND_ROOT + ".reload.complete";
 
     public static final String SAVE_COMPLETE            = COMMAND_ROOT + ".save.complete";
@@ -105,5 +109,4 @@ public class MessageConfigNodes {
 
     public static final String GENERIC                  = "generic";
     public static final String INFINITE                 = GENERIC + ".infinite";
-
 }

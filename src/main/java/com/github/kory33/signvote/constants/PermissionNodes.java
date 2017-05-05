@@ -23,4 +23,6 @@ public class PermissionNodes {
     public static final String SAVE           = BASE_NODE + ".save";
 
     public static final String LIST_SESSION   = BASE_NODE + ".listsession";
+
+    public static final String VIEW_STATS     = BASE_NODE + ".viewstats";
 }

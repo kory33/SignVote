@@ -63,6 +63,12 @@
                 "notvoted": "§cYou have not voted to this votepoint."
             }
         },
+        "stats": {
+            "help": "/signvote stats <session name> [type [page]] - see the statistics of the given session",
+            "summary": "see the statiscs of the given session",
+            "invalidtype": "§6Invalid statistics type received.",
+            "missingtype": "§6You need to enter the type of statistics."
+        },
         "reload": {
             "help": "/signvote reload - reloads the plugin",
             "summary": "reloads the plugin",
