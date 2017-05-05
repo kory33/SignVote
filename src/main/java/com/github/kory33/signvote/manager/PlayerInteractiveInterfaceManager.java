@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.bukkit.entity.Player;
 
-import com.github.kory33.signvote.ui.PlayerInteractiveChatInterface;
+import com.github.kory33.signvote.ui.PlayerClickableChatInterface;
 
 /**
  * A class which holds the association of player onto a single session.
@@ -14,7 +14,7 @@ import com.github.kory33.signvote.ui.PlayerInteractiveChatInterface;
  *
  */
 public class PlayerInteractiveInterfaceManager {
-    private final Map<Player, PlayerInteractiveChatInterface> playerInterfaceMap;
+    private final Map<Player, PlayerClickableChatInterface> playerInterfaceMap;
     public PlayerInteractiveInterfaceManager() {
         this.playerInterfaceMap = new HashMap<>();
     }
@@ -25,9 +25,9 @@ public class PlayerInteractiveInterfaceManager {
      * will be revoked and replaced
      * @param interactiveInterface
      */
-    public void registerInterface(PlayerInteractiveChatInterface interactiveInterface) {
+    public void registerInterface(PlayerClickableChatInterface interactiveInterface) {
         Player targetPlayer = interactiveInterface.getTargetPlayer();
-        PlayerInteractiveChatInterface registeredInterface = this.playerInterfaceMap.get(targetPlayer);
+        PlayerClickableChatInterface registeredInterface = this.playerInterfaceMap.get(targetPlayer);
         if (registeredInterface != null) {
             registeredInterface.revokeSession();
         }

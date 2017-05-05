@@ -1,8 +1,6 @@
 package com.github.kory33.signvote.ui;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -13,42 +11,20 @@ import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.listners.PlayerChatInterceptor;
-import com.github.kory33.signvote.utils.tellraw.TellRawUtility;
-import com.github.ucchyocean.messaging.tellraw.ClickEventType;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
-public abstract class PlayerInteractiveChatInterface extends PlayerChatInterface {
-    protected final JSONConfiguration messageConfig;
-    private final RunnableHashTable runnableHashTable;
-    private boolean isValidSession;
-
-    private final Set<Long> registeredRunnableIds;
-
+/**
+ * A class representing a player chat interface which is capable of accepting
+ * player's input through its input forms.
+ * @author kory
+ */
+public abstract class PlayerFormChatInterface extends PlayerClickableChatInterface {
     protected final PlayerChatInterceptor chatInterceptor;
 
-    public PlayerInteractiveChatInterface(Player player, JSONConfiguration messageConfiguration,
+    public PlayerFormChatInterface(Player player, JSONConfiguration messageConfiguration,
             RunnableHashTable runnableHashTable, PlayerChatInterceptor chatInterceptor) {
-        super(player);
-        this.messageConfig = messageConfiguration;
-        this.runnableHashTable = runnableHashTable;
-        this.isValidSession = true;
-        this.registeredRunnableIds = new HashSet<>();
-
+        super(player, messageConfiguration, runnableHashTable);
         this.chatInterceptor = chatInterceptor;
-    }
-
-    protected boolean isValidSession() {
-        return this.isValidSession;
-    }
-
-    /**
-     * Revoke all runnables bound to this interface.
-     */
-    private void revokeAllRunnables() {
-        // remove all the bound runnables
-        for (long runnableId: this.registeredRunnableIds) {
-            this.runnableHashTable.cancelTask(runnableId);
-        }
     }
 
     /**
@@ -56,31 +32,10 @@ public abstract class PlayerInteractiveChatInterface extends PlayerChatInterface
      * Clear all associated runnables from cache table
      * and mark the session as invalid.
      */
+    @Override
     public void revokeSession() {
-        this.isValidSession = false;
-        this.revokeAllRunnables();
+        super.revokeSession();
         this.chatInterceptor.cancelAnyInterception(this.targetPlayer, "UI session has been revoked.");
-    }
-
-    protected MessageParts getConfigMessagePart(String configurationNode) {
-        return new MessageParts(this.messageConfig.getString(configurationNode));
-    }
-
-    protected MessageParts getButton(String command) {
-        MessageParts button = this.getConfigMessagePart(MessageConfigNodes.UI_BUTTON);
-        button.setClickEvent(ClickEventType.RUN_COMMAND, command);
-        return button;
-    }
-
-    protected MessageParts getButton(Runnable runnable, MessageParts button) {
-        long runnableId = TellRawUtility.bindRunnableToMessageParts(this.runnableHashTable, button, runnable);
-        this.registeredRunnableIds.add(runnableId);
-        return button;
-    }
-
-    protected MessageParts getButton(Runnable runnable) {
-        MessageParts button = this.getConfigMessagePart(MessageConfigNodes.UI_BUTTON);
-        return this.getButton(runnable, button);
     }
 
     private void promptInput(String formName) {
@@ -137,15 +92,5 @@ public abstract class PlayerInteractiveChatInterface extends PlayerChatInterface
         form.add(new MessageParts("\n"));
 
         return form;
-    }
-
-    protected void cancelAction() {
-        if (!this.isValidSession) {
-            return;
-        }
-
-        this.revokeSession();
-        String message = this.messageConfig.getString(MessageConfigNodes.UI_CANCELLED);
-        this.targetPlayer.sendMessage(message);
     }
 }

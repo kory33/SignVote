@@ -17,7 +17,7 @@ import com.github.kory33.signvote.manager.PlayerInteractiveInterfaceManager;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.ui.PlayerAddscoreInterface;
-import com.github.kory33.signvote.ui.PlayerInteractiveChatInterface;
+import com.github.kory33.signvote.ui.PlayerFormChatInterface;
 
 public class AddScoreCommandExecutor extends SubCommandExecutor{
     private final JSONConfiguration messageConfiguration;
@@ -46,7 +46,7 @@ public class AddScoreCommandExecutor extends SubCommandExecutor{
      * @param session
      */
     private void sendAddScoreInterface(Player player, VoteSession session) {
-        PlayerInteractiveChatInterface chatInterface = new PlayerAddscoreInterface(player, session, messageConfiguration,
+        PlayerFormChatInterface chatInterface = new PlayerAddscoreInterface(player, session, messageConfiguration,
                 runnableHashTable, chatInterceptor);
         this.interfaceManager.registerInterface(chatInterface);
         chatInterface.send();

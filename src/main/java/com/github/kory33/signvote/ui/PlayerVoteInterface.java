@@ -13,20 +13,19 @@ import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.exception.InvalidScoreVotedException;
 import com.github.kory33.signvote.exception.ScoreCountLimitReachedException;
 import com.github.kory33.signvote.exception.VotePointAlreadyVotedException;
-import com.github.kory33.signvote.listners.PlayerChatInterceptor;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.ucchyocean.messaging.tellraw.MessageComponent;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
-public class PlayerVoteInterface extends PlayerInteractiveChatInterface {
+public class PlayerVoteInterface extends PlayerClickableChatInterface {
     private final VoteSession session;
     private final VotePoint votePoint;
     private final JSONConfiguration messageConfig;
 
     public PlayerVoteInterface(Player player, VoteSession session, VotePoint votePoint,
-            JSONConfiguration messageConfig, RunnableHashTable runnableHashTable, PlayerChatInterceptor chatInterceptor) {
-        super(player, messageConfig, runnableHashTable, chatInterceptor);
+            JSONConfiguration messageConfig, RunnableHashTable runnableHashTable) {
+        super(player, messageConfig, runnableHashTable);
         this.session = session;
         this.votePoint = votePoint;
         this.messageConfig = messageConfig;

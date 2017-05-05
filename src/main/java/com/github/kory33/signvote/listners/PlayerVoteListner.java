@@ -16,7 +16,7 @@ import com.github.kory33.signvote.manager.PlayerInteractiveInterfaceManager;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
-import com.github.kory33.signvote.ui.PlayerInteractiveChatInterface;
+import com.github.kory33.signvote.ui.PlayerClickableChatInterface;
 import com.github.kory33.signvote.ui.PlayerUnvoteInterface;
 import com.github.kory33.signvote.ui.PlayerVoteInterface;
 
@@ -25,7 +25,6 @@ public class PlayerVoteListner implements Listener {
     private final JSONConfiguration messageConfig;
     private final RunnableHashTable runnableHashTable;
     private final PlayerInteractiveInterfaceManager interfaceManager;
-    private final PlayerChatInterceptor chatInterceptor;
 
     public PlayerVoteListner(SignVote plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -33,7 +32,6 @@ public class PlayerVoteListner implements Listener {
         this.messageConfig = plugin.getMessagesConfiguration();
         this.runnableHashTable = plugin.getRunnableHashTable();
         this.interfaceManager = plugin.getInterfaceManager();
-        this.chatInterceptor = plugin.getChatInterceptor();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
@@ -61,11 +59,11 @@ public class PlayerVoteListner implements Listener {
 
         Player clickPlayer = event.getPlayer();
 
-        PlayerInteractiveChatInterface chatInterface;
+        PlayerClickableChatInterface chatInterface;
         if (session.getVoteManager().hasVoted(clickPlayer.getUniqueId(), votePoint)) {
-            chatInterface = new PlayerUnvoteInterface(clickPlayer, session, votePoint, messageConfig, runnableHashTable, chatInterceptor);
+            chatInterface = new PlayerUnvoteInterface(clickPlayer, session, votePoint, messageConfig, runnableHashTable);
         } else {
-            chatInterface = new PlayerVoteInterface(clickPlayer, session, votePoint, messageConfig, runnableHashTable, chatInterceptor);
+            chatInterface = new PlayerVoteInterface(clickPlayer, session, votePoint, messageConfig, runnableHashTable);
         }
 
         this.interfaceManager.registerInterface(chatInterface);

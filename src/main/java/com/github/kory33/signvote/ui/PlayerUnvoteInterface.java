@@ -9,13 +9,12 @@ import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.exception.VotePointNotVotedException;
-import com.github.kory33.signvote.listners.PlayerChatInterceptor;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.ucchyocean.messaging.tellraw.MessageComponent;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
-public class PlayerUnvoteInterface extends PlayerInteractiveChatInterface {
+public class PlayerUnvoteInterface extends PlayerClickableChatInterface {
     private final VoteSession session;
     private final VotePoint votePoint;
 
@@ -35,8 +34,8 @@ public class PlayerUnvoteInterface extends PlayerInteractiveChatInterface {
     }
 
     public PlayerUnvoteInterface(Player player, VoteSession session, VotePoint votePoint,
-            JSONConfiguration messageConfig, RunnableHashTable runnableHashTable, PlayerChatInterceptor chatInterceptor) {
-        super(player, messageConfig, runnableHashTable, chatInterceptor);
+            JSONConfiguration messageConfig, RunnableHashTable runnableHashTable) {
+        super(player, messageConfig, runnableHashTable);
 
         this.session = session;
         this.votePoint = votePoint;

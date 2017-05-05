@@ -16,7 +16,7 @@ import com.github.kory33.signvote.session.VoteSession;
 import com.github.ucchyocean.messaging.tellraw.MessageComponent;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
-public class PlayerAddscoreInterface extends PlayerInteractiveChatInterface {
+public class PlayerAddscoreInterface extends PlayerFormChatInterface {
     private final VoteSession session;
     private Integer score;
     private Integer voteLimit;
