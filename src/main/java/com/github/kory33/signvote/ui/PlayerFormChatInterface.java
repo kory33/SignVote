@@ -71,18 +71,18 @@ public abstract class PlayerFormChatInterface extends PlayerClickableChatInterfa
      * @return
      */
     protected ArrayList<MessageParts> getForm(Consumer<String> onPlayerSendString, Predicate<String> validator, String name, String value) {
-        MessageParts formName = new MessageParts(this.messageConfig.getFormatted(MessageConfigNodes.F_UI_FORM_NAME, name));
+        MessageParts formName = this.getFormattedMessagePart(MessageConfigNodes.F_UI_FORM_NAME, name);
 
         if (value == null || value.isEmpty()) {
             value = this.messageConfig.getString(MessageConfigNodes.UI_FORM_NOTSET);
         }
-        MessageParts formValue = new MessageParts(this.messageConfig.getFormatted(MessageConfigNodes.F_UI_FORM_VALUE, value));
+        MessageParts formValue = this.getFormattedMessagePart(MessageConfigNodes.F_UI_FORM_VALUE, value);
 
         MessageParts editButton = this.getButton(() -> {
             this.revokeAllRunnables();
             this.promptInput(name);
             this.getInputToForm(onPlayerSendString, validator, name);
-        }, this.getConfigMessagePart(MessageConfigNodes.UI_FORM_EDIT_BUTTON));
+        }, this.getFormattedMessagePart(MessageConfigNodes.UI_FORM_EDIT_BUTTON));
 
         ArrayList<MessageParts> form = new ArrayList<>();
 

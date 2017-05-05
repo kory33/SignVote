@@ -69,7 +69,7 @@ public class PlayerAddscoreInterface extends PlayerFormChatInterface {
     }
 
     private MessageParts getHeading() {
-        return new MessageParts(messageConfig.getFormatted(MessageConfigNodes.ADDSCORE_UI_HEADING, this.session.getName()));
+        return this.getFormattedMessagePart(MessageConfigNodes.ADDSCORE_UI_HEADING, this.session.getName());
     }
 
     private boolean validateLimitInput(String input) {
@@ -86,8 +86,8 @@ public class PlayerAddscoreInterface extends PlayerFormChatInterface {
 
     @Override
     protected MessageComponent constructInterfaceMessages() {
-        MessageParts header = this.getConfigMessagePart(MessageConfigNodes.UI_HEADER);
-        MessageParts footer = this.getConfigMessagePart(MessageConfigNodes.UI_FOOTER);
+        MessageParts header = this.getFormattedMessagePart(MessageConfigNodes.UI_HEADER);
+        MessageParts footer = this.getFormattedMessagePart(MessageConfigNodes.UI_FOOTER);
 
         ArrayList<MessageParts> scoreForm = super.getForm(
                 input -> this.score = NumberUtils.createInteger(input),
@@ -111,7 +111,7 @@ public class PlayerAddscoreInterface extends PlayerFormChatInterface {
             );
 
         MessageParts submitButton = this.getButton(this::addScoreLimit,
-                this.getConfigMessagePart(MessageConfigNodes.ADDSCORE_UI_SUBMIT));
+                this.getFormattedMessagePart(MessageConfigNodes.ADDSCORE_UI_SUBMIT));
 
         MessagePartsList messagePartsList = new MessagePartsList();
         messagePartsList.addLine(header);

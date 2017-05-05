@@ -84,8 +84,8 @@ public class PlayerVoteInterface extends PlayerClickableChatInterface {
             return messageComponent;
         }
 
-        MessageParts header = this.getConfigMessagePart(MessageConfigNodes.UI_HEADER);
-        MessageParts footer = this.getConfigMessagePart(MessageConfigNodes.UI_FOOTER);
+        MessageParts header = this.getFormattedMessagePart(MessageConfigNodes.UI_HEADER);
+        MessageParts footer = this.getFormattedMessagePart(MessageConfigNodes.UI_FOOTER);
 
         MessagePartsList messagePartsList = new MessagePartsList();
         messagePartsList.addLine(header);
@@ -101,7 +101,7 @@ public class PlayerVoteInterface extends PlayerClickableChatInterface {
             });
 
         messagePartsList.add(this.getButton(this::cancelAction));
-        messagePartsList.addLine(this.getConfigMessagePart(MessageConfigNodes.UI_CANCEL));
+        messagePartsList.addLine(this.getFormattedMessagePart(MessageConfigNodes.UI_CANCEL));
 
         messagePartsList.add(footer);
         return new MessageComponent(messagePartsList);

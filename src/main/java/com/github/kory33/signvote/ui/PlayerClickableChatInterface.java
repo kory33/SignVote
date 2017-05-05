@@ -58,12 +58,18 @@ public abstract class PlayerClickableChatInterface extends PlayerChatInterface {
         this.revokeAllRunnables();
     }
 
-    protected MessageParts getConfigMessagePart(String configurationNode) {
-        return new MessageParts(this.messageConfig.getString(configurationNode));
+    /**
+     * Get a message formatted with the given array of Object arguments(optional)
+     * @param configurationNode
+     * @param objects
+     * @return
+     */
+    protected MessageParts getFormattedMessagePart(String configurationNode, Object... objects) {
+        return new MessageParts(this.messageConfig.getFormatted(configurationNode, objects));
     }
 
     protected MessageParts getButton(String command) {
-        MessageParts button = this.getConfigMessagePart(MessageConfigNodes.UI_BUTTON);
+        MessageParts button = this.getFormattedMessagePart(MessageConfigNodes.UI_BUTTON);
         button.setClickEvent(ClickEventType.RUN_COMMAND, command);
         return button;
     }
@@ -75,7 +81,7 @@ public abstract class PlayerClickableChatInterface extends PlayerChatInterface {
     }
 
     protected MessageParts getButton(Runnable runnable) {
-        MessageParts button = this.getConfigMessagePart(MessageConfigNodes.UI_BUTTON);
+        MessageParts button = this.getFormattedMessagePart(MessageConfigNodes.UI_BUTTON);
         return this.getButton(runnable, button);
     }
 
