@@ -94,6 +94,16 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
         return messagePartsList;
     }
 
+    /**
+     * This method only returns null in subclasses of {@link BrowseablePageInterface}
+     * Functionality of this method is replaced with {@link BrowseablePageInterface#getEntryList}
+     * @return null
+     */
+    @Override
+    protected final MessagePartsList getBodyMessages() {
+        return null;
+    }
+
     @Override
     protected final MessagePartsList constructInterfaceMessages() {
         MessageParts header = this.getFormattedMessagePart(MessageConfigNodes.UI_HEADER);
