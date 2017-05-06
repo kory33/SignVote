@@ -70,7 +70,7 @@ public abstract class FormChatInterface extends PlayerClickableChatInterface {
      * @param defaultDisplayValue
      * @return
      */
-    protected MessagePartsList getForm(Consumer<String> onPlayerSendString, Predicate<String> validator, String name, String value) {
+    protected final MessagePartsList getForm(Consumer<String> onPlayerSendString, Predicate<String> validator, String name, String value) {
         MessageParts formName = this.getFormattedMessagePart(MessageConfigNodes.F_UI_FORM_NAME, name);
 
         if (value == null || value.isEmpty()) {

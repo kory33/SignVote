@@ -22,7 +22,7 @@ public abstract class PlayerChatInterface extends ChatInterface {
      */
     @Override
     @Deprecated
-    public void send(CommandSender player) {
+    public final void send(CommandSender player) {
         this.send();
     }
 }

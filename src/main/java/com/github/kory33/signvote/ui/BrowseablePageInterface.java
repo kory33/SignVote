@@ -35,16 +35,16 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
      */
     protected abstract ArrayList<MessagePartsList> getEntryList();
 
+    /**
+     * Send the same interface with the specified page index
+     */
+    protected abstract void sendPage(int pageIndex);
+
     public BrowseablePageInterface(Player player, JSONConfiguration messageConfiguration,
             RunnableHashTable runnableHashTable, int pageIndex) {
         super(player, messageConfiguration, runnableHashTable);
         this.requestedPageIndex = pageIndex;
     }
-
-    /**
-     * Send the same interface with the specified page index
-     */
-    protected abstract void sendPage(int pageIndex);
 
     /**
      * Get the body of the browseable table.
@@ -95,7 +95,7 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
     }
 
     @Override
-    protected MessagePartsList constructInterfaceMessages() {
+    protected final MessagePartsList constructInterfaceMessages() {
         MessageParts header = this.getFormattedMessagePart(MessageConfigNodes.UI_HEADER);
         MessageParts footer = this.getFormattedMessagePart(MessageConfigNodes.UI_FOOTER);
 

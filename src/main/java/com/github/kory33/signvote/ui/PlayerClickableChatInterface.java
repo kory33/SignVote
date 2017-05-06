@@ -42,7 +42,7 @@ public abstract class PlayerClickableChatInterface extends PlayerChatInterface {
     /**
      * Revoke all runnables bound to this interface.
      */
-    protected void revokeAllRunnables() {
+    protected final void revokeAllRunnables() {
         // remove all the bound runnables
         for (long runnableId: this.registeredRunnableIds) {
             this.runnableHashTable.cancelTask(runnableId);
@@ -65,23 +65,23 @@ public abstract class PlayerClickableChatInterface extends PlayerChatInterface {
      * @param objects
      * @return
      */
-    protected MessageParts getFormattedMessagePart(String configurationNode, Object... objects) {
+    protected final MessageParts getFormattedMessagePart(String configurationNode, Object... objects) {
         return new MessageParts(this.messageConfig.getFormatted(configurationNode, objects));
     }
 
-    protected MessageParts getButton(String command) {
+    protected final MessageParts getButton(String command) {
         MessageParts button = this.getFormattedMessagePart(MessageConfigNodes.UI_BUTTON);
         button.setClickEvent(ClickEventType.RUN_COMMAND, command);
         return button;
     }
 
-    protected MessageParts getButton(Runnable runnable, MessageParts button) {
+    protected final MessageParts getButton(Runnable runnable, MessageParts button) {
         long runnableId = TellRawUtility.bindRunnableToMessageParts(this.runnableHashTable, button, runnable);
         this.registeredRunnableIds.add(runnableId);
         return button;
     }
 
-    protected MessageParts getButton(Runnable runnable) {
+    protected final MessageParts getButton(Runnable runnable) {
         MessageParts button = this.getFormattedMessagePart(MessageConfigNodes.UI_BUTTON);
         return this.getButton(runnable, button);
     }
