@@ -1,4 +1,4 @@
-package com.github.kory33.signvote.ui;
+package com.github.kory33.signvote.ui.player;
 
 import java.util.Optional;
 
@@ -11,6 +11,7 @@ import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.exception.VotePointNotVotedException;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
+import com.github.kory33.signvote.ui.player.model.PlayerClickableChatInterface;
 
 public class UnvoteInterface extends PlayerClickableChatInterface {
     private final VoteSession session;

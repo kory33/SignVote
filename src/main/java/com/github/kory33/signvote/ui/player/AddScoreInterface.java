@@ -1,4 +1,4 @@
-package com.github.kory33.signvote.ui;
+package com.github.kory33.signvote.ui.player;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.entity.Player;
@@ -11,6 +11,7 @@ import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.listeners.PlayerChatInterceptor;
 import com.github.kory33.signvote.session.VoteSession;
+import com.github.kory33.signvote.ui.player.model.FormChatInterface;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
 public class AddScoreInterface extends FormChatInterface {

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.bukkit.entity.Player;
 
-import com.github.kory33.signvote.ui.PlayerClickableChatInterface;
+import com.github.kory33.signvote.ui.player.model.PlayerClickableChatInterface;
 
 /**
  * A class which holds the association of player onto a single session.

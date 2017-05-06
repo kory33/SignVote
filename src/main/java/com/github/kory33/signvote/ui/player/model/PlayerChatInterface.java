@@ -1,7 +1,9 @@
-package com.github.kory33.signvote.ui;
+package com.github.kory33.signvote.ui.player.model;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import com.github.kory33.signvote.ui.ChatInterface;
 
 import lombok.Getter;
 

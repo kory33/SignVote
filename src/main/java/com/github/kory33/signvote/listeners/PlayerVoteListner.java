@@ -16,9 +16,9 @@ import com.github.kory33.signvote.manager.PlayerInteractiveInterfaceManager;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
-import com.github.kory33.signvote.ui.PlayerClickableChatInterface;
-import com.github.kory33.signvote.ui.UnvoteInterface;
-import com.github.kory33.signvote.ui.VoteInterface;
+import com.github.kory33.signvote.ui.player.UnvoteInterface;
+import com.github.kory33.signvote.ui.player.VoteInterface;
+import com.github.kory33.signvote.ui.player.model.PlayerClickableChatInterface;
 
 public class PlayerVoteListner implements Listener {
     private final VoteSessionManager voteSessionManager;

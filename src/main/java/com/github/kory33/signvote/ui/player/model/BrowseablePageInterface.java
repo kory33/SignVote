@@ -1,4 +1,4 @@
-package com.github.kory33.signvote.ui;
+package com.github.kory33.signvote.ui.player.model;
 
 import java.util.ArrayList;
 import java.util.List;

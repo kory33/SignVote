@@ -1,4 +1,4 @@
-package com.github.kory33.signvote.ui;
+package com.github.kory33.signvote.ui.player;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -15,6 +15,7 @@ import com.github.kory33.signvote.exception.ScoreCountLimitReachedException;
 import com.github.kory33.signvote.exception.VotePointAlreadyVotedException;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
+import com.github.kory33.signvote.ui.player.model.PlayerClickableChatInterface;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
 public class VoteInterface extends PlayerClickableChatInterface {

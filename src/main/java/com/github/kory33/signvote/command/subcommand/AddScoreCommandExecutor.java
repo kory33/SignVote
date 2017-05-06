@@ -16,8 +16,8 @@ import com.github.kory33.signvote.listeners.PlayerChatInterceptor;
 import com.github.kory33.signvote.manager.PlayerInteractiveInterfaceManager;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.session.VoteSession;
-import com.github.kory33.signvote.ui.AddScoreInterface;
-import com.github.kory33.signvote.ui.FormChatInterface;
+import com.github.kory33.signvote.ui.player.AddScoreInterface;
+import com.github.kory33.signvote.ui.player.model.FormChatInterface;
 
 public class AddScoreCommandExecutor extends SubCommandExecutor{
     private final JSONConfiguration messageConfiguration;
