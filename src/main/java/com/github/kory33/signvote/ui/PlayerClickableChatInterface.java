@@ -11,7 +11,6 @@ import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.utils.tellraw.TellRawUtility;
 import com.github.ucchyocean.messaging.tellraw.ClickEventType;
-import com.github.ucchyocean.messaging.tellraw.MessageComponent;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
 /**
@@ -105,7 +104,7 @@ public abstract class PlayerClickableChatInterface extends PlayerChatInterface {
     protected abstract MessagePartsList getBodyMessages();
 
     @Override
-    protected MessageComponent constructInterfaceMessages() {
+    protected MessagePartsList constructInterfaceMessages() {
         MessageParts header = this.getFormattedMessagePart(MessageConfigNodes.UI_HEADER);
         MessageParts footer = this.getFormattedMessagePart(MessageConfigNodes.UI_FOOTER);
 
@@ -114,6 +113,6 @@ public abstract class PlayerClickableChatInterface extends PlayerChatInterface {
         messagePartsList.addAll(this.getBodyMessages());
         messagePartsList.addLine(footer);
 
-        return new MessageComponent(messagePartsList);
+        return messagePartsList;
     }
 }

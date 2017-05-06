@@ -2,6 +2,7 @@ package com.github.kory33.signvote.ui;
 
 import org.bukkit.command.CommandSender;
 
+import com.github.kory33.messaging.tellraw.MessagePartsList;
 import com.github.ucchyocean.messaging.tellraw.MessageComponent;
 
 /**
@@ -11,14 +12,14 @@ import com.github.ucchyocean.messaging.tellraw.MessageComponent;
  * @author kory33
  */
 public abstract class ChatInterface {
-    protected abstract MessageComponent constructInterfaceMessages();
+    protected abstract MessagePartsList constructInterfaceMessages();
 
     /**
      * Construct the user interface and send to a CommandSender.
      * @param player
      */
     public void send(CommandSender target) {
-        MessageComponent messageComponent = this.constructInterfaceMessages();
+        MessageComponent messageComponent = new MessageComponent(this.constructInterfaceMessages());
         if (messageComponent != null) {
             messageComponent.send(target);
         }

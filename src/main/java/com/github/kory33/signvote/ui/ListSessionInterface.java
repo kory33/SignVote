@@ -6,7 +6,6 @@ import com.github.kory33.messaging.tellraw.MessagePartsList;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.session.VoteSession;
-import com.github.ucchyocean.messaging.tellraw.MessageComponent;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
 public class ListSessionInterface extends ChatInterface {
@@ -36,7 +35,7 @@ public class ListSessionInterface extends ChatInterface {
     }
 
     @Override
-    protected MessageComponent constructInterfaceMessages() {
+    protected MessagePartsList constructInterfaceMessages() {
         MessageParts header = this.getConfigMessagePart(MessageConfigNodes.UI_HEADER);
         MessageParts footer = this.getConfigMessagePart(MessageConfigNodes.UI_FOOTER);
 
@@ -52,6 +51,6 @@ public class ListSessionInterface extends ChatInterface {
 
         messagePartsList.add(footer);
 
-        return new MessageComponent(messagePartsList);
+        return messagePartsList;
     }
 }
