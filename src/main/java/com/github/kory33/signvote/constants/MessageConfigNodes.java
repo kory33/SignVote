@@ -76,6 +76,12 @@ public class MessageConfigNodes {
     public static final String UI_CANCEL                = UI_ROOT + ".cancel";
     public static final String UI_CANCELLED             = UI_ROOT + ".cancelled";
 
+    public static final String UI_PREV_BUTTON           = UI_ROOT + ".prevbutton";
+    public static final String UI_NEXT_BUTTON           = UI_ROOT + ".nextbutton";
+    public static final String UI_PREV_BUTTON_INACTIVE  = UI_ROOT + ".inactiveprevbutton";
+    public static final String UI_NEXT_BUTTON_INACTIVE  = UI_ROOT + ".inactivenextbutton";
+    public static final String F_UI_PAGE_DISPLAY        = UI_ROOT + ".pagedisp";
+
     public static final String VOTE_UI_ROOT             = UI_ROOT + ".vote";
     public static final String VOTE_UI_HEADING          = VOTE_UI_ROOT + ".heading";
     public static final String VOTE_UI_SCORE_SELECTION  = VOTE_UI_ROOT + ".scoreselection";

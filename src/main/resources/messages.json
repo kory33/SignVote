@@ -100,6 +100,11 @@
         "button": "§3[x] §r",
         "cancel": "§eCANCEL",
         "cancelled": "§eOperation cancelled.",
+        "prevbutton": "§6[Prev <<<]§r",
+        "nextbutton": "§6[>>> Next]§r",
+        "inactiveprevbutton": "§7[Prev <<<]§r",
+        "inactivenextbutton": "§7[>>> Next]§r",
+        "pagedisp": " §6 {0} / {1} §r ",
         "vote": {
             "heading": "§aSelect a point to vote to §6{0}",
             "scoreselection": "§6{0} §aPoints(§e{1} §atimes remaining)",
