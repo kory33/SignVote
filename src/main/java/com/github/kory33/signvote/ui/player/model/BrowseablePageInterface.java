@@ -9,6 +9,7 @@ import com.github.kory33.messaging.tellraw.MessagePartsList;
 import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
+import com.github.kory33.signvote.manager.PlayerInteractiveInterfaceManager;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
 import lombok.Getter;
@@ -26,6 +27,7 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
     protected static final int ENTRY_PER_PAGE = 10;
 
     @Getter private int requestedPageIndex;
+    protected final PlayerInteractiveInterfaceManager interfaceManager;
 
     /**
      * Get the list of all entries.
@@ -36,9 +38,9 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
     protected abstract ArrayList<MessagePartsList> getEntryList();
 
     /**
-     * Send the same interface with the specified page index
+     * Create new instance of browseable chat interface with the specified index.
      */
-    protected abstract void sendPage(int pageIndex);
+    protected abstract BrowseablePageInterface yieldPage(int pageIndex);
 
     /**
      * Get the line which is inserted before the table's main body
@@ -47,9 +49,21 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
     protected abstract MessagePartsList getHeading();
 
     public BrowseablePageInterface(Player player, JSONConfiguration messageConfiguration,
-            RunnableHashTable runnableHashTable, int pageIndex) {
+            RunnableHashTable runnableHashTable, PlayerInteractiveInterfaceManager interfaceManager, int pageIndex) {
         super(player, messageConfiguration, runnableHashTable);
+        this.interfaceManager = interfaceManager;
         this.requestedPageIndex = pageIndex;
+    }
+
+    /**
+     * Get the copy of the new interface with another index specified.
+     * No registration to the interface manager is done in this constructor.
+     * @param oldInterface
+     * @param newIndex
+     */
+    public BrowseablePageInterface(BrowseablePageInterface oldInterface, int newIndex) {
+        this(oldInterface.getTargetPlayer(), oldInterface.messageConfig, oldInterface.getRunnableHashTable(),
+                oldInterface.interfaceManager, newIndex);
     }
 
     /**
@@ -62,15 +76,17 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
 
         MessageParts prevButton = (finalPageIndex != 0) ?
                 this.getButton(() -> {
-                    this.revokeSession();
-                    this.sendPage(finalPageIndex - 1);
+                    BrowseablePageInterface newInterface = this.yieldPage(finalPageIndex - 1);
+                    this.interfaceManager.registerInterface(newInterface);
+                    newInterface.send();
                 }, this.getFormattedMessagePart(MessageConfigNodes.UI_PREV_BUTTON)):
                 this.getFormattedMessagePart(MessageConfigNodes.UI_PREV_BUTTON_INACTIVE);
 
         MessageParts nextButton = (finalPageIndex != maximumPageIndex)?
                 this.getButton(() -> {
-                    this.revokeSession();
-                    this.sendPage(finalPageIndex + 1);
+                    BrowseablePageInterface newInterface = this.yieldPage(finalPageIndex + 1);
+                    this.interfaceManager.registerInterface(newInterface);
+                    newInterface.send();
                 }, this.getFormattedMessagePart(MessageConfigNodes.UI_NEXT_BUTTON)):
                 this.getFormattedMessagePart(MessageConfigNodes.UI_NEXT_BUTTON_INACTIVE);
 

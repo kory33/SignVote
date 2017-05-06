@@ -115,4 +115,8 @@ public class MessageConfigNodes {
 
     public static final String GENERIC                  = "generic";
     public static final String INFINITE                 = GENERIC + ".infinite";
+
+    public static final String STATS_TYPE_VOTES         = GENERIC + ".votes";
+    public static final String STATS_TYPE_SCORE         = GENERIC + ".score";
+    public static final String STATS_TYPE_MEAN          = GENERIC + ".mean";
 }

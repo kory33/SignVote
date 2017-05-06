@@ -13,6 +13,8 @@ import com.github.kory33.signvote.utils.tellraw.TellRawUtility;
 import com.github.ucchyocean.messaging.tellraw.ClickEventType;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
+import lombok.Getter;
+
 /**
  * A class representing a player chat interface which is capable of navigating the player
  * through clicks on the buttons
@@ -20,7 +22,7 @@ import com.github.ucchyocean.messaging.tellraw.MessageParts;
  */
 public abstract class PlayerClickableChatInterface extends PlayerChatInterface {
     protected final JSONConfiguration messageConfig;
-    private final RunnableHashTable runnableHashTable;
+    @Getter private final RunnableHashTable runnableHashTable;
     private boolean isValidSession;
 
     private final Set<Long> registeredRunnableIds;
