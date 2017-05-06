@@ -1,4 +1,4 @@
-package com.github.kory33.signvote.listners;
+package com.github.kory33.signvote.listeners;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;

@@ -9,7 +9,7 @@ import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MagicNumbers;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
-import com.github.kory33.signvote.listners.PlayerChatInterceptor;
+import com.github.kory33.signvote.listeners.PlayerChatInterceptor;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 

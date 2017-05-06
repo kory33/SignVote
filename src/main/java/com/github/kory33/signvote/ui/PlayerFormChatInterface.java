@@ -10,7 +10,7 @@ import com.github.kory33.messaging.tellraw.MessagePartsList;
 import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
-import com.github.kory33.signvote.listners.PlayerChatInterceptor;
+import com.github.kory33.signvote.listeners.PlayerChatInterceptor;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
 /**

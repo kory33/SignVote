@@ -12,7 +12,7 @@ import com.github.kory33.signvote.constants.MagicNumbers;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.core.SignVote;
-import com.github.kory33.signvote.listners.PlayerChatInterceptor;
+import com.github.kory33.signvote.listeners.PlayerChatInterceptor;
 import com.github.kory33.signvote.manager.PlayerInteractiveInterfaceManager;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.session.VoteSession;
