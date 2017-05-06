@@ -40,6 +40,12 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
      */
     protected abstract void sendPage(int pageIndex);
 
+    /**
+     * Get the line which is inserted before the table's main body
+     * @return
+     */
+    protected abstract MessagePartsList getHeading();
+
     public BrowseablePageInterface(Player player, JSONConfiguration messageConfiguration,
             RunnableHashTable runnableHashTable, int pageIndex) {
         super(player, messageConfiguration, runnableHashTable);
@@ -115,6 +121,7 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
 
         MessagePartsList messagePartsList = new MessagePartsList();
         messagePartsList.addLine(header);
+        messagePartsList.addAll(getHeading());
         messagePartsList.addAll(getTableBody(roundedPageIndex, entryList));
         messagePartsList.addLine(getBrowseButtonLine(roundedPageIndex, maximumPageIndex));
         messagePartsList.addLine(footer);
