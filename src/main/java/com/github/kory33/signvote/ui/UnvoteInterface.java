@@ -12,7 +12,7 @@ import com.github.kory33.signvote.exception.VotePointNotVotedException;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 
-public class PlayerUnvoteInterface extends PlayerClickableChatInterface {
+public class UnvoteInterface extends PlayerClickableChatInterface {
     private final VoteSession session;
     private final VotePoint votePoint;
 
@@ -31,7 +31,7 @@ public class PlayerUnvoteInterface extends PlayerClickableChatInterface {
         this.revokeSession();
     }
 
-    public PlayerUnvoteInterface(Player player, VoteSession session, VotePoint votePoint,
+    public UnvoteInterface(Player player, VoteSession session, VotePoint votePoint,
             JSONConfiguration messageConfig, RunnableHashTable runnableHashTable) {
         super(player, messageConfig, runnableHashTable);
 

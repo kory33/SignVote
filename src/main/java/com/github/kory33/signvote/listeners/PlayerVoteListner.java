@@ -17,8 +17,8 @@ import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.ui.PlayerClickableChatInterface;
-import com.github.kory33.signvote.ui.PlayerUnvoteInterface;
-import com.github.kory33.signvote.ui.PlayerVoteInterface;
+import com.github.kory33.signvote.ui.UnvoteInterface;
+import com.github.kory33.signvote.ui.VoteInterface;
 
 public class PlayerVoteListner implements Listener {
     private final VoteSessionManager voteSessionManager;
@@ -61,9 +61,9 @@ public class PlayerVoteListner implements Listener {
 
         PlayerClickableChatInterface chatInterface;
         if (session.getVoteManager().hasVoted(clickPlayer.getUniqueId(), votePoint)) {
-            chatInterface = new PlayerUnvoteInterface(clickPlayer, session, votePoint, messageConfig, runnableHashTable);
+            chatInterface = new UnvoteInterface(clickPlayer, session, votePoint, messageConfig, runnableHashTable);
         } else {
-            chatInterface = new PlayerVoteInterface(clickPlayer, session, votePoint, messageConfig, runnableHashTable);
+            chatInterface = new VoteInterface(clickPlayer, session, votePoint, messageConfig, runnableHashTable);
         }
 
         this.interfaceManager.registerInterface(chatInterface);

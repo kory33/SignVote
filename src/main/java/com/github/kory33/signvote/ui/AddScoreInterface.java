@@ -13,13 +13,13 @@ import com.github.kory33.signvote.listeners.PlayerChatInterceptor;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
-public class PlayerAddscoreInterface extends PlayerFormChatInterface {
+public class AddScoreInterface extends FormChatInterface {
     private final VoteSession session;
     private Integer score;
     private Integer voteLimit;
     private String permission;
 
-    public PlayerAddscoreInterface(Player player, VoteSession session, JSONConfiguration messageConfiguration,
+    public AddScoreInterface(Player player, VoteSession session, JSONConfiguration messageConfiguration,
             RunnableHashTable runnableHashTable, PlayerChatInterceptor chatInterceptor) {
         super(player, messageConfiguration, runnableHashTable, chatInterceptor);
         this.session = session;

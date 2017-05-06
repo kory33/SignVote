@@ -18,10 +18,10 @@ import com.github.ucchyocean.messaging.tellraw.MessageParts;
  * player's input through its input forms.
  * @author kory
  */
-public abstract class PlayerFormChatInterface extends PlayerClickableChatInterface {
+public abstract class FormChatInterface extends PlayerClickableChatInterface {
     protected final PlayerChatInterceptor chatInterceptor;
 
-    public PlayerFormChatInterface(Player player, JSONConfiguration messageConfiguration,
+    public FormChatInterface(Player player, JSONConfiguration messageConfiguration,
             RunnableHashTable runnableHashTable, PlayerChatInterceptor chatInterceptor) {
         super(player, messageConfiguration, runnableHashTable);
         this.chatInterceptor = chatInterceptor;
