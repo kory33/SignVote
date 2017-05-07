@@ -10,6 +10,7 @@ import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
+import com.github.kory33.signvote.constants.StatsType;
 import com.github.kory33.signvote.core.SignVote;
 import com.github.kory33.signvote.manager.PlayerInteractiveInterfaceManager;
 import com.github.kory33.signvote.manager.VoteSessionManager;
@@ -64,12 +65,7 @@ public class StatsCommandExecutor extends SubCommandExecutor {
         if (args.size() == 0) {
             chatInterface = new StatsTypeSelectionInterface(player, session, messageConfig, runnableHashTable, interfaceManager);
         } else {
-            String statsType;
-            if (args.size() == 0) {
-                statsType = args.remove(0);
-            } else {
-                statsType = null;
-            }
+            String statsType = args.size() == 0 ? StatsType.MEAN.getType() : args.remove(0);
 
             int pageIndex;
             if (args.size() == 0) {

@@ -13,6 +13,8 @@ public class SubCommands {
     public static final String DELETEVP  = "deletevp";
     public static final String RELOAD    = "reload";
     public static final String UNVOTE    = "unvote";
+    public static final String STATS     = "stats";
     public static final String SAVE      = "save";
+
     public static final String RUN       = "run";
 }

@@ -107,7 +107,7 @@ public class MessageConfigNodes {
 
     public static final String STATS_UI                 = UI_ROOT + ".stats";
     public static final String F_STATS_UI_HEADING       = STATS_UI + ".heading";
-    public static final String STATS_ENTRY_TEMPLATE     = STATS_UI + ".template";
+    public static final String F_STATS_ENTRY_TEMPLATE   = STATS_UI + ".template";
 
     public static final String UI_FORM_ROOT             = UI_ROOT + ".form";
     public static final String F_UI_FORM_NAME           = UI_FORM_ROOT + ".name";
