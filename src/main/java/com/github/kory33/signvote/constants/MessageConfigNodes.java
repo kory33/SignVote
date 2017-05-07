@@ -93,7 +93,7 @@ public class MessageConfigNodes {
 
     public static final String LIST_UI                  = UI_ROOT + ".list";
     public static final String LIST_UI_HEADING          = LIST_UI + ".heading";
-    public static final String LIST_UI_LINE_PREFIX      = LIST_UI + ".lineprefix";
+    public static final String F_LIST_UI_ENTRY_TEMPLATE = LIST_UI + ".entrytemplate";
     public static final String LIST_UI_SESSION_OPEN     = LIST_UI + ".state.open";
     public static final String LIST_UI_SESSION_CLOSED   = LIST_UI + ".state.closed";
 

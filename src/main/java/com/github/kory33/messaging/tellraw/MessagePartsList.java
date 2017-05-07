@@ -12,6 +12,27 @@ import com.github.ucchyocean.messaging.tellraw.MessageParts;
 public class MessagePartsList extends ArrayList<MessageParts> {
     private static final long serialVersionUID = -3095004887890313967L;
 
+    public MessagePartsList() {
+        super();
+    }
+
+    /**
+     * Construct list containing a given message part.
+     * @param messageParts
+     */
+    public MessagePartsList(MessageParts messageParts) {
+        super();
+        this.add(messageParts);
+    }
+
+    /**
+     * Construct list containing a message part which has given message string as a body.
+     * @param messageParts
+     */
+    public MessagePartsList(String messageString) {
+        this(new MessageParts(messageString));
+    }
+
     /**
      * Append a MessageParts and a line break at the end of this list.
      * @param messageParts

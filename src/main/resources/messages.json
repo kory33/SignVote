@@ -116,7 +116,7 @@
         },
         "list": {
             "heading": "§bList of existing sesions:",
-            "lineprefix": "§6",
+            "entrytemplate": "§6{0} {1}",
             "state": {
                 "open": " §a(open)",
                 "closed": " §e(closed)"
