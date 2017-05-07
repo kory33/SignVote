@@ -28,6 +28,7 @@ import com.github.kory33.signvote.exception.InvalidScoreVotedException;
 import com.github.kory33.signvote.exception.ScoreCountLimitReachedException;
 import com.github.kory33.signvote.exception.VotePointAlreadyVotedException;
 import com.github.kory33.signvote.exception.VotePointNotVotedException;
+import com.github.kory33.signvote.exception.VoteSessionClosedException;
 import com.github.kory33.signvote.manager.VoteManager;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.utils.FileUtils;
@@ -287,9 +288,10 @@ public class VoteSession {
      *
      * @throws ScoreCountLimitReachedException when the player can no longer vote with the given score due to the limit
      * @throws VotePointAlreadyVotedException when the player has already voted to the votepoint
+     * @throws VoteSessionClosedException when this vote session is closed
      */
     public void vote(Player player, VotePoint votePoint, int voteScore)
-            throws ScoreCountLimitReachedException, VotePointAlreadyVotedException, InvalidScoreVotedException {
+            throws ScoreCountLimitReachedException, VotePointAlreadyVotedException, InvalidScoreVotedException, VoteSessionClosedException {
         if (this.voteScoreCountLimits.getLimit(voteScore, player) == 0) {
             throw new InvalidScoreVotedException(votePoint, player, voteScore);
         }
@@ -300,6 +302,10 @@ public class VoteSession {
 
         if (!this.getAvailableVoteCounts(player).containsKey(voteScore)) {
             throw new ScoreCountLimitReachedException(player, votePoint, voteScore);
+        }
+
+        if (!this.isOpen()) {
+            throw new VoteSessionClosedException(this);
         }
 
         this.voteManager.addVotePointData(player.getUniqueId(), voteScore, votePoint);

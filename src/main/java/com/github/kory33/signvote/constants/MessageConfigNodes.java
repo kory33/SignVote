@@ -123,4 +123,5 @@ public class MessageConfigNodes {
     public static final String STATS_TYPE_VOTES         = GENERIC + ".votes";
     public static final String STATS_TYPE_SCORE         = GENERIC + ".score";
     public static final String STATS_TYPE_MEAN          = GENERIC + ".mean";
+    public static final String VOTE_SESSION_CLOSED      = GENERIC + ".vsclosed";
 }

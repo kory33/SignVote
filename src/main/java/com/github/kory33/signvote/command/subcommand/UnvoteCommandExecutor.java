@@ -61,6 +61,11 @@ public class UnvoteCommandExecutor extends SubCommandExecutor {
             return true;
         }
 
+        if (!session.isOpen()) {
+            player.sendMessage(this.messageConfiguration.getString(MessageConfigNodes.VOTE_SESSION_CLOSED));
+            return true;
+        }
+
         try {
             session.getVoteManager().removeVote(player.getUniqueId(), votePoint);
             player.sendMessage(this.messageConfiguration.getFormatted(MessageConfigNodes.F_UNVOTED, votePointName));

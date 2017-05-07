@@ -147,6 +147,7 @@
         "infinite": "infinite",
         "votes": "votes",
         "score": "score",
-        "mean": "mean"
+        "mean": "mean",
+        "vsclosed": "§aThis vote session is already closed."
     }
 }

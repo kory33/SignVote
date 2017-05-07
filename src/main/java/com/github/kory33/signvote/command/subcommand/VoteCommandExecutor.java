@@ -14,6 +14,7 @@ import com.github.kory33.signvote.core.SignVote;
 import com.github.kory33.signvote.exception.InvalidScoreVotedException;
 import com.github.kory33.signvote.exception.ScoreCountLimitReachedException;
 import com.github.kory33.signvote.exception.VotePointAlreadyVotedException;
+import com.github.kory33.signvote.exception.VoteSessionClosedException;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
@@ -89,6 +90,8 @@ public class VoteCommandExecutor extends SubCommandExecutor {
             player.sendMessage(this.messageConfiguration.getString(MessageConfigNodes.VOTEPOINT_ALREADY_VOTED));
         } catch (InvalidScoreVotedException exception) {
             player.sendMessage(this.messageConfiguration.getString(MessageConfigNodes.INVALID_VOTE_SCORE));
+        } catch (VoteSessionClosedException exception) {
+            player.sendMessage(this.messageConfiguration.getString(MessageConfigNodes.VOTE_SESSION_CLOSED));
         }
 
         return true;

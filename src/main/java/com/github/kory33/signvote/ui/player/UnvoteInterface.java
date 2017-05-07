@@ -55,6 +55,13 @@ public class UnvoteInterface extends PlayerClickableChatInterface {
 
     @Override
     protected MessagePartsList getBodyMessages() {
+        if (!this.session.isOpen()) {
+            String message = this.messageConfig.getString(MessageConfigNodes.VOTE_SESSION_CLOSED);
+            MessagePartsList messagePartsList = new MessagePartsList();
+            messagePartsList.addLine(message);
+            return messagePartsList;
+        }
+
         MessagePartsList messagePartsList = new MessagePartsList();
         messagePartsList.addLine(this.getHeading());
         messagePartsList.add(this.getButton(this::unVote));

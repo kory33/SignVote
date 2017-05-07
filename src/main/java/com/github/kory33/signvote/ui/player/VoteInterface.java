@@ -13,6 +13,7 @@ import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.exception.InvalidScoreVotedException;
 import com.github.kory33.signvote.exception.ScoreCountLimitReachedException;
 import com.github.kory33.signvote.exception.VotePointAlreadyVotedException;
+import com.github.kory33.signvote.exception.VoteSessionClosedException;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.ui.player.model.PlayerClickableChatInterface;
@@ -53,6 +54,8 @@ public class VoteInterface extends PlayerClickableChatInterface {
             resultMessage = this.messageConfig.getString(MessageConfigNodes.VOTEPOINT_ALREADY_VOTED);
         } catch (InvalidScoreVotedException exception) {
             resultMessage = this.messageConfig.getString(MessageConfigNodes.INVALID_VOTE_SCORE);
+        } catch (VoteSessionClosedException e) {
+            resultMessage = this.messageConfig.getString(MessageConfigNodes.VOTE_SESSION_CLOSED);
         }
 
         this.targetPlayer.sendMessage(resultMessage);
@@ -76,9 +79,14 @@ public class VoteInterface extends PlayerClickableChatInterface {
         HashMap<Integer, Optional<Integer>> availableVotePoints = this.session.getAvailableVoteCounts(this.targetPlayer);
         if (availableVotePoints.isEmpty()) {
             String message = this.messageConfig.getString(MessageConfigNodes.VOTE_UI_NONE_AVAILABLE);
-
             MessagePartsList messagePartsList = new MessagePartsList();
+            messagePartsList.addLine(message);
+            return messagePartsList;
+        }
 
+        if (!this.session.isOpen()) {
+            String message = this.messageConfig.getString(MessageConfigNodes.VOTE_SESSION_CLOSED);
+            MessagePartsList messagePartsList = new MessagePartsList();
             messagePartsList.addLine(message);
             return messagePartsList;
         }

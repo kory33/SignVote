@@ -113,7 +113,7 @@ public abstract class PlayerClickableChatInterface extends PlayerChatInterface {
         MessagePartsList messagePartsList = new MessagePartsList();
         messagePartsList.addLine(header);
         messagePartsList.addAll(this.getBodyMessages());
-        messagePartsList.addLine(footer);
+        messagePartsList.add(footer);
 
         return messagePartsList;
     }
