@@ -13,7 +13,7 @@ import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.ui.player.model.PlayerClickableChatInterface;
 
-public class UnvoteInterface extends PlayerClickableChatInterface {
+public final class UnvoteInterface extends PlayerClickableChatInterface {
     private final VoteSession session;
     private final VotePoint votePoint;
 

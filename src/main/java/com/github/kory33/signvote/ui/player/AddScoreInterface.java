@@ -14,7 +14,7 @@ import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.ui.player.model.FormChatInterface;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
-public class AddScoreInterface extends FormChatInterface {
+public final class AddScoreInterface extends FormChatInterface {
     private final VoteSession session;
     private Integer score;
     private Integer voteLimit;

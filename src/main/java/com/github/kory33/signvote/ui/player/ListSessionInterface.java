@@ -13,7 +13,7 @@ import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.ui.player.model.BrowseablePageInterface;
 
-public class ListSessionInterface extends BrowseablePageInterface {
+public final class ListSessionInterface extends BrowseablePageInterface {
     private final VoteSessionManager voteSessionManager;
 
     public ListSessionInterface(Player player, VoteSessionManager voteSessionManager, JSONConfiguration messageConfiguration,

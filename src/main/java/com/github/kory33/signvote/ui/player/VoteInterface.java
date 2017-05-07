@@ -19,7 +19,7 @@ import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.ui.player.model.PlayerClickableChatInterface;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
-public class VoteInterface extends PlayerClickableChatInterface {
+public final class VoteInterface extends PlayerClickableChatInterface {
     private final VoteSession session;
     private final VotePoint votePoint;
     private final JSONConfiguration messageConfig;
