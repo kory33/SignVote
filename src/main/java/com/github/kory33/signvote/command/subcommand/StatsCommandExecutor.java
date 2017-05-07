@@ -15,7 +15,6 @@ import com.github.kory33.signvote.core.SignVote;
 import com.github.kory33.signvote.manager.PlayerInteractiveInterfaceManager;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.session.VoteSession;
-import com.github.kory33.signvote.ui.player.StatsTypeSelectionInterface;
 import com.github.kory33.signvote.ui.player.model.PlayerClickableChatInterface;
 import com.github.kory33.signvote.ui.player.stats.StatsInterface;
 
@@ -49,7 +48,7 @@ public class StatsCommandExecutor extends SubCommandExecutor {
             return true;
         }
 
-        Player player = (Player)sender;
+        Player player = (Player) sender;
 
         if (args.size() == 0) {
             return false;
@@ -62,28 +61,26 @@ public class StatsCommandExecutor extends SubCommandExecutor {
         }
 
         PlayerClickableChatInterface chatInterface;
+
+        String statsType = args.size() == 0 ? StatsType.MEAN.getType() : args.remove(0);
+
+        int pageIndex;
         if (args.size() == 0) {
-            chatInterface = new StatsTypeSelectionInterface(player, session, messageConfig, runnableHashTable, interfaceManager);
+            pageIndex = 0;
         } else {
-            String statsType = args.remove(0);
-
-            int pageIndex;
-            if (args.size() == 0) {
+            try {
+                pageIndex = Integer.parseInt(args.remove(0));
+            } catch (NumberFormatException exception) {
                 pageIndex = 0;
-            } else {
-                try {
-                    pageIndex = Integer.parseInt(args.remove(0));
-                } catch (NumberFormatException exception) {
-                    pageIndex = 0;
-                }
             }
+        }
 
-            chatInterface = StatsInterface.createNewInterface(player, session, statsType, pageIndex, messageConfig, runnableHashTable, interfaceManager);
+        chatInterface = StatsInterface.createNewInterface(player, session, statsType, pageIndex, messageConfig,
+                runnableHashTable, interfaceManager);
 
-            if (chatInterface == null) {
-                sender.sendMessage(messageConfig.getString(MessageConfigNodes.STATS_INVALID_TYPE));
-                return true;
-            }
+        if (chatInterface == null) {
+            sender.sendMessage(messageConfig.getString(MessageConfigNodes.STATS_INVALID_TYPE));
+            return true;
         }
 
         chatInterface.send();
