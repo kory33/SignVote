@@ -114,12 +114,6 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
         MessagePartsList messagePartsList = new MessagePartsList();
         displayList.forEach(messagePartsList::addLine);
 
-        // add blank lines
-        int blankLineNumber = ENTRY_PER_PAGE - displayList.size();
-        for (int i = 0; i < blankLineNumber; i++) {
-            messagePartsList.addLine("");
-        }
-
         return messagePartsList;
     }
 
