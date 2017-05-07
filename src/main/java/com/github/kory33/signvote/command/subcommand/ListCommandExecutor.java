@@ -14,6 +14,8 @@ import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.core.SignVote;
 import com.github.kory33.signvote.manager.PlayerInteractiveInterfaceManager;
 import com.github.kory33.signvote.manager.VoteSessionManager;
+import com.github.kory33.signvote.ui.ChatInterface;
+import com.github.kory33.signvote.ui.console.ConsoleListSessionInterface;
 import com.github.kory33.signvote.ui.player.ListSessionInterface;
 import com.github.kory33.signvote.ui.player.model.PlayerClickableChatInterface;
 
@@ -43,7 +45,8 @@ public class ListCommandExecutor extends SubCommandExecutor {
         }
 
         if (!(sender instanceof Player)) {
-            sender.sendMessage(messageConfig.getString(MessageConfigNodes.COMMAND_ONLY_FOR_PLAYERS));
+            ChatInterface listInterface = new ConsoleListSessionInterface(voteSessionManager, messageConfig);
+            listInterface.send(sender);
             return true;
         }
 
