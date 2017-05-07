@@ -1,11 +1,19 @@
 package com.github.kory33.signvote.ui.player.stats;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.stream.Stream;
+
 import org.bukkit.entity.Player;
 
+import com.github.kory33.messaging.tellraw.MessagePartsList;
 import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
+import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.StatsType;
 import com.github.kory33.signvote.manager.PlayerInteractiveInterfaceManager;
+import com.github.kory33.signvote.model.VotePointStats;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.ui.player.model.BrowseablePageInterface;
 
@@ -21,6 +29,20 @@ public abstract class StatsInterface extends BrowseablePageInterface {
         super(oldInterface, newPageIndex);
         this.targetVoteSession = oldInterface.targetVoteSession;
     }
+
+    /**
+     * Get the statistics type associated with the interface
+     * @return
+     */
+    public abstract StatsType getStatsType();
+
+    public abstract Number getStatsDisplayedValue(VotePointStats stats);
+
+    /**
+     * Get the comparator that determines the order of statistics entries
+     * @return
+     */
+    public abstract Comparator<? super VotePointStats> getStatsComparator();
 
     /**
      * Create a new stats interface with given information
@@ -45,5 +67,35 @@ public abstract class StatsInterface extends BrowseablePageInterface {
         } catch (IllegalArgumentException exception) {}
 
         return null;
+    }
+
+    @Override
+    protected MessagePartsList getHeading() {
+        MessagePartsList messagePartsList = new MessagePartsList();
+        String statsType = this.messageConfig.getString(this.getStatsType().getTypeMessageNode());
+        messagePartsList.add(getFormattedMessagePart(MessageConfigNodes.F_STATS_UI_HEADING, statsType));
+        return messagePartsList;
+    }
+
+    @Override
+    protected ArrayList<MessagePartsList> getEntryList() {
+        ArrayList<MessagePartsList> entryList = new ArrayList<>();
+
+        Stream<VotePointStats> sortedStatsStream = this.targetVoteSession.getAllVotePoints()
+                .stream()
+                .map(votePoint -> new VotePointStats(this.targetVoteSession, votePoint))
+                .sorted(this.getStatsComparator());
+
+        int index = 1;
+        for (Iterator<VotePointStats> iterator = sortedStatsStream.iterator(); iterator.hasNext(); index++) {
+            VotePointStats stats = iterator.next();
+            MessagePartsList entry = new MessagePartsList();
+
+            entry.add(this.getFormattedMessagePart(MessageConfigNodes.STATS_ENTRY_TEMPLATE, index, this.getStatsDisplayedValue(stats)));
+
+            entryList.add(entry);
+        }
+
+        return entryList;
     }
 }

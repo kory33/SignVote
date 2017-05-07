@@ -105,6 +105,10 @@ public class MessageConfigNodes {
     public static final String ADDSCORE_UI_SCORE_NOT_SET= ADDSCORE_UI + ".scorenotset";
     public static final String ADDSCORE_UI_SUBMIT       = ADDSCORE_UI + ".submit";
 
+    public static final String STATS_UI                 = UI_ROOT + ".stats";
+    public static final String F_STATS_UI_HEADING       = STATS_UI + ".heading";
+    public static final String STATS_ENTRY_TEMPLATE     = STATS_UI + ".template";
+
     public static final String UI_FORM_ROOT             = UI_ROOT + ".form";
     public static final String F_UI_FORM_NAME           = UI_FORM_ROOT + ".name";
     public static final String F_UI_FORM_VALUE          = UI_FORM_ROOT + ".value";

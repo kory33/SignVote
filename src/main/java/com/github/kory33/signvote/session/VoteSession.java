@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
@@ -330,5 +331,12 @@ public class VoteSession {
         sign.update();
 
         return;
+    }
+
+    /**
+     * Get all the votepoints registered to this vote session
+     */
+    public Set<VotePoint> getAllVotePoints() {
+        return this.votePointNameMap.getInverse().keySet();
     }
 }

@@ -112,7 +112,7 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
         List<MessagePartsList> displayList = entryList.subList(beginEntryIndex, lastEntryIndex);
 
         MessagePartsList messagePartsList = new MessagePartsList();
-        displayList.forEach(messagePartsList::addAll);
+        displayList.forEach(messagePartsList::addLine);
         return messagePartsList;
     }
 
