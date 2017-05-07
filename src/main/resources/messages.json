@@ -97,7 +97,7 @@
     "ui": {
         "header": "§6----------[SignVote]----------§r",
         "footer": "§6----------------------------",
-        "button": "§3[x] §r",
+        "button": "§3[+] §r",
         "cancel": "§eCANCEL",
         "cancelled": "§eOperation cancelled.",
         "prevbutton": "§6[Prev <<<]§r",
