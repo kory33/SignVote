@@ -147,7 +147,7 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
         messagePartsList.addAll(getHeading());
         messagePartsList.addAll(getTableBody(roundedPageIndex, entryList));
         messagePartsList.addLine(getBrowseButtonLine(roundedPageIndex, maximumPageIndex));
-        messagePartsList.addLine(footer);
+        messagePartsList.add(footer);
 
         return messagePartsList;
     }
