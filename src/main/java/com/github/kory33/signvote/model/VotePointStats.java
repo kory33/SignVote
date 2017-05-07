@@ -60,17 +60,23 @@ public class VotePointStats {
             totalScores += score * count;
         });
 
-        // compute mean
-        this.meanScore = this.totalScores * 1.0 / this.totalVotes;
+        if (this.totalVotes == 0) {
+            this.meanScore = 0;
+            this.variance = 0;
+            this.standardDeviation = 0;
+        } else {
+            // compute mean
+            this.meanScore = this.totalScores * 1.0 / this.totalVotes;
 
-        // compute variance and standard deviation
-        this.variance = 0.0d;
-        this.scoreDistribution.forEach((score, count) -> {
-            double deviation = score - this.meanScore;
-            double sqDeviation = deviation * deviation;
-            this.variance += sqDeviation * count;
-        });
-        this.variance /= this.totalVotes;
-        this.standardDeviation = Math.sqrt(variance);
+            // compute variance and standard deviation
+            this.variance = 0.0d;
+            this.scoreDistribution.forEach((score, count) -> {
+                double deviation = score - this.meanScore;
+                double sqDeviation = deviation * deviation;
+                this.variance += sqDeviation * count;
+            });
+            this.variance /= this.totalVotes;
+            this.standardDeviation = Math.sqrt(variance);
+        }
     }
 }

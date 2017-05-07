@@ -65,7 +65,7 @@ public class StatsCommandExecutor extends SubCommandExecutor {
         if (args.size() == 0) {
             chatInterface = new StatsTypeSelectionInterface(player, session, messageConfig, runnableHashTable, interfaceManager);
         } else {
-            String statsType = args.size() == 0 ? StatsType.MEAN.getType() : args.remove(0);
+            String statsType = args.remove(0);
 
             int pageIndex;
             if (args.size() == 0) {

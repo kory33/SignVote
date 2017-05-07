@@ -73,7 +73,7 @@ public abstract class StatsInterface extends BrowseablePageInterface {
     protected MessagePartsList getHeading() {
         MessagePartsList messagePartsList = new MessagePartsList();
         String statsType = this.messageConfig.getString(this.getStatsType().getTypeMessageNode());
-        messagePartsList.add(getFormattedMessagePart(MessageConfigNodes.F_STATS_UI_HEADING,
+        messagePartsList.addLine(getFormattedMessagePart(MessageConfigNodes.F_STATS_UI_HEADING,
                 targetVoteSession.getName(), statsType));
         return messagePartsList;
     }

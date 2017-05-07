@@ -108,11 +108,18 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
      */
     private static MessagePartsList getTableBody(final int finalPageIndex, final ArrayList<MessagePartsList> entryList) {
         int beginEntryIndex = ENTRY_PER_PAGE * finalPageIndex;
-        int lastEntryIndex = Math.max(entryList.size(), beginEntryIndex + ENTRY_PER_PAGE);
+        int lastEntryIndex = Math.min(entryList.size(), beginEntryIndex + ENTRY_PER_PAGE);
         List<MessagePartsList> displayList = entryList.subList(beginEntryIndex, lastEntryIndex);
 
         MessagePartsList messagePartsList = new MessagePartsList();
         displayList.forEach(messagePartsList::addLine);
+
+        // add blank lines
+        int blankLineNumber = ENTRY_PER_PAGE - displayList.size();
+        for (int i = 0; i < blankLineNumber; i++) {
+            messagePartsList.addLine("");
+        }
+
         return messagePartsList;
     }
 
