@@ -10,8 +10,6 @@ import com.github.ucchyocean.messaging.tellraw.MessageComponent;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 import org.bukkit.entity.Player;
 
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -21,15 +19,15 @@ import java.util.function.Predicate;
  * @author kory
  */
 public abstract class FormChatInterface extends PlayerClickableChatInterface {
-    protected final PlayerChatInterceptor chatInterceptor;
+    private final PlayerChatInterceptor chatInterceptor;
 
-    private Optional<Long> formInputCancelRunnableId;
+    private Long formInputCancelRunnableId;
 
     public FormChatInterface(Player player, JSONConfiguration messageConfiguration,
             RunnableHashTable runnableHashTable, PlayerChatInterceptor chatInterceptor) {
         super(player, messageConfiguration, runnableHashTable);
         this.chatInterceptor = chatInterceptor;
-        this.formInputCancelRunnableId = Optional.empty();
+        this.formInputCancelRunnableId = null;
     }
 
     /**
@@ -45,22 +43,21 @@ public abstract class FormChatInterface extends PlayerClickableChatInterface {
     }
 
     private void revokeCancelInputButton() {
-        if (this.formInputCancelRunnableId.isPresent()) {
-            this.getRunnableHashTable().cancelTask(this.formInputCancelRunnableId.get());
-            this.formInputCancelRunnableId = Optional.empty();
+        if (this.formInputCancelRunnableId != null) {
+            this.getRunnableHashTable().cancelTask(this.formInputCancelRunnableId);
+            this.formInputCancelRunnableId = null;
         }
     }
 
     private MessageParts getCancelInputButton() {
         MessageParts button = new MessageParts(messageConfig.getString(MessageConfigNodes.UI_CANCEL_INPUT_BUTTON));
-        long cancelInputRunnableId = TellRawUtility.bindRunnableToMessageParts(getRunnableHashTable(), button, () -> {
+        formInputCancelRunnableId = TellRawUtility.bindRunnableToMessageParts(getRunnableHashTable(), button, () -> {
             this.chatInterceptor.cancelAnyInterception(this.targetPlayer, "Input cancelled.");
             this.targetPlayer.sendMessage(this.messageConfig.getString(MessageConfigNodes.UI_FOOTER));
             this.targetPlayer.sendMessage(this.messageConfig.getString(MessageConfigNodes.UI_INPUT_CANCELLED));
             this.revokeCancelInputButton();
             this.send();
         });
-        formInputCancelRunnableId = Optional.of(cancelInputRunnableId);
 
         return button;
     }
@@ -82,12 +79,12 @@ public abstract class FormChatInterface extends PlayerClickableChatInterface {
         this.targetPlayer.sendMessage(message);
     }
 
-    private CompletableFuture<Void> getInputToForm(Consumer<String> onPlayerSendString, Predicate<String> validator, String formName) {
-        return chatInterceptor.interceptFirstMessageFrom(this.targetPlayer)
+    private void getInputToForm(Consumer<String> onPlayerSendString, Predicate<String> validator) {
+        chatInterceptor.interceptFirstMessageFrom(this.targetPlayer)
                 .thenAccept(input -> {
                     if (!validator.test(input)) {
                         this.notifyInvalidInput();
-                        this.getInputToForm(onPlayerSendString, validator, formName);
+                        this.getInputToForm(onPlayerSendString, validator);
                         return;
                     }
                     onPlayerSendString.accept(input);
@@ -97,15 +94,16 @@ public abstract class FormChatInterface extends PlayerClickableChatInterface {
     }
 
     /**
-     * Get an arraylist representing a form to which the target player can input string data.
-     * @param onPlayerSendString
-     * @param validator
-     * @param name
-     * @param value
-     * @return
+     * Get a list representing a form to which the target player can input string data.
+     * @param onPlayerSendString action which is invoked after the target player inputs a validated string.
+     * @param validator predicate which determines if a given input string is valid.
+     *                  When this method returns true, player's input is passed to {@code onPlayerSendString} consumer.
+     * @param label string that labels this form
+     * @param value string that gets displayed as current value.
+     * @return a list of message parts representing an input form
      */
-    protected final MessagePartsList getForm(Consumer<String> onPlayerSendString, Predicate<String> validator, String name, String value) {
-        MessageParts formName = this.getFormattedMessagePart(MessageConfigNodes.F_UI_FORM_NAME, name);
+    protected final MessagePartsList getForm(Consumer<String> onPlayerSendString, Predicate<String> validator, String label, String value) {
+        MessageParts formName = this.getFormattedMessagePart(MessageConfigNodes.F_UI_FORM_NAME, label);
 
         if (value == null || value.isEmpty()) {
             value = this.messageConfig.getString(MessageConfigNodes.UI_FORM_NOTSET);
@@ -114,8 +112,8 @@ public abstract class FormChatInterface extends PlayerClickableChatInterface {
 
         MessageParts editButton = this.getButton(() -> {
             this.revokeAllRunnables();
-            this.promptInput(name);
-            this.getInputToForm(onPlayerSendString, validator, name);
+            this.promptInput(label);
+            this.getInputToForm(onPlayerSendString, validator);
         }, this.getFormattedMessagePart(MessageConfigNodes.UI_FORM_EDIT_BUTTON));
 
         MessagePartsList form = new MessagePartsList();
