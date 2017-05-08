@@ -14,7 +14,7 @@ import com.github.kory33.signvote.core.SignVote;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.session.VoteSession;
 
-public class CreateCommandExecutor extends SubCommandExecutor{
+public class CreateCommandExecutor implements SubCommandExecutor{
     private final JSONConfiguration messageConfiguration;
     private final VoteSessionManager voteSessionManager;
     private final Logger pluginLogger;
@@ -55,7 +55,7 @@ public class CreateCommandExecutor extends SubCommandExecutor{
     }
 
     @Override
-    protected String getHelpString() {
+    public String getHelpString() {
         return messageConfiguration.getString(MessageConfigNodes.CREATE_COMMAND_HELP);
     }
 }

@@ -12,7 +12,7 @@ import com.github.kory33.signvote.core.SignVote;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.session.VoteSession;
 
-public class CloseCommandExecutor extends SubCommandExecutor {
+public class CloseCommandExecutor implements SubCommandExecutor {
     private final JSONConfiguration messageConfiguration;
     private final VoteSessionManager voteSessionManager;
 
@@ -22,7 +22,7 @@ public class CloseCommandExecutor extends SubCommandExecutor {
     }
 
     @Override
-    protected String getHelpString() {
+    public String getHelpString() {
         return this.messageConfiguration.getString(MessageConfigNodes.CLOSE_COMMAND_HELP);
     }
 

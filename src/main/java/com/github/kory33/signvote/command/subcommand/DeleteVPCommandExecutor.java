@@ -13,7 +13,7 @@ import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 
-public class DeleteVPCommandExecutor extends SubCommandExecutor {
+public class DeleteVPCommandExecutor implements SubCommandExecutor {
     private final JSONConfiguration messageConfiguration;
     private final VoteSessionManager voteSessionManager;
 
@@ -23,7 +23,7 @@ public class DeleteVPCommandExecutor extends SubCommandExecutor {
     }
     
     @Override
-    protected String getHelpString() {
+    public String getHelpString() {
         return this.messageConfiguration.getString(MessageConfigNodes.DELETE_VP_COMMAND_HELP);
     }
 

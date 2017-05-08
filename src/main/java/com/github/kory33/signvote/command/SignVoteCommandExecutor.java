@@ -28,10 +28,25 @@ import com.github.kory33.signvote.command.subcommand.VoteCommandExecutor;
 import com.github.kory33.signvote.constants.SubCommands;
 import com.github.kory33.signvote.core.SignVote;
 
+/**
+ * Executor of SignVote root command.
+ *
+ * This class acts as a proxy for all other specific "sub-commands"
+ * such as "/signvote create" or "/signvote save".
+ *
+ * All the sub-commands should have been put into
+ * "command map" in the constructor of this class.
+ *
+ * See the constructor's implementation for more details.
+ */
 public class SignVoteCommandExecutor implements CommandExecutor{
     private final Map<String, SubCommandExecutor> subCommandExecutorMap;
     private final SubCommandExecutor defaultCommandExecutor;
 
+    /**
+     * Constructs and automatically registers sub-commands
+     * @param plugin instance of SignVote plugin
+     */
     public SignVoteCommandExecutor(SignVote plugin) {
         HashMap<String, SubCommandExecutor> commandMaps = new HashMap<>();
 
@@ -60,7 +75,7 @@ public class SignVoteCommandExecutor implements CommandExecutor{
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         ArrayList<String> argList = new ArrayList<>(Arrays.asList(args));
 
-        SubCommandExecutor executor = null;
+        SubCommandExecutor executor;
         if (args.length == 0) {
             executor = this.defaultCommandExecutor;
         } else {

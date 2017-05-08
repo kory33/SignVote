@@ -12,7 +12,7 @@ import com.github.kory33.signvote.core.SignVote;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.session.VoteSession;
 
-public class OpenCommandExecutor extends SubCommandExecutor {
+public class OpenCommandExecutor implements SubCommandExecutor {
     private final JSONConfiguration messageConfiguration;
     private final VoteSessionManager voteSessionManager;
 
@@ -22,7 +22,7 @@ public class OpenCommandExecutor extends SubCommandExecutor {
     }
     
     @Override
-    protected String getHelpString() {
+    public String getHelpString() {
         return this.messageConfiguration.getString(MessageConfigNodes.OPEN_COMMAND_HELP);
     }
     

@@ -10,7 +10,7 @@ import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.core.SignVote;
 
-public class ReloadCommandExecutor extends SubCommandExecutor {
+public class ReloadCommandExecutor implements SubCommandExecutor {
     private final SignVote plugin;
     private final JSONConfiguration messageConfiguration;
     
@@ -20,7 +20,7 @@ public class ReloadCommandExecutor extends SubCommandExecutor {
     }
     
     @Override
-    protected String getHelpString() {
+    public String getHelpString() {
         return "";
     }
     

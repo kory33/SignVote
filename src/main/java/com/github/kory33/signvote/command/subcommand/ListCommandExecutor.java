@@ -19,7 +19,7 @@ import com.github.kory33.signvote.ui.console.ConsoleListSessionInterface;
 import com.github.kory33.signvote.ui.player.ListSessionInterface;
 import com.github.kory33.signvote.ui.player.model.PlayerClickableChatInterface;
 
-public class ListCommandExecutor extends SubCommandExecutor {
+public class ListCommandExecutor implements SubCommandExecutor {
     private final JSONConfiguration messageConfig;
     private final VoteSessionManager voteSessionManager;
     private final RunnableHashTable runnableHashTable;
@@ -33,7 +33,7 @@ public class ListCommandExecutor extends SubCommandExecutor {
     }
 
     @Override
-    protected String getHelpString() {
+    public String getHelpString() {
         return messageConfig.getString(MessageConfigNodes.LIST_COMMAND_HELP);
     }
 

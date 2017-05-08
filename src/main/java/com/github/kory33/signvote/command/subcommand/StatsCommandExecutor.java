@@ -18,7 +18,7 @@ import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.ui.player.model.PlayerClickableChatInterface;
 import com.github.kory33.signvote.ui.player.stats.StatsInterface;
 
-public class StatsCommandExecutor extends SubCommandExecutor {
+public class StatsCommandExecutor implements SubCommandExecutor {
     private final JSONConfiguration messageConfig;
     private final VoteSessionManager sessionManager;
     private final RunnableHashTable runnableHashTable;
@@ -32,7 +32,7 @@ public class StatsCommandExecutor extends SubCommandExecutor {
     }
 
     @Override
-    protected String getHelpString() {
+    public String getHelpString() {
         return this.messageConfig.getString(MessageConfigNodes.STATS_COMMAND_HELP);
     }
 

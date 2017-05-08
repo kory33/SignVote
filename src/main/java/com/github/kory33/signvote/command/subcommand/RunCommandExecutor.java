@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.core.SignVote;
 
-public class RunCommandExecutor extends SubCommandExecutor {
+public class RunCommandExecutor implements SubCommandExecutor {
     private final RunnableHashTable runnableHashTable;
 
     public RunCommandExecutor(SignVote plugin) {
@@ -16,7 +16,7 @@ public class RunCommandExecutor extends SubCommandExecutor {
     }
 
     @Override
-    protected String getHelpString() {
+    public String getHelpString() {
         return "";
     }
 
@@ -25,7 +25,7 @@ public class RunCommandExecutor extends SubCommandExecutor {
         try {
             long runnableId = Long.parseLong(args.remove(0));
             this.runnableHashTable.runSync(runnableId);
-        } catch (IllegalArgumentException exception) {}
+        } catch (IllegalArgumentException ignored) {}
 
         return true;
     }

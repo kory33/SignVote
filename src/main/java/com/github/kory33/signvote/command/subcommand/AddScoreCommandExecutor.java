@@ -19,7 +19,7 @@ import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.ui.player.AddScoreInterface;
 import com.github.kory33.signvote.ui.player.model.FormChatInterface;
 
-public class AddScoreCommandExecutor extends SubCommandExecutor{
+public class AddScoreCommandExecutor implements SubCommandExecutor{
     private final JSONConfiguration messageConfiguration;
     private final VoteSessionManager voteSessionManager;
     private final RunnableHashTable runnableHashTable;
@@ -35,15 +35,15 @@ public class AddScoreCommandExecutor extends SubCommandExecutor{
     }
 
     @Override
-    protected String getHelpString() {
+    public String getHelpString() {
         return messageConfiguration.getString(MessageConfigNodes.ADD_SCORE_COMMAND_HELP);
     }
 
     /**
      * Construct and send addscore interface to the player
-     * which adds a votelimit to the given session
-     * @param player
-     * @param session
+     * which adds a vote limit to the given session
+     * @param player target player
+     * @param session target vote session
      */
     private void sendAddScoreInterface(Player player, VoteSession session) {
         FormChatInterface chatInterface = new AddScoreInterface(player, session, messageConfiguration,
@@ -90,7 +90,7 @@ public class AddScoreCommandExecutor extends SubCommandExecutor{
         String permission = PermissionNodes.VOTE;
         if (!args.isEmpty()) {
             permission = args.remove(0);
-            if (permission == "op") {
+            if (permission.equalsIgnoreCase("op")) {
                 permission = PermissionNodes.VOTE_MORE;
             }
         }
