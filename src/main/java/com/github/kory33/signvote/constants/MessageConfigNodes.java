@@ -116,6 +116,8 @@ public class MessageConfigNodes {
     public static final String UI_FORM_EDIT_BUTTON      = UI_FORM_ROOT + ".editbutton";
     public static final String F_UI_FORM_PROMPT         = UI_FORM_ROOT + ".prompt";
     public static final String UI_FORM_INVALID_INPUT    = UI_FORM_ROOT + ".invalidinput";
+    public static final String UI_CANCEL_INPUT_BUTTON   = UI_FORM_ROOT + ".inputcancelbutton";
+    public static final String UI_INPUT_CANCELLED       = UI_FORM_ROOT + ".inputcancelled";
 
     public static final String GENERIC                  = "generic";
     public static final String INFINITE                 = GENERIC + ".infinite";

@@ -1,17 +1,19 @@
 package com.github.kory33.signvote.ui.player.model;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-
-import org.bukkit.entity.Player;
-
 import com.github.kory33.messaging.tellraw.MessagePartsList;
 import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.listeners.PlayerChatInterceptor;
+import com.github.kory33.signvote.utils.tellraw.TellRawUtility;
+import com.github.ucchyocean.messaging.tellraw.MessageComponent;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
+import org.bukkit.entity.Player;
+
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * A class representing a player chat interface which is capable of accepting
@@ -21,10 +23,13 @@ import com.github.ucchyocean.messaging.tellraw.MessageParts;
 public abstract class FormChatInterface extends PlayerClickableChatInterface {
     protected final PlayerChatInterceptor chatInterceptor;
 
+    private Optional<Long> formInputCancelRunnableId;
+
     public FormChatInterface(Player player, JSONConfiguration messageConfiguration,
             RunnableHashTable runnableHashTable, PlayerChatInterceptor chatInterceptor) {
         super(player, messageConfiguration, runnableHashTable);
         this.chatInterceptor = chatInterceptor;
+        this.formInputCancelRunnableId = Optional.empty();
     }
 
     /**
@@ -36,11 +41,40 @@ public abstract class FormChatInterface extends PlayerClickableChatInterface {
     public void revokeSession() {
         super.revokeSession();
         this.chatInterceptor.cancelAnyInterception(this.targetPlayer, "UI session has been revoked.");
+        this.revokeCancelInputButton();
+    }
+
+    private void revokeCancelInputButton() {
+        if (this.formInputCancelRunnableId.isPresent()) {
+            this.getRunnableHashTable().cancelTask(this.formInputCancelRunnableId.get());
+            this.formInputCancelRunnableId = Optional.empty();
+        }
+    }
+
+    private MessageParts getCancelInputButton() {
+        MessageParts button = new MessageParts(messageConfig.getString(MessageConfigNodes.UI_CANCEL_INPUT_BUTTON));
+        long cancelInputRunnableId = TellRawUtility.bindRunnableToMessageParts(getRunnableHashTable(), button, () -> {
+            this.chatInterceptor.cancelAnyInterception(this.targetPlayer, "Input cancelled.");
+            this.targetPlayer.sendMessage(this.messageConfig.getString(MessageConfigNodes.UI_FOOTER));
+            this.targetPlayer.sendMessage(this.messageConfig.getString(MessageConfigNodes.UI_INPUT_CANCELLED));
+            this.revokeCancelInputButton();
+            this.send();
+        });
+        formInputCancelRunnableId = Optional.of(cancelInputRunnableId);
+
+        return button;
     }
 
     private void promptInput(String formName) {
         String message = this.messageConfig.getFormatted(MessageConfigNodes.F_UI_FORM_PROMPT, formName);
-        this.targetPlayer.sendMessage(message);
+        MessageParts cancelInputButton = this.getCancelInputButton();
+
+        MessagePartsList messagePartsList = new MessagePartsList();
+        messagePartsList.add(message);
+        messagePartsList.add(" ");
+        messagePartsList.add(cancelInputButton);
+
+        (new MessageComponent(messagePartsList)).send(this.targetPlayer);
     }
 
     private void notifyInvalidInput() {
@@ -65,9 +99,9 @@ public abstract class FormChatInterface extends PlayerClickableChatInterface {
     /**
      * Get an arraylist representing a form to which the target player can input string data.
      * @param onPlayerSendString
+     * @param validator
      * @param name
-     * @param displayValue
-     * @param defaultDisplayValue
+     * @param value
      * @return
      */
     protected final MessagePartsList getForm(Consumer<String> onPlayerSendString, Predicate<String> validator, String name, String value) {

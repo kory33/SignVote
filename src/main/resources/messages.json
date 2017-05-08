@@ -140,7 +140,9 @@
             "editbutton": " §3[edit]§r",
             "notset": "(not set)",
             "prompt": "§bEnter a value for field §6{0}:",
-            "invalidinput": "§cInvalid input received.\n§3Try again:"
+            "invalidinput": "§cInvalid input received.\n§3Try again:",
+            "inputcancelbutton": "§9[Cancel Input]",
+            "inputcancelled": "§eInput cancelled."
         }
     },
     "generic": {

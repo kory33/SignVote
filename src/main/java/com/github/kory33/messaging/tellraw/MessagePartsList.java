@@ -30,7 +30,8 @@ public class MessagePartsList extends ArrayList<MessageParts> {
      * @param messageParts
      */
     public MessagePartsList(String messageString) {
-        this(new MessageParts(messageString));
+        super();
+        this.add(messageString);
     }
 
     /**
@@ -40,7 +41,7 @@ public class MessagePartsList extends ArrayList<MessageParts> {
      */
     public boolean addLine(MessageParts messageParts) {
         this.add(messageParts);
-        this.add(new MessageParts("\n"));
+        this.add("\n");
         return true;
     }
 
@@ -82,5 +83,13 @@ public class MessagePartsList extends ArrayList<MessageParts> {
     public void addLine(Collection<? extends MessageParts> c) {
         this.addAll(c);
         this.addLine("");
+    }
+
+    /**
+     * Append a string element at the end of this list
+     * @param message
+     */
+    public void add(String message) {
+        this.add(new MessageParts(message));
     }
 }
