@@ -1,5 +1,9 @@
 package com.github.kory33.signvote.constants;
 
+/**
+ * Collection of permission nodes used by SignVote plugin
+ * @author Kory
+ */
 public class PermissionNodes {
     private static final String BASE_NODE = "signvote";
 

@@ -1,5 +1,9 @@
 package com.github.kory33.signvote.constants;
 
+/**
+ * Collection of sub-commands  present in SignVote plugin
+ * @author Kory
+ */
 public class SubCommands {
     public static final String ROOT      = "/signvote:signvote";
 
