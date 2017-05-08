@@ -18,7 +18,7 @@ public class MessagePartsList extends ArrayList<MessageParts> {
 
     /**
      * Construct list containing a given message part.
-     * @param messageParts
+     * @param messageParts a message part to be contained in the list
      */
     public MessagePartsList(MessageParts messageParts) {
         super();
@@ -27,7 +27,7 @@ public class MessagePartsList extends ArrayList<MessageParts> {
 
     /**
      * Construct list containing a message part which has given message string as a body.
-     * @param messageParts
+     * @param messageString a string to be contained in the list
      */
     public MessagePartsList(String messageString) {
         super();
@@ -36,58 +36,33 @@ public class MessagePartsList extends ArrayList<MessageParts> {
 
     /**
      * Append a MessageParts and a line break at the end of this list.
-     * @param messageParts
-     * @return true (As specified by {@link #Collection.add(E)})
+     * @param messageParts a message to be added along with a line break
      */
-    public boolean addLine(MessageParts messageParts) {
+    public void addLine(MessageParts messageParts) {
         this.add(messageParts);
         this.add("\n");
-        return true;
     }
 
     /**
      * Append a MessageParts and a line break at the end of this list.
-     * @param messageParts
-     * @return true (As specified by {@link #Collection.add(E)})
+     * @param messageString a string to be added along with a line ending
      */
-    public boolean addLine(String messageString) {
+    public void addLine(String messageString) {
         this.addLine(new MessageParts(messageString));
-        return true;
-    }
-
-    /**
-     * Insert a MessageParts and a line break at the position specified by the index.
-     * @param messageParts
-     * @param index
-     */
-    public void addLine(int index, MessageParts messageParts) {
-        this.add(index, new MessageParts("\n"));
-        this.add(index, messageParts);
-    }
-
-    /**
-     * Insert an array of MessageParts and a line break at the position specified by the index.
-     * @param messageParts
-     * @param index
-     */
-    public void addLine(int index, Collection<? extends MessageParts> c) {
-        this.add(index, new MessageParts("\n"));
-        this.addAll(index, c);
     }
 
     /**
      * Append an array of MessageParts and a line break at the end of the collection
-     * @param messageParts
-     * @param index
+     * @param collection a collection of messages to be inserted into the list
      */
-    public void addLine(Collection<? extends MessageParts> c) {
-        this.addAll(c);
+    public void addLine(Collection<? extends MessageParts> collection) {
+        this.addAll(collection);
         this.addLine("");
     }
 
     /**
      * Append a string element at the end of this list
-     * @param message
+     * @param message a message to be added
      */
     public void add(String message) {
         this.add(new MessageParts(message));
