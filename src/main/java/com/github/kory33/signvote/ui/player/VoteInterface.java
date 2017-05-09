@@ -86,9 +86,7 @@ public final class VoteInterface extends PlayerClickableChatInterface {
 
         if (!this.session.isOpen()) {
             String message = this.messageConfig.getString(MessageConfigNodes.VOTE_SESSION_CLOSED);
-            MessagePartsList messagePartsList = new MessagePartsList();
-            messagePartsList.addLine(message);
-            return messagePartsList;
+            return new MessagePartsList(message);
         }
 
         MessagePartsList messagePartsList = new MessagePartsList();
