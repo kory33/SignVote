@@ -1,41 +1,29 @@
 package com.github.kory33.signvote.session;
 
+import com.github.kory33.signvote.collection.BijectiveHashMap;
+import com.github.kory33.signvote.collection.VoteScoreLimits;
+import com.github.kory33.signvote.configurable.JSONConfiguration;
+import com.github.kory33.signvote.constants.*;
+import com.github.kory33.signvote.exception.*;
+import com.github.kory33.signvote.manager.VoteManager;
+import com.github.kory33.signvote.model.VotePoint;
+import com.github.kory33.signvote.utils.FileUtils;
+import com.google.gson.JsonObject;
+import lombok.Getter;
+import lombok.Setter;
+import org.bukkit.Bukkit;
+import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.stream.Stream;
-
-import org.bukkit.Bukkit;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Player;
-
-import com.github.kory33.signvote.collection.BijectiveHashMap;
-import com.github.kory33.signvote.collection.VoteScoreLimits;
-import com.github.kory33.signvote.configurable.JSONConfiguration;
-import com.github.kory33.signvote.constants.FilePaths;
-import com.github.kory33.signvote.constants.Formats;
-import com.github.kory33.signvote.constants.MagicNumbers;
-import com.github.kory33.signvote.constants.Patterns;
-import com.github.kory33.signvote.constants.SignTexts;
-import com.github.kory33.signvote.constants.VoteSessionDataFileKeys;
-import com.github.kory33.signvote.exception.InvalidScoreVotedException;
-import com.github.kory33.signvote.exception.ScoreCountLimitReachedException;
-import com.github.kory33.signvote.exception.VotePointAlreadyVotedException;
-import com.github.kory33.signvote.exception.VotePointNotVotedException;
-import com.github.kory33.signvote.exception.VoteSessionClosedException;
-import com.github.kory33.signvote.manager.VoteManager;
-import com.github.kory33.signvote.model.VotePoint;
-import com.github.kory33.signvote.utils.FileUtils;
-import com.google.gson.JsonObject;
-
-import lombok.Getter;
-import lombok.Setter;
 
 public class VoteSession {
     private final BijectiveHashMap<Sign, VotePoint> signMap;
@@ -49,9 +37,8 @@ public class VoteSession {
 
     /**
      * Constructs the vote session from the given session folder
-     * @param sessionFolder
+     * @param sessionSaveLocation directory from which session data is read
      * @throws IllegalArgumentException when the session folder is invalid
-     * @throws IOException
      */
     public VoteSession(File sessionSaveLocation) throws IllegalArgumentException, IOException {
         this.signMap = new BijectiveHashMap<>();
@@ -70,7 +57,9 @@ public class VoteSession {
 
         // load all the saved votepoints
         File votePointDirectory = new File(sessionSaveLocation, FilePaths.VOTE_POINTS_DIR);
-        for (File votePointFile: votePointDirectory.listFiles()) {
+        File[] votePointFiles = votePointDirectory.listFiles();
+        assert votePointFiles != null;
+        for (File votePointFile: votePointFiles) {
             this.addVotePoint(votePointFile);
         }
 
@@ -80,7 +69,7 @@ public class VoteSession {
 
     /**
      * Constructs the vote session from its parameters.
-     * @param sessionName
+     * @param sessionName name of the session
      */
     public VoteSession(String sessionName) {
         this.name = sessionName;
@@ -96,7 +85,7 @@ public class VoteSession {
 
     /**
      * Load a votepoint from the existing votepoint data file.
-     * @param votePointFIle
+     * @param votePointFIle file which contains information about vote point
      */
     private void addVotePoint(File votePointFIle) {
         try {
@@ -108,8 +97,8 @@ public class VoteSession {
     }
 
     /**
-     *
-     * @param votePoint
+     * add a vote point to the session
+     * @param votePoint vote point
      */
     public void addVotePoint(VotePoint votePoint) {
         this.signMap.put(votePoint.getVoteSign(), votePoint);
@@ -118,7 +107,7 @@ public class VoteSession {
 
     /**
      * Get Json object containing information directly related to this object
-     * @return
+     * @return json object containing information about session
      */
     private JsonObject toJson() {
         JsonObject jsonObject = new JsonObject();
@@ -132,43 +121,41 @@ public class VoteSession {
 
     /**
      * purge non-registered votepoint files under a given directory.
-     * @param votePointDirectory
+     * @param votePointDirectory directory which contains vote point directory
      */
     private void purgeInvalidVpFiles(File votePointDirectory) {
         Stream<File> nonExistentVpFiles = FileUtils.getFileListStream(votePointDirectory).filter(file -> {
-                Matcher matcher = Patterns.JSON_FILE_NAME.matcher(file.getName());
-                if (!matcher.find()) {
-                    return true;
-                }
-                return !this.votePointNameMap.containsKey(matcher.group(1));
-            });
+            Matcher matcher = Patterns.JSON_FILE_NAME.matcher(file.getName());
+            return !matcher.find() || !this.votePointNameMap.containsKey(matcher.group(1));
+        });
 
         CompletableFuture.runAsync(() -> nonExistentVpFiles.forEach(file -> {
             System.out.println("Deleting " + file.getName());
+            //noinspection ResultOfMethodCallIgnored
             file.delete();
         }));
     }
 
     /**
      * Save the session data to the given directory.
-     * @param sessionSaveLocation
-     * @throws IOException when the given location is not a directory.
+     * @param sessionSaveLocation location to which session data is saved
+     * @throws IOException when any error occurs whilst saving files
      */
     public void saveTo(File sessionSaveLocation) throws IOException {
-        if (!sessionSaveLocation.exists()) {
-            sessionSaveLocation.mkdirs();
+        if (!sessionSaveLocation.exists() && !sessionSaveLocation.mkdirs()) {
+            throw new IOException("Failed to create vote session save directory!");
         } else if (!sessionSaveLocation.isDirectory()) {
-            throw new IOException("Votesession was about to be saved into a file! (" + sessionSaveLocation.getAbsolutePath() + ")");
+            throw new IOException("Vote session was about to be saved into a file! (" + sessionSaveLocation.getAbsolutePath() + ")");
         }
 
-        // initialize votepoint dir
+        // initialize vote point dir
         File votePointDirectory = new File(sessionSaveLocation, FilePaths.VOTE_POINTS_DIR);
-        if (!votePointDirectory.exists()) {
-            votePointDirectory.mkdirs();
+        if (!votePointDirectory.exists() && !votePointDirectory.mkdirs()) {
+            throw new IOException("Failed to create vote point save directory!");
         }
         this.purgeInvalidVpFiles(votePointDirectory);
 
-        // save votepoints
+        // save vote points
         signMap.getInverse().keySet().stream().parallel()
             .forEach(votePoint -> {
                 File saveTarget = new File(votePointDirectory, votePoint.getName() + Formats.JSON_EXT);
@@ -177,17 +164,14 @@ public class VoteSession {
 
         // save vote data
         File voteDataDirectory = new File(sessionSaveLocation, FilePaths.VOTE_DATA_DIR);
-        if (!voteDataDirectory.exists()) {
-            voteDataDirectory.mkdirs();
+        if (!voteDataDirectory.exists() && !voteDataDirectory.mkdirs()) {
+            throw new IOException("Failed to create vote data directory!");
         }
-        this.voteManager.getPlayersVoteData().entrySet().stream()
-            .forEach(entry -> {
-                UUID playerUUID = entry.getKey();
-                File playerVoteDataFile = new File(voteDataDirectory, playerUUID.toString() + Formats.JSON_EXT);
+        this.voteManager.getPlayersVoteData().forEach((playerUUID, voteData) -> {
+            File playerVoteDataFile = new File(voteDataDirectory, playerUUID.toString() + Formats.JSON_EXT);
 
-                JsonObject voteData = entry.getValue();
-                FileUtils.writeJSON(playerVoteDataFile, voteData);
-            });
+            FileUtils.writeJSON(playerVoteDataFile, voteData);
+        });
 
         // write session data
         File sessionDataFile = new File(sessionSaveLocation, FilePaths.SESSION_DATA_FILENAME);
@@ -197,8 +181,8 @@ public class VoteSession {
 
     /**
      * Get a VotePoint associated with a given Sign.
-     * @param sign
-     * @return
+     * @param sign vote point sign
+     * @return vote point instance associated with sign, null if sign is not a vote point
      */
     public VotePoint getVotePoint(Sign sign) {
         return this.signMap.get(sign);
@@ -210,17 +194,17 @@ public class VoteSession {
 
     /**
      * Rename the votepoint to a given name.
-     * @param votePoint
-     * @param newName
+     * @param oldName old name of the vote point
+     * @param newName new name of the vote point
      */
     public void renameVotePoint(String oldName, String newName) throws IllegalArgumentException{
         VotePoint target = this.votePointNameMap.get(oldName);
         if (target == null) {
-            new IllegalArgumentException("No votepoint with that name exists.");
+            throw new IllegalArgumentException("No votepoint with that name exists.");
         }
 
         if (this.votePointNameMap.containsKey(newName)) {
-            new IllegalArgumentException("A votepoint with name of \"" + newName + "\" already exists.");
+            throw new IllegalArgumentException("A votepoint with name of \"" + newName + "\" already exists.");
         }
 
         target.setName(newName);
@@ -229,8 +213,9 @@ public class VoteSession {
 
     /**
      * Get a score -> count map of available votes for a given player
-     * @param player
-     * @return
+     * @param player player instance
+     * @return map of score -> reserved limit
+     * limit is an optional with limit value, empty if infinite number of votes can be casted
      */
     public HashMap<Integer, Optional<Integer>> getAvailableVoteCounts(Player player) {
         HashMap<Integer, Optional<Integer>> availableCounts = this.getReservedVoteCounts(player);
@@ -258,8 +243,9 @@ public class VoteSession {
 
     /**
      * Get a score -> count map of reserved votes for a given player
-     * @param player
-     * @return
+     * @param player player instance
+     * @return map of score -> available limit
+     * limit is an optional with limit value, empty if infinite number of votes can be casted
      */
     public HashMap<Integer, Optional<Integer>> getReservedVoteCounts(Player player) {
         HashMap<Integer, Optional<Integer>> reservedCounts = new HashMap<>();
@@ -282,9 +268,9 @@ public class VoteSession {
      * Make a vote to the specified votepoint with a given score.
      * Score has to be checked for it's validity,
      * but may not be checked for player vote limits as an exception is thrown
-     * @param player
-     * @param votePoint
-     * @param voteScore
+     * @param player player who is attempting to vote
+     * @param votePoint vote point to which the player is attempting to vote
+     * @param voteScore score of vote which the player is attempting to cast
      *
      * @throws ScoreCountLimitReachedException when the player can no longer vote with the given score due to the limit
      * @throws VotePointAlreadyVotedException when the player has already voted to the votepoint
@@ -313,8 +299,8 @@ public class VoteSession {
 
     /**
      * Cancel a vote to the specified votepoint made by a given player.
-     * @param player
-     * @param votePoint
+     * @param player player who is trying to cancel a vote
+     * @param votePoint vote point from which the vote should be removed
      * @throws VotePointNotVotedException When the player hasn't voted the votepoint.
      */
     public void unvote(Player player, VotePoint votePoint) throws VotePointNotVotedException {
@@ -323,7 +309,7 @@ public class VoteSession {
 
     /**
      * Delete the specified votepoint
-     * @param votePoint
+     * @param votePoint target vote point
      */
     public void deleteVotepoint(VotePoint votePoint) {
         this.voteManager.removeAllVotes(votePoint);
@@ -335,8 +321,6 @@ public class VoteSession {
         sign.setLine(1, SignTexts.DELETED);
         sign.setLine(2, "");
         sign.update();
-
-        return;
     }
 
     /**

@@ -70,7 +70,7 @@ public class SignListener implements Listener {
             return;
         }
 
-        VotePoint votePoint = new VotePoint(pointName, (Sign)sign.getBlock().getState(), session);
+        VotePoint votePoint = new VotePoint(pointName, (Sign)sign.getBlock().getState());
         session.addVotePoint(votePoint);
 
         sign.setLine(0, SignTexts.REGISTERED_SIGN_TEXT);
