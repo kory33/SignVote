@@ -14,7 +14,14 @@ import java.util.stream.Stream;
 import com.github.kory33.signvote.constants.Formats;
 import com.google.gson.JsonObject;
 
+/**
+ * An util class which handles file I/O
+ */
 public class FileUtils {
+    /**
+     * delete folder and its content recursively.
+     * @param targetDirectory directory to be deleted
+     */
     public static void deleteFolderRecursively(final File targetDirectory) {
         try {
             Files.walkFileTree(targetDirectory.toPath(), new SimpleFileVisitor<Path>() {
@@ -38,11 +45,18 @@ public class FileUtils {
         }
     }
 
+    /**
+     * Write json data to the given target file
+     * @param targetFile target file to which json data should be written.
+     *                   File may not exist at the time of method invocation, but should not be a directory.
+     * @param jsonObject a source json object
+     */
     public static void writeJSON(final File targetFile, JsonObject jsonObject) {
         if (!targetFile.exists()) {
             File parent = targetFile.getParentFile();
-            if (!parent.exists()) {
-                parent.mkdirs();
+            if (!parent.exists() && !parent.mkdirs()) {
+                System.out.println("Failed to create directory " + parent.getAbsolutePath());
+                return;
             }
         }
 
@@ -55,6 +69,11 @@ public class FileUtils {
         }
     }
 
+    /**
+     * Get a stream of files that are present in the given directory
+     * @param directory directory from which the list of files is fetched
+     * @return a stream containing reference to files in the given directory
+     */
     public static Stream<File> getFileListStream(File directory) {
         return Arrays.stream(directory.listFiles());
     }
