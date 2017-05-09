@@ -20,13 +20,16 @@ import com.github.kory33.signvote.ui.player.UnvoteInterface;
 import com.github.kory33.signvote.ui.player.VoteInterface;
 import com.github.kory33.signvote.ui.player.model.PlayerClickableChatInterface;
 
-public class PlayerVoteListner implements Listener {
+/**
+ * A Listener implementation which listens to player's attempts to vote to a vote point
+ */
+public class PlayerVoteListener implements Listener {
     private final VoteSessionManager voteSessionManager;
     private final JSONConfiguration messageConfig;
     private final RunnableHashTable runnableHashTable;
     private final PlayerInteractiveInterfaceManager interfaceManager;
 
-    public PlayerVoteListner(SignVote plugin) {
+    public PlayerVoteListener(SignVote plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         this.voteSessionManager = plugin.getVoteSessionManager();
         this.messageConfig = plugin.getMessagesConfiguration();
@@ -34,7 +37,7 @@ public class PlayerVoteListner implements Listener {
         this.interfaceManager = plugin.getInterfaceManager();
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteractWithVotePoint(PlayerInteractEvent event) {
         Block clickedBlock = event.getClickedBlock();
         if (clickedBlock == null) {
@@ -71,6 +74,5 @@ public class PlayerVoteListner implements Listener {
         chatInterface.send();
 
         event.setCancelled(true);
-        return;
     }
 }

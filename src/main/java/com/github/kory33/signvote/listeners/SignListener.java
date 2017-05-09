@@ -17,11 +17,11 @@ import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 
-public class SignListner implements Listener {
+public class SignListener implements Listener {
     private final JSONConfiguration messageConfig;
     private final VoteSessionManager voteSessionManager;
 
-    public SignListner(SignVote plugin) {
+    public SignListener(SignVote plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
 
         this.messageConfig = plugin.getMessagesConfiguration();
