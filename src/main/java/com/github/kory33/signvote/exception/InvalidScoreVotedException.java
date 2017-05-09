@@ -6,6 +6,9 @@ import com.github.kory33.signvote.model.VotePoint;
 
 import lombok.Getter;
 
+/**
+ * Represents an exception thrown when a player attempts to vote with an invalid score
+ */
 public class InvalidScoreVotedException extends Exception {
     @Getter private VotePoint targetVotePoint;
     @Getter private Player voter;

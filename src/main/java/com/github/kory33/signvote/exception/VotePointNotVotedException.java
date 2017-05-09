@@ -9,6 +9,9 @@ import com.github.kory33.signvote.session.VoteSession;
 
 import lombok.Getter;
 
+/**
+ * Represents an exception thrown when a cancel of non-existent vote has been requested.
+ */
 public class VotePointNotVotedException extends Exception {
     @Getter UUID voterUUID;
     @Getter VotePoint votePoint;
@@ -16,9 +19,6 @@ public class VotePointNotVotedException extends Exception {
 
     /**
      * @deprecated Use {@link #VotePointNotVotedException(UUID, VotePoint, VoteSession)} instead
-     * @param voter
-     * @param votePoint
-     * @param session
      */
     public VotePointNotVotedException(Player voter, VotePoint votePoint, VoteSession session) {
         this.voterUUID = voter.getUniqueId();

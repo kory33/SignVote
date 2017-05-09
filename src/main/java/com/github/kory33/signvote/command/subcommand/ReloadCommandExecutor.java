@@ -10,6 +10,10 @@ import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.core.SignVote;
 
+/**
+ * Executor class of "reload" sub-command
+ * @author Kory
+ */
 public class ReloadCommandExecutor implements SubCommandExecutor {
     private final SignVote plugin;
     private final JSONConfiguration messageConfiguration;

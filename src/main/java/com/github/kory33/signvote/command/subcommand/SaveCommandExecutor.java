@@ -12,6 +12,10 @@ import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.core.SignVote;
 
+/**
+ * Executor class of "save" sub-command
+ * @author Kory
+ */
 public class SaveCommandExecutor implements SubCommandExecutor {
     private final SignVote plugin;
     private final JSONConfiguration messageConfiguration;

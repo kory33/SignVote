@@ -27,6 +27,10 @@ import com.github.kory33.updatenotificationplugin.bukkit.github.GithubUpdateNoti
 
 import lombok.Getter;
 
+/**
+ * Core class of SignVote plugin
+ * @author Kory
+ */
 public class SignVote extends GithubUpdateNotifyPlugin {
     @Getter private VoteSessionManager voteSessionManager;
     @Getter private JSONConfiguration messagesConfiguration;

@@ -12,6 +12,10 @@ import com.github.kory33.signvote.core.SignVote;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.session.VoteSession;
 
+/**
+ * Executor class of "delete" sub-command
+ * @author Kory
+ */
 public class DeleteCommandExecutor implements SubCommandExecutor {
     private final JSONConfiguration messageConfiguration;
     private final VoteSessionManager voteSessionManager;

@@ -19,6 +19,10 @@ import com.github.kory33.signvote.ui.console.ConsoleListSessionInterface;
 import com.github.kory33.signvote.ui.player.ListSessionInterface;
 import com.github.kory33.signvote.ui.player.model.PlayerClickableChatInterface;
 
+/**
+ * Executor class of "list" sub-command
+ * @author Kory
+ */
 public class ListCommandExecutor implements SubCommandExecutor {
     private final JSONConfiguration messageConfig;
     private final VoteSessionManager voteSessionManager;

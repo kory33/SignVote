@@ -8,6 +8,10 @@ import org.bukkit.command.CommandSender;
 import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.core.SignVote;
 
+/**
+ * Executor class of "run"(internal) sub-command
+ * @author Kory
+ */
 public class RunCommandExecutor implements SubCommandExecutor {
     private final RunnableHashTable runnableHashTable;
 

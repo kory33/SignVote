@@ -13,6 +13,10 @@ import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 
+/**
+ * Executor class of "deletevp" sub-command
+ * @author Kory
+ */
 public class DeleteVPCommandExecutor implements SubCommandExecutor {
     private final JSONConfiguration messageConfiguration;
     private final VoteSessionManager voteSessionManager;

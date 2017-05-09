@@ -19,6 +19,10 @@ import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.ui.player.AddScoreInterface;
 import com.github.kory33.signvote.ui.player.model.FormChatInterface;
 
+/**
+ * Executor class of "addscore" sub-command
+ * @author Kory
+ */
 public class AddScoreCommandExecutor implements SubCommandExecutor{
     private final JSONConfiguration messageConfiguration;
     private final VoteSessionManager voteSessionManager;
