@@ -31,13 +31,20 @@ public class VoteSessionManager {
         }
     }
 
+    /**
+     * Construct a vote session manager
+     * @param logger logger to which the information should be logged
+     * @param sessionSaveDirectory Directory
+     */
     public VoteSessionManager(Logger logger, File sessionSaveDirectory) {
         this.sessionMap = new BijectiveHashMap<>();
 
         this.sessionSaveDirectory = sessionSaveDirectory;
         this.logger = logger;
 
-        for (File sessionFolder: sessionSaveDirectory.listFiles()) {
+        File[] dirFiles = sessionSaveDirectory.listFiles();
+        assert dirFiles != null;
+        for (File sessionFolder: dirFiles) {
             if (!sessionFolder.isDirectory()) {
                 continue;
             }
@@ -52,7 +59,7 @@ public class VoteSessionManager {
 
     /**
      * Save specific session.
-     * @param session
+     * @param session vote session whose data is to be saved
      */
     private void saveSession(VoteSession session) {
         if (!this.sessionMap.getInverse().containsKey(session)) {
@@ -60,14 +67,14 @@ public class VoteSessionManager {
         }
 
         File sessionDirectory = new File(this.sessionSaveDirectory, session.getName());
-        if (!sessionDirectory.exists()) {
-            sessionDirectory.mkdir();
+        if (!sessionDirectory.exists() && !sessionDirectory.mkdir()) {
+            this.logger.log(Level.SEVERE, "Could not create directory " + sessionDirectory.getAbsolutePath());
         }
 
         try {
             session.saveTo(sessionDirectory);
         } catch (IOException e) {
-            this.logger.log(Level.SEVERE, "Error while saving session: ", e);;
+            this.logger.log(Level.SEVERE, "Error while saving session: ", e);
         }
     }
 
@@ -89,17 +96,18 @@ public class VoteSessionManager {
 
     /**
      * Get the vote session from session name
-     * @param sessionName
-     * @return
+     * @param sessionName get session instance from the session name
+     * @return session instance with the given name, null if no such session exists
      */
     public VoteSession getVoteSession(String sessionName) {
         return this.sessionMap.get(sessionName);
     }
 
     /**
-     * Get votepoint corresponding to the given sign
-     * @param votepointSign
-     * @return
+     * Get vote point corresponding to the given sign
+     * @param votepointSign a vote point sign
+     * @return a vote session who is responsible for a give sign
+     * null if no such vote session exists
      */
     public VoteSession getVoteSession(Sign votepointSign) {
         for (VoteSession session: this.sessionMap.values()) {
@@ -113,8 +121,9 @@ public class VoteSessionManager {
 
     /**
      * Get the corresponding vote point from sign.
-     * @param sign
-     * @return
+     * @param sign a vote point sign
+     * @return a vote point instance associated with the sign.
+     * null if the sign is not a vote point.
      */
     public VotePoint getVotePoint(Sign sign) {
         for (VoteSession session: this.sessionMap.values()) {

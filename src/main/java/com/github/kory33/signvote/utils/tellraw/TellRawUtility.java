@@ -10,9 +10,9 @@ public class TellRawUtility {
 
     /**
      * Get a command associated with a given runnable.
-     * @param runnableManager
-     * @param messageParts
-     * @param runnable
+     * @param runnableManager runnable hash table which is responsible for managing runnable objects
+     * @param messageParts message component to which the runnable has to be bound
+     * @param runnable a runnable object which gets invoked when a player clicks on the message component.
      * @return id of the bound runnable
      */
     public static long bindRunnableToMessageParts(RunnableHashTable runnableManager, MessageParts messageParts, Runnable runnable) {

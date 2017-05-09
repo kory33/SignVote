@@ -17,11 +17,14 @@ import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 
-public class SignListner implements Listener {
+/**
+ * A Listener implementation which listens to player's interaction with sign.
+ */
+public class SignListener implements Listener {
     private final JSONConfiguration messageConfig;
     private final VoteSessionManager voteSessionManager;
 
-    public SignListner(SignVote plugin) {
+    public SignListener(SignVote plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
 
         this.messageConfig = plugin.getMessagesConfiguration();
@@ -67,7 +70,7 @@ public class SignListner implements Listener {
             return;
         }
 
-        VotePoint votePoint = new VotePoint(pointName, (Sign)sign.getBlock().getState(), session);
+        VotePoint votePoint = new VotePoint(pointName, (Sign)sign.getBlock().getState());
         session.addVotePoint(votePoint);
 
         sign.setLine(0, SignTexts.REGISTERED_SIGN_TEXT);

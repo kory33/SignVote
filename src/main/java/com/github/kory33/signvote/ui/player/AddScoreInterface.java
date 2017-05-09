@@ -14,6 +14,10 @@ import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.ui.player.model.FormChatInterface;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
+/**
+ * Represents an interface that allows the player to add a new vote score limit.
+ * @author Kory
+ */
 public final class AddScoreInterface extends FormChatInterface {
     private final VoteSession session;
     private Integer score;
@@ -48,10 +52,10 @@ public final class AddScoreInterface extends FormChatInterface {
             voteLimit = MagicNumbers.VOTELIMIT_INFINITY;
         }
 
-        String convertedPermission = permission;
+        String convertedPermission;
         if (permission == null || permission.isEmpty()) {
             convertedPermission = PermissionNodes.VOTE;
-        } else if (permission == "op") {
+        } else if (permission.equals("op")) {
             convertedPermission = PermissionNodes.VOTE_MORE;
         } else {
             convertedPermission = permission;
@@ -73,10 +77,7 @@ public final class AddScoreInterface extends FormChatInterface {
     private boolean validateLimitInput(String input) {
         try {
             int limit = NumberUtils.createInteger(input);
-            if (limit != MagicNumbers.VOTELIMIT_INFINITY && limit <= 0) {
-                return false;
-            }
-            return true;
+            return limit == MagicNumbers.VOTELIMIT_INFINITY || limit > 0;
         } catch (NumberFormatException exception) {
             return false;
         }

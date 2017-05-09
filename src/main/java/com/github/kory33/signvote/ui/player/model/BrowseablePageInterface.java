@@ -24,7 +24,7 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
      * Number of entry(row) per page.
      * This value should be used to calculate the index rather than hard-coding it.
      */
-    protected static final int ENTRY_PER_PAGE = 10;
+    private static final int ENTRY_PER_PAGE = 10;
 
     @Getter private int requestedPageIndex;
     protected final PlayerInteractiveInterfaceManager interfaceManager;
@@ -33,7 +33,7 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
      * Get the list of all entries.
      * The list must be ordered in an appropriate way.
      * Each entry may not contain line ending at the end.
-     * @return
+     * @return a list containing entries to be displayed on a page
      */
     protected abstract ArrayList<MessagePartsList> getEntryList();
 
@@ -44,7 +44,7 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
 
     /**
      * Get the line which is inserted before the table's main body
-     * @return
+     * @return heading message
      */
     protected abstract MessagePartsList getHeading();
 
@@ -58,8 +58,8 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
     /**
      * Get the copy of the new interface with another index specified.
      * No registration to the interface manager is done in this constructor.
-     * @param oldInterface
-     * @param newIndex
+     * @param oldInterface old interface instance
+     * @param newIndex page number(starts from 0) of the new interface
      */
     public BrowseablePageInterface(BrowseablePageInterface oldInterface, int newIndex) {
         this(oldInterface.getTargetPlayer(), oldInterface.messageConfig, oldInterface.getRunnableHashTable(),
@@ -67,9 +67,9 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
     }
 
     /**
-     * Get the body of the browseable table.
+     * Get the body of the browse-able table.
      * @param finalPageIndex processed page index number(should not be out of range)
-     * @return
+     * @return list representing the browse button interface component
      */
     private MessagePartsList getBrowseButtonLine(final int finalPageIndex, final int maximumPageIndex) {
         MessagePartsList messagePartsList = new MessagePartsList();
@@ -104,7 +104,8 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
     /**
      * Get the body of the browseable table.
      * @param finalPageIndex processed page index number(should not be out of range)
-     * @return
+     * @param entryList a list containing entries to be displayed.
+     *                  Entry order will be same as arranged in this list.
      */
     private static MessagePartsList getTableBody(final int finalPageIndex, final ArrayList<MessagePartsList> entryList) {
         int beginEntryIndex = ENTRY_PER_PAGE * finalPageIndex;

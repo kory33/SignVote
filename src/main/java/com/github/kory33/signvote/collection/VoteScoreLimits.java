@@ -10,22 +10,25 @@ import com.github.kory33.signvote.constants.PermissionNodes;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+/**
+ * A class representing a collection of vote score limits.
+ * @author Kory
+ */
 public class VoteScoreLimits {
     private final HashMap<Integer, HashMap<String, Integer>> limitMap;
 
     /**
      * Construct a VoteScoreLimits from an json data
-     * @param jsonObject
+     * @param jsonObject json object containing information about existing vote score limits
      */
     public VoteScoreLimits(JsonObject jsonObject) {
         HashMap<Integer, HashMap<String, Integer>> limitMap = new HashMap<>();
-        jsonObject.entrySet().stream().forEach(entry -> {
+        jsonObject.entrySet().forEach(entry -> {
             try {
                 int limit = Integer.parseInt(entry.getKey());
                 HashMap<String, Integer> permLimits = new HashMap<>();
                 entry.getValue().getAsJsonObject()
                     .entrySet()
-                    .stream()
                     .forEach(permLimit -> permLimits.put(permLimit.getKey(), permLimit.getValue().getAsInt()));
                 limitMap.put(limit, permLimits);
             } catch (Exception e) {
@@ -44,7 +47,7 @@ public class VoteScoreLimits {
 
     /**
      * Get the Json representation of this object
-     * @return
+     * @return json object representing a collection of score limits
      */
     public JsonObject toJson() {
         return new Gson().toJsonTree(this.limitMap).getAsJsonObject();
@@ -52,7 +55,7 @@ public class VoteScoreLimits {
 
     public void addLimit(int score, String permission, int limit) throws IllegalArgumentException {
         if (!this.limitMap.containsKey(score)) {
-            this.limitMap.put(score, new HashMap<String, Integer>());
+            this.limitMap.put(score, new HashMap<>());
         }
 
         if (limit != MagicNumbers.VOTELIMIT_INFINITY && limit <= 0) {
@@ -79,7 +82,7 @@ public class VoteScoreLimits {
         HashMap<String, Integer> permissiveLimits = this.limitMap.get(score);
         int maxLimit = 0;
         for (String permission: permissiveLimits.keySet()) {
-            if (permission != PermissionNodes.VOTE && !player.hasPermission(permission)) {
+            if (!permission.equals(PermissionNodes.VOTE) && !player.hasPermission(permission)) {
                 continue;
             }
 
@@ -97,8 +100,8 @@ public class VoteScoreLimits {
     }
 
     /**
-     * Get all the possible votable scores given that the voter has full permissions
-     * @return
+     * Get all the possible vote-able scores given that the voter has full permissions
+     * @return set containing every possible vote scores
      */
     public Set<Integer> getVotableScores() {
         return this.limitMap.keySet();

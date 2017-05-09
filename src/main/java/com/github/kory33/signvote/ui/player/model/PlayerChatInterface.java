@@ -7,10 +7,14 @@ import com.github.kory33.signvote.ui.ChatInterface;
 
 import lombok.Getter;
 
+/**
+ * Represents an abstract player chat interface object
+ * @author Kory
+ */
 public abstract class PlayerChatInterface extends ChatInterface {
     @Getter protected final Player targetPlayer;
 
-    public PlayerChatInterface(Player player) {
+    protected PlayerChatInterface(Player player) {
         this.targetPlayer = player;
     }
 

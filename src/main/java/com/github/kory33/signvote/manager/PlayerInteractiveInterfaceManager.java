@@ -23,7 +23,7 @@ public class PlayerInteractiveInterfaceManager {
      * Register an interface session.
      * Any interface that is already associated with the target player
      * will be revoked and replaced
-     * @param interactiveInterface
+     * @param interactiveInterface interface to be bound to a player.
      */
     public void registerInterface(PlayerClickableChatInterface interactiveInterface) {
         Player targetPlayer = interactiveInterface.getTargetPlayer();

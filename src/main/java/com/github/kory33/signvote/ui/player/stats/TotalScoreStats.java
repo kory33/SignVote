@@ -12,13 +12,17 @@ import com.github.kory33.signvote.model.VotePointStats;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.ui.player.model.BrowseablePageInterface;
 
+/**
+ * Implementation of stats interface which sorts vote point statistics by total voted score.
+ * @author Kory
+ */
 public final class TotalScoreStats extends StatsInterface {
-    public TotalScoreStats(Player player, VoteSession targetVoteSession, JSONConfiguration messageConfiguration,
-            RunnableHashTable runnableHashTable, PlayerInteractiveInterfaceManager interfaceManager, int pageIndex) {
+    TotalScoreStats(Player player, VoteSession targetVoteSession, JSONConfiguration messageConfiguration,
+                    RunnableHashTable runnableHashTable, PlayerInteractiveInterfaceManager interfaceManager, int pageIndex) {
         super(player, targetVoteSession, messageConfiguration, runnableHashTable, interfaceManager, pageIndex);
     }
 
-    public TotalScoreStats(StatsInterface oldInterface, int newPageIndex) {
+    private TotalScoreStats(StatsInterface oldInterface, int newPageIndex) {
         super(oldInterface, newPageIndex);
     }
 

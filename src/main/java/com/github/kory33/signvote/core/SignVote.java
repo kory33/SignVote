@@ -19,14 +19,18 @@ import com.github.kory33.signvote.constants.FilePaths;
 import com.github.kory33.signvote.io.PluginDataAutoSaver;
 import com.github.kory33.signvote.io.RunCommandFilter;
 import com.github.kory33.signvote.listeners.PlayerChatInterceptor;
-import com.github.kory33.signvote.listeners.PlayerVoteListner;
-import com.github.kory33.signvote.listeners.SignListner;
+import com.github.kory33.signvote.listeners.PlayerVoteListener;
+import com.github.kory33.signvote.listeners.SignListener;
 import com.github.kory33.signvote.manager.PlayerInteractiveInterfaceManager;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.updatenotificationplugin.bukkit.github.GithubUpdateNotifyPlugin;
 
 import lombok.Getter;
 
+/**
+ * Core class of SignVote plugin
+ * @author Kory
+ */
 public class SignVote extends GithubUpdateNotifyPlugin {
     @Getter private VoteSessionManager voteSessionManager;
     @Getter private JSONConfiguration messagesConfiguration;
@@ -38,7 +42,6 @@ public class SignVote extends GithubUpdateNotifyPlugin {
     private static Filter runnableCommandFilter = null;
 
     private boolean isEnabled = false;
-    private SignVoteCommandExecutor commandExecutor;
 
     private PluginDataAutoSaver autoSaver;
 
@@ -72,8 +75,14 @@ public class SignVote extends GithubUpdateNotifyPlugin {
 
         // setup session directory
         File sessionsDir = new File(this.getDataFolder(), FilePaths.SESSION_DIR);
-        if (!sessionsDir.exists()) {
-            sessionsDir.mkdirs();
+        try {
+            if (!sessionsDir.exists() && !sessionsDir.mkdirs()) {
+                throw new IllegalStateException("Directory " + sessionsDir.getAbsolutePath()
+                        + " could not be created");
+            }
+        } catch (Exception ignored) {
+            this.getLogger().log(Level.SEVERE, "Failed to setup session directories! Aborting initialization...");
+            return;
         }
 
         // setup runnable hash table
@@ -98,12 +107,12 @@ public class SignVote extends GithubUpdateNotifyPlugin {
 
         // register listners
         this.chatInterceptor = new PlayerChatInterceptor(this);
-        new SignListner(this);
-        new PlayerVoteListner(this);
+        new SignListener(this);
+        new PlayerVoteListener(this);
 
         // register command
-        this.commandExecutor = new SignVoteCommandExecutor(this);
-        this.getCommand("signvote").setExecutor(this.commandExecutor);
+        SignVoteCommandExecutor commandExecutor = new SignVoteCommandExecutor(this);
+        this.getCommand("signvote").setExecutor(commandExecutor);
 
         // setup automatic saving routine
         if (this.configuration.getBoolean(ConfigNodes.IS_AUTOSAVE_ENABLED, false)) {
@@ -128,6 +137,7 @@ public class SignVote extends GithubUpdateNotifyPlugin {
 
         if (this.autoSaver != null) {
             this.autoSaver.stopAutoSaveTask();
+            this.autoSaver = null;
         }
 
         this.getLogger().info("Saving session data");

@@ -15,7 +15,11 @@ import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 
-public class UnvoteCommandExecutor extends SubCommandExecutor {
+/**
+ * Executor class of "unvote" sub-command
+ * @author Kory
+ */
+public class UnvoteCommandExecutor implements SubCommandExecutor {
     private final JSONConfiguration messageConfiguration;
     private final VoteSessionManager voteSessionManager;
 
@@ -25,7 +29,7 @@ public class UnvoteCommandExecutor extends SubCommandExecutor {
     }
 
     @Override
-    protected String getHelpString() {
+    public String getHelpString() {
         return this.messageConfiguration.getString(MessageConfigNodes.UNVOTE_COMMAND_HELP);
     }
 

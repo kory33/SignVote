@@ -16,12 +16,10 @@ public abstract class ChatInterface {
 
     /**
      * Construct the user interface and send to a CommandSender.
-     * @param player
+     * @param target to whom this interface should be sent
      */
     public void send(CommandSender target) {
         MessageComponent messageComponent = new MessageComponent(this.constructInterfaceMessages());
-        if (messageComponent != null) {
-            messageComponent.send(target);
-        }
+        messageComponent.send(target);
     }
 }

@@ -1,29 +1,29 @@
 package com.github.kory33.signvote.model;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-
+import com.github.kory33.signvote.constants.Formats;
+import com.github.kory33.signvote.constants.VotePointDataFileKeys;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 
-import com.github.kory33.signvote.constants.Formats;
-import com.github.kory33.signvote.constants.VotePointDataFileKeys;
-import com.github.kory33.signvote.session.VoteSession;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
-import lombok.Getter;
-import lombok.Setter;
-
+/**
+ * A class representing a sign of a vote point
+ */
 public class VotePoint {
     @Setter @Getter private String name;
     @Getter private Sign voteSign;
 
-    public VotePoint(String name, Sign voteSign, VoteSession parentSession) {
+    public VotePoint(String name, Sign voteSign) {
         this.name = name;
         this.voteSign = voteSign;
     }
@@ -55,7 +55,7 @@ public class VotePoint {
 
     /**
      * Get the json-serialized data of this object.
-     * @return
+     * @return a json file that contains
      */
     public JsonObject toJson() {
         JsonObject jsonObject = new JsonObject();

@@ -29,13 +29,12 @@ public class VotePointStats {
 
     /**
      * Calculate the score distribution for the votepoint.
-     * @return
+     * @return map of score -> vote count
      */
     private Map<Integer, Integer> computeScoreDistribution() {
         Map<Integer, Integer> distrMap = new HashMap<>();
 
         this.voteSession.getVoteManager().getVotes(this.votePoint)
-            .stream()
             .forEach(vote -> {
                 int score = vote.getScore();
                 int count = distrMap.getOrDefault(score, 0);
@@ -48,7 +47,7 @@ public class VotePointStats {
     /**
      * Recalculates and refreshes the statistical values within this class
      */
-    public void refreshStatsValues() {
+    private void refreshStatsValues() {
         // initialize distribution cache
         this.scoreDistribution = Collections.unmodifiableMap(this.computeScoreDistribution());
 

@@ -12,7 +12,11 @@ import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.core.SignVote;
 
-public class SaveCommandExecutor extends SubCommandExecutor {
+/**
+ * Executor class of "save" sub-command
+ * @author Kory
+ */
+public class SaveCommandExecutor implements SubCommandExecutor {
     private final SignVote plugin;
     private final JSONConfiguration messageConfiguration;
     
@@ -22,7 +26,7 @@ public class SaveCommandExecutor extends SubCommandExecutor {
     }
 
     @Override
-    protected String getHelpString() {
+    public String getHelpString() {
         return "";
     }
     
@@ -32,11 +36,11 @@ public class SaveCommandExecutor extends SubCommandExecutor {
             sender.sendMessage(messageConfiguration.getString(MessageConfigNodes.MISSING_PERMS));
         }
         
-        CompletableFuture.runAsync(this.plugin::saveSessionData).thenRun(() -> {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, () -> {
-                sender.sendMessage(messageConfiguration.getString(MessageConfigNodes.SAVE_COMPLETE));
-            });
-        });
+        CompletableFuture.runAsync(this.plugin::saveSessionData).thenRun(() ->
+                Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, () ->
+                        sender.sendMessage(messageConfiguration.getString(MessageConfigNodes.SAVE_COMPLETE))
+                )
+        );
         
         return true;
     }

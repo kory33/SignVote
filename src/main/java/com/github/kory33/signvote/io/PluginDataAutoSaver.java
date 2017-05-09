@@ -8,42 +8,27 @@ import org.bukkit.Bukkit;
 
 import com.github.kory33.signvote.core.SignVote;
 
+/**
+ * A class which is capable of scheduling auto-save of the plugin data with a specified time interval.
+ * @author Kory
+ */
 public class PluginDataAutoSaver {
     private int nextAutoSaveTaskId;
 
     private final long autosaveIntervalTicks;
     private final boolean shouldLog;
     private final SignVote plugin;
-    
-    private boolean isTaskScheduled;
 
     private final ExecutorService saveTaskExecutor;
     
     private void scheduleNextAutoSaveTask() {
-        CompletableFuture.runAsync(() -> PluginDataAutoSaver.this.plugin.saveSessionData(), PluginDataAutoSaver.this.saveTaskExecutor);
+        CompletableFuture.runAsync(PluginDataAutoSaver.this.plugin::saveSessionData, PluginDataAutoSaver.this.saveTaskExecutor);
         if (this.shouldLog) {
             PluginDataAutoSaver.this.plugin.getLogger().info("Session data is being saved asynchronously...");
         }
         
-        this.nextAutoSaveTaskId = Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
-            @Override
-            public void run() {
-                PluginDataAutoSaver.this.scheduleNextAutoSaveTask();
-            }
-        }, this.autosaveIntervalTicks);
-        
-        this.isTaskScheduled = true;
-    }
-    
-    /**
-     * Schedule a repeating autosave task.
-     * This method should fail silently if there already exists a task scheduled.
-     */
-    public void scheduleAutoSaveTask() {
-        if (this.isTaskScheduled) {
-            return;
-        }
-        this.scheduleNextAutoSaveTask();
+        this.nextAutoSaveTaskId = Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin,
+                        PluginDataAutoSaver.this::scheduleNextAutoSaveTask, this.autosaveIntervalTicks);
     }
 
     /**
@@ -51,7 +36,6 @@ public class PluginDataAutoSaver {
      */
     public void stopAutoSaveTask() {
         Bukkit.getServer().getScheduler().cancelTask(this.nextAutoSaveTaskId);
-        this.isTaskScheduled = false;
     }
     
     public PluginDataAutoSaver(SignVote plugin, int autosaveInterval, boolean shouldLog) {

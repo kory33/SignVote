@@ -13,6 +13,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.kory33.signvote.exception.ChatInterceptionCancelledException;
 
+/**
+ * A Bukkit listener class which can be used to intercept a player message.
+ */
 public class PlayerChatInterceptor implements Listener {
     private final Map<Player, CompletableFuture<String>> interceptionFutureMap;
 
@@ -21,6 +24,9 @@ public class PlayerChatInterceptor implements Listener {
         this.interceptionFutureMap = new HashMap<>();
     }
 
+    /**
+     * Attempts to complete interception future when a player sends a chat message.
+     */
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         Player sender = event.getPlayer();
@@ -34,6 +40,9 @@ public class PlayerChatInterceptor implements Listener {
         event.setCancelled(true);
     }
 
+    /**
+     * Cancels chat interception when the player has quit.
+     */
     @EventHandler
     public void onPlayerExit(PlayerQuitEvent event) {
         this.cancelAnyInterception(event.getPlayer(), "Player has quit.");
@@ -41,8 +50,8 @@ public class PlayerChatInterceptor implements Listener {
 
     /**
      * Cancel chat interception task associated with a given player, if there exists any.
-     * @param player
-     * @param cancelReason
+     * @param player target player whose chat message interception is cancelled
+     * @param cancelReason reason for cancellation(optional)
      */
     public void cancelAnyInterception(Player player, String cancelReason) {
         CompletableFuture<String> future = this.interceptionFutureMap.remove(player);
@@ -56,8 +65,8 @@ public class PlayerChatInterceptor implements Listener {
 
     /**
      * Intercept the first message sent by the given player.
-     * @param sourcePlayer
-     * @return
+     * @param sourcePlayer target player whose first chat message is to be intercepted
+     * @return a completable future which completes with a first message from the player
      */
     public CompletableFuture<String> interceptFirstMessageFrom(Player sourcePlayer) {
         CompletableFuture<String> future = new CompletableFuture<>();

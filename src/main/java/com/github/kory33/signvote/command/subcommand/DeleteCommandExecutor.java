@@ -12,7 +12,11 @@ import com.github.kory33.signvote.core.SignVote;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.session.VoteSession;
 
-public class DeleteCommandExecutor extends SubCommandExecutor {
+/**
+ * Executor class of "delete" sub-command
+ * @author Kory
+ */
+public class DeleteCommandExecutor implements SubCommandExecutor {
     private final JSONConfiguration messageConfiguration;
     private final VoteSessionManager voteSessionManager;
 
@@ -22,7 +26,7 @@ public class DeleteCommandExecutor extends SubCommandExecutor {
     }
     
     @Override
-    protected String getHelpString() {
+    public String getHelpString() {
         return this.messageConfiguration.getString(MessageConfigNodes.DELETE_SESS_COMMAND_HELP);
     }
     

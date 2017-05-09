@@ -63,31 +63,41 @@ public abstract class PlayerClickableChatInterface extends PlayerChatInterface {
 
     /**
      * Get a message formatted with the given array of Object arguments(optional)
-     * @param configurationNode
-     * @param objects
-     * @return
+     * @param configurationNode configuration node from which the message should be fetched
+     * @param objects objects used in formatting the fetched string
+     * @return formatted message component
      */
     protected final MessageParts getFormattedMessagePart(String configurationNode, Object... objects) {
         return new MessageParts(this.messageConfig.getFormatted(configurationNode, objects));
     }
 
-    protected final MessageParts getButton(String command) {
-        MessageParts button = this.getFormattedMessagePart(MessageConfigNodes.UI_BUTTON);
-        button.setClickEvent(ClickEventType.RUN_COMMAND, command);
-        return button;
-    }
-
+    /**
+     * Get a message component which invokes the given runnable object when clicked.
+     * @param runnable runnable to be run(synchronously) when the player clicks the button
+     * @param button message that gets displayed as the button
+     * @return a button message component that is bound to the runnable object
+     */
     protected final MessageParts getButton(Runnable runnable, MessageParts button) {
         long runnableId = TellRawUtility.bindRunnableToMessageParts(this.runnableHashTable, button, runnable);
         this.registeredRunnableIds.add(runnableId);
         return button;
     }
 
+    /**
+     * Get a message component which invokes the given runnable object when clicked.
+     * Displayed button message defaults to string at {@value MessageConfigNodes#UI_BUTTON}
+     * Use {@link PlayerClickableChatInterface#getButton(Runnable, MessageParts)} to configure button display.
+     * @param runnable runnable to be run(synchronously) when the player clicks the button
+     * @return a button message component that is bound to the runnable object.
+     */
     protected final MessageParts getButton(Runnable runnable) {
         MessageParts button = this.getFormattedMessagePart(MessageConfigNodes.UI_BUTTON);
         return this.getButton(runnable, button);
     }
 
+    /**
+     * Cancel the action aimed by the interface and revoke the interface object
+     */
     protected void cancelAction() {
         if (!this.isValidSession) {
             return;
@@ -101,7 +111,7 @@ public abstract class PlayerClickableChatInterface extends PlayerChatInterface {
     /**
      * Get the body of the chat interface.
      * Returned body is enclosed by a header and a footer and is finally sent to the player.
-     * @return
+     * @return a list of messages that represents a body of the interface
      */
     protected abstract MessagePartsList getBodyMessages();
 

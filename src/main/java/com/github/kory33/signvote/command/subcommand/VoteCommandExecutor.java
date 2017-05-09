@@ -19,7 +19,11 @@ import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 
-public class VoteCommandExecutor extends SubCommandExecutor {
+/**
+ * Executor class of "vote" sub-command
+ * @author Kory
+ */
+public class VoteCommandExecutor implements SubCommandExecutor {
     private final JSONConfiguration messageConfiguration;
     private final VoteSessionManager voteSessionManager;
 
@@ -29,7 +33,7 @@ public class VoteCommandExecutor extends SubCommandExecutor {
     }
 
     @Override
-    protected String getHelpString() {
+    public String getHelpString() {
         return this.messageConfiguration.getString(MessageConfigNodes.VOTE_COMMAND_HELP);
     }
 

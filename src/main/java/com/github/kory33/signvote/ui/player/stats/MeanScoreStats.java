@@ -12,13 +12,17 @@ import com.github.kory33.signvote.model.VotePointStats;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.ui.player.model.BrowseablePageInterface;
 
+/**
+ * Implementation of stats interface which sorts vote point statistics by mean score
+ * @author Kory
+ */
 public final class MeanScoreStats extends StatsInterface {
-    public MeanScoreStats(Player player, VoteSession targetVoteSession, JSONConfiguration messageConfiguration,
-            RunnableHashTable runnableHashTable, PlayerInteractiveInterfaceManager interfaceManager, int pageIndex) {
+    MeanScoreStats(Player player, VoteSession targetVoteSession, JSONConfiguration messageConfiguration,
+                   RunnableHashTable runnableHashTable, PlayerInteractiveInterfaceManager interfaceManager, int pageIndex) {
         super(player, targetVoteSession, messageConfiguration, runnableHashTable, interfaceManager, pageIndex);
     }
 
-    public MeanScoreStats(MeanScoreStats oldInterface, int newIndex) {
+    private MeanScoreStats(MeanScoreStats oldInterface, int newIndex) {
         super(oldInterface, newIndex);
     }
 

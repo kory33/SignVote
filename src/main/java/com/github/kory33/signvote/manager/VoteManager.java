@@ -23,6 +23,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+/**
+ * A class which handles all the vote data
+ */
 public class VoteManager {
     private final HashMap<UUID, HashMap<Integer, HashSet<String>>> voteData;
     private final HashMap<VotePoint, HashSet<Vote>> votePointVotes;
@@ -30,19 +33,26 @@ public class VoteManager {
 
     /**
      * Construct a VoteManager object from data at given file location
-     * @param voteDataDirectory
-     * @throws IOException
+     * @param voteDataDirectory directory in which vote data is stored player-wise
+     * @param parentSession session which is responsible for votes that are about to be read
+     * @throws IllegalArgumentException when null value or a non-directory file is given as a parameter
      */
     public VoteManager(File voteDataDirectory, VoteSession parentSession) throws IOException {
         this.parentSession = parentSession;
         this.voteData = new HashMap<>();
         this.votePointVotes = new HashMap<>();
 
+        if (voteDataDirectory == null) {
+            throw new IllegalArgumentException("Directory cannot be null!");
+        }
+
         if (!voteDataDirectory.isDirectory()) {
             throw new IOException("Directory has to be specified for save location!");
         }
 
-        for (File playerVoteDataFile: voteDataDirectory.listFiles()) {
+        File[] dirFiles = voteDataDirectory.listFiles();
+        assert dirFiles != null;
+        for (File playerVoteDataFile: dirFiles) {
             JsonObject jsonObject = (new JsonParser()).parse(Files.newBufferedReader(playerVoteDataFile.toPath())).getAsJsonObject();
 
             Matcher playerUUIDMatcher = Patterns.JSON_FILE_NAME.matcher(playerVoteDataFile.getName());
@@ -62,7 +72,7 @@ public class VoteManager {
     }
 
     private void loadPlayerVoteData(UUID playerUUID, JsonObject jsonObject) {
-        jsonObject.entrySet().stream().forEach(entry -> {
+        jsonObject.entrySet().forEach(entry -> {
             int score = Integer.parseInt(entry.getKey());
 
             entry.getValue().getAsJsonArray().forEach(elem -> {
@@ -73,16 +83,14 @@ public class VoteManager {
 
                 try {
                     this.addVotePointData(playerUUID, score, votePoint);
-                } catch (VotePointAlreadyVotedException e) {
-                    return;
-                }
+                } catch (VotePointAlreadyVotedException ignored) {}
             });
         });
     }
 
     /**
      * Get the players' vote data, as a map of Player to JsonObject
-     * @return
+     * @return mapping of (player's)UUID -> json object containing votes of the player
      */
     public Map<UUID, JsonObject> getPlayersVoteData() {
         Map<UUID, JsonObject> map = new HashMap<>();
@@ -128,9 +136,9 @@ public class VoteManager {
 
     /**
      * Add a vote data related to the score and the votepoint to which the player has voted
-     * @param voterUUID
-     * @param voteScore
-     * @param votePoint
+     * @param voterUUID UUID of a player who has voted
+     * @param voteScore score which the player has voted
+     * @param votePoint vote point to which the player has voted
      * @throws IllegalArgumentException when there is a duplicate in the vote
      */
     public void addVotePointData(UUID voterUUID, int voteScore, VotePoint votePoint) throws VotePointAlreadyVotedException {
@@ -157,10 +165,10 @@ public class VoteManager {
     }
 
     /**
-     * Remove a vote casted by the given player to the given votepoint.
-     * @param playerUUID
-     * @param votePoint
-     * @throws VotePointNotVotedException
+     * Remove a vote casted by the given player to the given vote point.
+     * @param playerUUID UUID of a player who tries to cancel the vote
+     * @param votePoint vote point whose vote by the player is being cancelled
+     * @throws VotePointNotVotedException when the player has not voted to the target vote point
      */
     public void removeVote(UUID playerUUID, VotePoint votePoint) throws VotePointNotVotedException {
         HashMap<Integer, HashSet<String>> playerVotes = this.getVotedPointsMap(playerUUID);
@@ -183,7 +191,7 @@ public class VoteManager {
 
     /**
      * Remove all the votes associated with the given votepoint.
-     * @param votePoint
+     * @param votePoint vote point from which votes will be removed
      */
     public void removeAllVotes(VotePoint votePoint) {
         HashSet<Vote> votes = this.votePointVotes.get(votePoint);
@@ -204,9 +212,9 @@ public class VoteManager {
     }
 
     /**
-     * Get a set of votes casted to the given votepoint.
-     * @param votePoint
-     * @return
+     * Get a set of votes casted to the given vote point.
+     * @param votePoint target vote point
+     * @return set containing all the votes casted to the vote point.
      */
     public HashSet<Vote> getVotes(VotePoint votePoint) {
         if (!this.votePointVotes.containsKey(votePoint)) {
@@ -218,34 +226,34 @@ public class VoteManager {
     /**
      * Get the score a given player has voted to a given name of votepoint.
      * The returned optional object contains no value if the player has not voted.
-     * @param playerUUID
-     * @param votePointName
-     * @return
+     * @param playerUUID UUID of the player
+     * @param votePointName name of the vote point from which score data is fetched
+     * @return an Optional object containing score vote by the player
      */
     public Optional<Integer> getVotedScore(UUID playerUUID, String votePointName) {
         return this.getVotedPointsMap(playerUUID).entrySet()
                 .stream()
                 .filter(entry -> entry.getValue().contains(votePointName))
-                .map(entry -> entry.getKey())
+                .map(Entry::getKey)
                 .findFirst();
     }
 
     /**
      * Check if the given player has voted to the specified votepoint.
-     * @param playerUUID
-     * @param votePoint
-     * @return
+     * @param playerUUID UUID of the player
+     * @param votePoint target vote point
+     * @return boolean value true iff player has voted to the given vote point.
      */
     public boolean hasVoted(UUID playerUUID, VotePoint votePoint) {
         return this.getVotedScore(playerUUID, votePoint.getName()).isPresent();
     }
 
     /**
-     * Refresh the votepoint name from the oldName to the newName.
+     * Refresh the vote point name from the oldName to the newName.
      * This method SHOULD NOT be invoked except from VoteSession.
-     * This method MUST be called after change in votepoint name to be effective.
-     * @param votePoint
-     * @param oldName
+     * This method MUST be called after change in vote point name to be effective.
+     * @param votePoint target vote point(name of this vote point has to be changed beforehand)
+     * @param oldName old name of the vote point
      */
     public void refreshVotePointName(VotePoint votePoint, String oldName) {
         HashSet<Vote> votes = this.getVotes(votePoint);

@@ -13,7 +13,11 @@ import com.github.kory33.signvote.core.SignVote;
 
 import net.md_5.bungee.api.ChatColor;
 
-public class HelpCommandExecutor extends SubCommandExecutor {
+/**
+ * Executor class of "help"(default) sub-command
+ * @author Kory
+ */
+public class HelpCommandExecutor implements SubCommandExecutor {
     private final JSONConfiguration messageConfiguration;
     private final Map<String, SubCommandExecutor> subCommandExecutorMap;
     
@@ -23,7 +27,7 @@ public class HelpCommandExecutor extends SubCommandExecutor {
     }
     
     @Override
-    protected String getHelpString() {
+    public String getHelpString() {
         return "";
     }
     

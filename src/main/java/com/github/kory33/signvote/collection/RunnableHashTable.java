@@ -6,6 +6,10 @@ import java.util.Random;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
+/**
+ * Class which handles registrations and invocations of runnable objects
+ * @author Kory
+ */
 public class RunnableHashTable {
     private final HashMap<Long, Runnable> runnableTable;
     private final JavaPlugin plugin;
@@ -39,7 +43,7 @@ public class RunnableHashTable {
 
     /**
      * Get a runnable associated with a given id.
-     * @param runnableId
+     * @param runnableId id of the target runnable
      * @return a runnable associated with a given runnable id
      */
     private Runnable getRunnable(long runnableId) throws IllegalArgumentException {
@@ -53,7 +57,7 @@ public class RunnableHashTable {
 
     /**
      * Remove and cancel a task associated with a given id.
-     * @param runnableId
+     * @param runnableId id of the target runnable
      */
     public void cancelTask(long runnableId) {
         this.runnableTable.remove(runnableId);
@@ -61,7 +65,7 @@ public class RunnableHashTable {
 
     /**
      * Synchronously run a task associated with a given id.
-     * @param runnableId
+     * @param runnableId id of the target runnable
      */
     public void runSync(long runnableId) {
         this.scheduler.runTask(this.plugin, this.getRunnable(runnableId));
@@ -70,7 +74,7 @@ public class RunnableHashTable {
 
     /**
      * Asynchronously run a task associated with a given id.
-     * @param runnableId
+     * @param runnableId id of the target runnable
      */
     public void runAsync(long runnableId) {
         this.scheduler.runTaskAsynchronously(this.plugin, this.getRunnable(runnableId));
