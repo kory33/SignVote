@@ -32,7 +32,7 @@ public final class ListSessionInterface extends BrowseablePageInterface {
     }
 
     private MessagePartsList getEntry(VoteSession session) {
-        String openStateNode = session.isOpen() ? MessageConfigNodes.LIST_UI_SESSION_OPEN : MessageConfigNodes.LIST_UI_SESSION_OPEN;
+        String openStateNode = session.isOpen() ? MessageConfigNodes.LIST_UI_SESSION_OPEN : MessageConfigNodes.LIST_UI_SESSION_CLOSED;
         String sessionState = messageConfig.getString(openStateNode);
         return new MessagePartsList(getFormattedMessagePart(MessageConfigNodes.F_LIST_UI_ENTRY_TEMPLATE, session.getName(), sessionState));
     }
