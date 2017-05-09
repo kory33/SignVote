@@ -57,11 +57,15 @@ public final class UnvoteInterface extends PlayerClickableChatInterface {
         return messageConfig.getFormatted(MessageConfigNodes.UNVOTE_UI_HEADING, votePointName, votedScore);
     }
 
+    private MessagePartsList getSessionClosedMessage() {
+        String message = this.messageConfig.getString(MessageConfigNodes.VOTE_SESSION_CLOSED);
+        return new MessagePartsList(message + "\n");
+    }
+
     @Override
     protected MessagePartsList getBodyMessages() {
         if (!this.session.isOpen()) {
-            String message = this.messageConfig.getString(MessageConfigNodes.VOTE_SESSION_CLOSED);
-            return new MessagePartsList(message);
+            return this.getSessionClosedMessage();
         }
 
         MessagePartsList messagePartsList = new MessagePartsList();

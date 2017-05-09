@@ -74,19 +74,23 @@ public final class VoteInterface extends PlayerClickableChatInterface {
         return this.messageConfig.getFormatted(MessageConfigNodes.VOTE_UI_SCORE_SELECTION, score, remainingString);
     }
 
+    private MessagePartsList getSessionClosedMessage() {
+        String message = this.messageConfig.getString(MessageConfigNodes.VOTE_SESSION_CLOSED);
+        return new MessagePartsList(message + "\n");
+    }
+
     @Override
     protected MessagePartsList getBodyMessages() {
         HashMap<Integer, Optional<Integer>> availableVotePoints = this.session.getAvailableVoteCounts(this.targetPlayer);
         if (availableVotePoints.isEmpty()) {
-            String message = this.messageConfig.getString(MessageConfigNodes.VOTE_UI_NONE_AVAILABLE);
-            MessagePartsList messagePartsList = new MessagePartsList();
-            messagePartsList.addLine(message);
-            return messagePartsList;
+            return this.getSessionClosedMessage();
         }
 
         if (!this.session.isOpen()) {
             String message = this.messageConfig.getString(MessageConfigNodes.VOTE_SESSION_CLOSED);
-            return new MessagePartsList(message);
+            MessagePartsList messagePartsList = new MessagePartsList(message);
+            messagePartsList.addLine("");
+            return messagePartsList;
         }
 
         MessagePartsList messagePartsList = new MessagePartsList();
