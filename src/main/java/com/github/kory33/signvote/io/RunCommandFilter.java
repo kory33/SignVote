@@ -13,6 +13,14 @@ import org.apache.logging.log4j.message.Message;
 
 import com.github.kory33.signvote.constants.SubCommands;
 
+/**
+ * This class acts as a "filter" for runnable invocation commands.
+ *
+ * When a player clicks on a button in {@link com.github.kory33.signvote.ui.player.model.PlayerClickableChatInterface},
+ * a command `/signvote:signvote run` is run in order to invoke a registered runnable.
+ *
+ * However, this can cause a lot of spam in the console. This class is useful in preventing such logs.
+ */
 public class RunCommandFilter extends AbstractFilter implements Filter {
     private static final String runCommand = SubCommands.ROOT + " " + SubCommands.RUN;
     private static final String commandLogRegex = "^\\w{3,16} issued server command: " + runCommand + " .*";

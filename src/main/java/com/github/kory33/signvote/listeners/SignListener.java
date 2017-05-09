@@ -17,6 +17,9 @@ import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 
+/**
+ * A Listener implementation which listens to player's interaction with sign.
+ */
 public class SignListener implements Listener {
     private final JSONConfiguration messageConfig;
     private final VoteSessionManager voteSessionManager;
