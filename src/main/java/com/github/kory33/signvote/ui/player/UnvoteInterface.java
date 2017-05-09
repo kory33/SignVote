@@ -13,6 +13,10 @@ import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.ui.player.model.PlayerClickableChatInterface;
 
+/**
+ * Represents an interface which confirms and executes player's un-vote.
+ * @author Kory
+ */
 public final class UnvoteInterface extends PlayerClickableChatInterface {
     private final VoteSession session;
     private final VotePoint votePoint;

@@ -13,6 +13,10 @@ import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.ui.player.model.BrowseablePageInterface;
 
+/**
+ * Represents an interface which displays a list of existing sessions
+ * @author Kory
+ */
 public final class ListSessionInterface extends BrowseablePageInterface {
     private final VoteSessionManager voteSessionManager;
 
@@ -22,7 +26,7 @@ public final class ListSessionInterface extends BrowseablePageInterface {
         this.voteSessionManager = voteSessionManager;
     }
 
-    public ListSessionInterface(ListSessionInterface oldInterface, int newIndex) {
+    private ListSessionInterface(ListSessionInterface oldInterface, int newIndex) {
         super(oldInterface, newIndex);
         this.voteSessionManager = oldInterface.voteSessionManager;
     }

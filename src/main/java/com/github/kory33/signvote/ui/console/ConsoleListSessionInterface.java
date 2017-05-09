@@ -8,6 +8,11 @@ import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.ui.ChatInterface;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
+/**
+ * A class which represents a console interface(non-interactive)
+ * which displays a list of existing sessions
+ * @author Kory
+ */
 public class ConsoleListSessionInterface extends ChatInterface {
     private final VoteSessionManager sessionManager;
     private final JSONConfiguration messageConfig;

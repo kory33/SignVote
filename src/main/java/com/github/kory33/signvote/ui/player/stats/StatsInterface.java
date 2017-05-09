@@ -17,22 +17,26 @@ import com.github.kory33.signvote.model.VotePointStats;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.ui.player.model.BrowseablePageInterface;
 
+/**
+ * Abstraction of statistics interface which can be browsed by a player.
+ * @author Kory
+ */
 public abstract class StatsInterface extends BrowseablePageInterface {
-    protected final VoteSession targetVoteSession;
-    public StatsInterface(Player player, VoteSession targetVoteSession, JSONConfiguration messageConfiguration,
-            RunnableHashTable runnableHashTable, PlayerInteractiveInterfaceManager interfaceManager, int pageIndex) {
+    private final VoteSession targetVoteSession;
+    StatsInterface(Player player, VoteSession targetVoteSession, JSONConfiguration messageConfiguration,
+                   RunnableHashTable runnableHashTable, PlayerInteractiveInterfaceManager interfaceManager, int pageIndex) {
         super(player, messageConfiguration, runnableHashTable, interfaceManager, pageIndex);
         this.targetVoteSession = targetVoteSession;
     }
 
-    public StatsInterface(StatsInterface oldInterface, int newPageIndex) {
+    protected StatsInterface(StatsInterface oldInterface, int newPageIndex) {
         super(oldInterface, newPageIndex);
         this.targetVoteSession = oldInterface.targetVoteSession;
     }
 
     /**
      * Get the statistics type associated with the interface
-     * @return
+     * @return statistics type
      */
     public abstract StatsType getStatsType();
 
@@ -40,7 +44,7 @@ public abstract class StatsInterface extends BrowseablePageInterface {
 
     /**
      * Get the comparator that determines the order of statistics entries
-     * @return
+     * @return comparator that compares statistics data and determines the order of entries
      */
     public abstract Comparator<? super VotePointStats> getStatsComparator();
 
@@ -50,7 +54,7 @@ public abstract class StatsInterface extends BrowseablePageInterface {
      * @param session The session against which the statistics should be taken
      * @param statsType The type of statistics
      * @param pageIndex Index of the statistics ranking page.
-     * @return
+     * @return statistics interface instance
      */
     public static StatsInterface createNewInterface(Player sender, VoteSession session, String statsType, int pageIndex,
             JSONConfiguration messageConfiguration, RunnableHashTable runnableHashTable, PlayerInteractiveInterfaceManager interfaceManager) {
@@ -64,7 +68,7 @@ public abstract class StatsInterface extends BrowseablePageInterface {
             case MEAN:
                 return new MeanScoreStats(sender, session, messageConfiguration, runnableHashTable, interfaceManager, pageIndex);
             }
-        } catch (IllegalArgumentException exception) {}
+        } catch (IllegalArgumentException ignored) {}
 
         return null;
     }

@@ -19,6 +19,10 @@ import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.ui.player.model.PlayerClickableChatInterface;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
+/**
+ * Represents an interface which allows a player to vote to a vote point.
+ * @author Kory
+ */
 public final class VoteInterface extends PlayerClickableChatInterface {
     private final VoteSession session;
     private final VotePoint votePoint;
@@ -64,12 +68,8 @@ public final class VoteInterface extends PlayerClickableChatInterface {
     }
 
     private String getScoreSelectionLine(int score, Optional<Integer> remaining) {
-        String remainingString;
-        if (remaining.isPresent()) {
-            remainingString = remaining.get().toString();
-        } else {
-            remainingString = this.messageConfig.getString(MessageConfigNodes.INFINITE);
-        }
+        String remainingString = remaining.map(Object::toString)
+                .orElseGet(() -> this.messageConfig.getString(MessageConfigNodes.INFINITE));
 
         return this.messageConfig.getFormatted(MessageConfigNodes.VOTE_UI_SCORE_SELECTION, score, remainingString);
     }
