@@ -10,7 +10,6 @@ import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.utils.tellraw.TellRawUtility;
-import com.github.ucchyocean.messaging.tellraw.ClickEventType;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
 import lombok.Getter;
@@ -89,7 +88,9 @@ public abstract class PlayerClickableChatInterface extends PlayerChatInterface {
      * Use {@link PlayerClickableChatInterface#getButton(Runnable, MessageParts)} to configure button display.
      * @param runnable runnable to be run(synchronously) when the player clicks the button
      * @return a button message component that is bound to the runnable object.
+     * @deprecated use more generalized {@link PlayerClickableChatInterface#getButton(Runnable, MessageParts)} instead.
      */
+    @Deprecated
     protected final MessageParts getButton(Runnable runnable) {
         MessageParts button = this.getFormattedMessagePart(MessageConfigNodes.UI_BUTTON);
         return this.getButton(runnable, button);
@@ -97,15 +98,24 @@ public abstract class PlayerClickableChatInterface extends PlayerChatInterface {
 
     /**
      * Cancel the action aimed by the interface and revoke the interface object
+     * @deprecated this method relies on message configuration constant.
+     *             use {@link PlayerClickableChatInterface#cancelAction(String)} instead.
      */
+    @Deprecated
     protected void cancelAction() {
+        this.cancelAction(this.messageConfig.getString(MessageConfigNodes.UI_CANCELLED));
+    }
+
+    /**
+     * Cancel the action aimed by the interface and revoke the interface object
+     */
+    protected void cancelAction(String cancelMessage) {
         if (!this.isValidSession) {
             return;
         }
 
         this.revokeSession();
-        String message = this.messageConfig.getString(MessageConfigNodes.UI_CANCELLED);
-        this.targetPlayer.sendMessage(message);
+        this.targetPlayer.sendMessage(cancelMessage);
     }
 
     /**
@@ -115,6 +125,15 @@ public abstract class PlayerClickableChatInterface extends PlayerChatInterface {
      */
     protected abstract MessagePartsList getBodyMessages();
 
+    /**
+     * Construct the interface in a form of:<br>
+     * [header]<br>
+     * [body content] <br>
+     * [footer]<br>
+     * <br>
+     * Override this method only if the interface should be in other form.<br>
+     * Otherwise, [body content] part should be constructed by {@link PlayerClickableChatInterface#getBodyMessages()} method.
+     */
     @Override
     protected MessagePartsList constructInterfaceMessages() {
         MessageParts header = this.getFormattedMessagePart(MessageConfigNodes.UI_HEADER);

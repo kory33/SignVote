@@ -3,6 +3,7 @@ package com.github.kory33.signvote.ui.player.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Setter;
 import org.bukkit.entity.Player;
 
 import com.github.kory33.messaging.tellraw.MessagePartsList;
@@ -20,11 +21,7 @@ import lombok.Getter;
  *
  */
 public abstract class BrowseablePageInterface extends PlayerClickableChatInterface {
-    /**
-     * Number of entry(row) per page.
-     * This value should be used to calculate the index rather than hard-coding it.
-     */
-    private static final int ENTRY_PER_PAGE = 10;
+    @Setter private int entryPerPage;
 
     @Getter private int requestedPageIndex;
     protected final PlayerInteractiveInterfaceManager interfaceManager;
@@ -53,6 +50,7 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
         super(player, messageConfiguration, runnableHashTable);
         this.interfaceManager = interfaceManager;
         this.requestedPageIndex = pageIndex;
+        this.entryPerPage = 10;
     }
 
     /**
@@ -62,8 +60,10 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
      * @param newIndex page number(starts from 0) of the new interface
      */
     public BrowseablePageInterface(BrowseablePageInterface oldInterface, int newIndex) {
-        this(oldInterface.getTargetPlayer(), oldInterface.messageConfig, oldInterface.getRunnableHashTable(),
-                oldInterface.interfaceManager, newIndex);
+        super(oldInterface.getTargetPlayer(), oldInterface.messageConfig, oldInterface.getRunnableHashTable());
+        this.interfaceManager = oldInterface.interfaceManager;
+        this.requestedPageIndex = newIndex;
+        this.entryPerPage = oldInterface.entryPerPage;
     }
 
     /**
@@ -107,9 +107,9 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
      * @param entryList a list containing entries to be displayed.
      *                  Entry order will be same as arranged in this list.
      */
-    private static MessagePartsList getTableBody(final int finalPageIndex, final ArrayList<MessagePartsList> entryList) {
-        int beginEntryIndex = ENTRY_PER_PAGE * finalPageIndex;
-        int lastEntryIndex = Math.min(entryList.size(), beginEntryIndex + ENTRY_PER_PAGE);
+    private MessagePartsList getTableBody(final int finalPageIndex, final ArrayList<MessagePartsList> entryList) {
+        int beginEntryIndex = this.entryPerPage * finalPageIndex;
+        int lastEntryIndex = Math.min(entryList.size(), beginEntryIndex + this.entryPerPage);
         List<MessagePartsList> displayList = entryList.subList(beginEntryIndex, lastEntryIndex);
 
         MessagePartsList messagePartsList = new MessagePartsList();
@@ -118,31 +118,16 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
         return messagePartsList;
     }
 
-    /**
-     * This method only returns null in subclasses of {@link BrowseablePageInterface}
-     * Functionality of this method is replaced with {@link BrowseablePageInterface#getEntryList}
-     * @return null
-     */
     @Override
     protected final MessagePartsList getBodyMessages() {
-        return null;
-    }
-
-    @Override
-    protected final MessagePartsList constructInterfaceMessages() {
-        MessageParts header = this.getFormattedMessagePart(MessageConfigNodes.UI_HEADER);
-        MessageParts footer = this.getFormattedMessagePart(MessageConfigNodes.UI_FOOTER);
-
         ArrayList<MessagePartsList> entryList = this.getEntryList();
-        final int maximumPageIndex = (int) Math.floor(entryList.size() * 1.0 / ENTRY_PER_PAGE);
+        final int maximumPageIndex = (int) Math.floor(entryList.size() * 1.0 / this.entryPerPage);
         final int roundedPageIndex = Math.min(Math.max(0, this.requestedPageIndex), maximumPageIndex);
 
         MessagePartsList messagePartsList = new MessagePartsList();
-        messagePartsList.addLine(header);
-        messagePartsList.addAll(getHeading());
-        messagePartsList.addAll(getTableBody(roundedPageIndex, entryList));
-        messagePartsList.addLine(getBrowseButtonLine(roundedPageIndex, maximumPageIndex));
-        messagePartsList.add(footer);
+        messagePartsList.addAll(this.getHeading());
+        messagePartsList.addAll(this.getTableBody(roundedPageIndex, entryList));
+        messagePartsList.addLine(this.getBrowseButtonLine(roundedPageIndex, maximumPageIndex));
 
         return messagePartsList;
     }
