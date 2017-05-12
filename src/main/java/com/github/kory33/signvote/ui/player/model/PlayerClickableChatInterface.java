@@ -83,30 +83,6 @@ public abstract class PlayerClickableChatInterface extends PlayerChatInterface {
     }
 
     /**
-     * Get a message component which invokes the given runnable object when clicked.
-     * Displayed button message defaults to string at {@value MessageConfigNodes#UI_BUTTON}
-     * Use {@link PlayerClickableChatInterface#getButton(Runnable, MessageParts)} to configure button display.
-     * @param runnable runnable to be run(synchronously) when the player clicks the button
-     * @return a button message component that is bound to the runnable object.
-     * @deprecated use more generalized {@link PlayerClickableChatInterface#getButton(Runnable, MessageParts)} instead.
-     */
-    @Deprecated
-    protected final MessageParts getButton(Runnable runnable) {
-        MessageParts button = this.getFormattedMessagePart(MessageConfigNodes.UI_BUTTON);
-        return this.getButton(runnable, button);
-    }
-
-    /**
-     * Cancel the action aimed by the interface and revoke the interface object
-     * @deprecated this method relies on message configuration constant.
-     *             use {@link PlayerClickableChatInterface#cancelAction(String)} instead.
-     */
-    @Deprecated
-    protected void cancelAction() {
-        this.cancelAction(this.messageConfig.getString(MessageConfigNodes.UI_CANCELLED));
-    }
-
-    /**
      * Cancel the action aimed by the interface and revoke the interface object
      */
     protected void cancelAction(String cancelMessage) {

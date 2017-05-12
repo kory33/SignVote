@@ -67,6 +67,11 @@ public final class VoteInterface extends PlayerClickableChatInterface {
         this.revokeSession();
     }
 
+    private void cancelAction() {
+        MessageParts cancelMessage = this.getFormattedMessagePart(MessageConfigNodes.UI_CANCELLED);
+        this.cancelAction(cancelMessage.build());
+    }
+
     private String getScoreSelectionLine(int score, Optional<Integer> remaining) {
         String remainingString = remaining.map(Object::toString)
                 .orElseGet(() -> this.messageConfig.getString(MessageConfigNodes.INFINITE));
@@ -93,6 +98,8 @@ public final class VoteInterface extends PlayerClickableChatInterface {
             return messagePartsList;
         }
 
+        MessageParts defaultButtonMessage = this.getFormattedMessagePart(MessageConfigNodes.UI_BUTTON);
+
         MessagePartsList messagePartsList = new MessagePartsList();
         messagePartsList.addLine(this.getHeading());
 
@@ -101,11 +108,11 @@ public final class VoteInterface extends PlayerClickableChatInterface {
             .stream()
             .sorted(Comparator.reverseOrder())
             .forEach(score -> {
-                messagePartsList.add(this.getButton(() -> this.vote(score)));
+                messagePartsList.add(this.getButton(() -> this.vote(score), defaultButtonMessage));
                 messagePartsList.addLine(this.getScoreSelectionLine(score, availableVotePoints.get(score)));
             });
 
-        messagePartsList.add(this.getButton(this::cancelAction));
+        messagePartsList.add(this.getButton(this::cancelAction, defaultButtonMessage));
         messagePartsList.addLine(this.getFormattedMessagePart(MessageConfigNodes.UI_CANCEL));
 
         return messagePartsList;

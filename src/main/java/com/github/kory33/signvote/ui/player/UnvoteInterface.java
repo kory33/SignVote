@@ -2,6 +2,7 @@ package com.github.kory33.signvote.ui.player;
 
 import java.util.Optional;
 
+import com.github.ucchyocean.messaging.tellraw.MessageParts;
 import org.bukkit.entity.Player;
 
 import com.github.kory33.messaging.tellraw.MessagePartsList;
@@ -62,17 +63,24 @@ public final class UnvoteInterface extends PlayerClickableChatInterface {
         return new MessagePartsList(message + "\n");
     }
 
+    private void cancelAction() {
+        MessageParts cancelMessage = this.getFormattedMessagePart(MessageConfigNodes.UI_CANCELLED);
+        this.cancelAction(cancelMessage.build());
+    }
+
     @Override
     protected MessagePartsList getBodyMessages() {
         if (!this.session.isOpen()) {
             return this.getSessionClosedMessage();
         }
 
+        MessageParts defaultButtonMessage = this.getFormattedMessagePart(MessageConfigNodes.UI_BUTTON);
+
         MessagePartsList messagePartsList = new MessagePartsList();
         messagePartsList.addLine(this.getHeading());
-        messagePartsList.add(this.getButton(this::unVote));
+        messagePartsList.add(this.getButton(this::unVote, defaultButtonMessage));
         messagePartsList.addLine(this.getFormattedMessagePart(MessageConfigNodes.UNVOTE_UI_COMFIRM));
-        messagePartsList.add(this.getButton(this::cancelAction));
+        messagePartsList.add(this.getButton(this::cancelAction, defaultButtonMessage));
         messagePartsList.addLine(this.getFormattedMessagePart(MessageConfigNodes.UI_CANCEL));
 
         return messagePartsList;
