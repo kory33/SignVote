@@ -77,8 +77,6 @@ public abstract class FormChatInterface extends PlayerClickableChatInterface {
         (new MessageComponent(messagePartsList)).send(this.targetPlayer);
     }
 
-    protected abstract void notifyInvalidInput();
-
     private void getInputToForm(Consumer<String> onPlayerSendString, Predicate<String> validator) {
         chatInterceptor.interceptFirstMessageFrom(this.targetPlayer)
                 .thenAccept(input -> {
@@ -92,6 +90,12 @@ public abstract class FormChatInterface extends PlayerClickableChatInterface {
                 })
                 .exceptionally((error) -> null);
     }
+
+    /**
+     * Notify the player that the input value is invalid,
+     * asking the input to be attempted again.
+     */
+    protected abstract void notifyInvalidInput();
 
     /**
      * Get a string that is used as a button to edit the value in the form.
