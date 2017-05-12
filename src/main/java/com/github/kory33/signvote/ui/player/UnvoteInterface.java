@@ -21,6 +21,7 @@ import com.github.kory33.signvote.ui.player.model.PlayerClickableChatInterface;
 public final class UnvoteInterface extends PlayerClickableChatInterface {
     private final VoteSession session;
     private final VotePoint votePoint;
+    private final JSONConfiguration messageConfig;
 
     private void unVote() {
         if (!this.isValidSession()) {
@@ -39,10 +40,21 @@ public final class UnvoteInterface extends PlayerClickableChatInterface {
 
     public UnvoteInterface(Player player, VoteSession session, VotePoint votePoint,
             JSONConfiguration messageConfig, RunnableHashTable runnableHashTable) {
-        super(player, messageConfig, runnableHashTable);
+        super(player, runnableHashTable);
 
         this.session = session;
         this.votePoint = votePoint;
+        this.messageConfig = messageConfig;
+    }
+
+    /**
+     * Get a message formatted with the given array of Object arguments(optional)
+     * @param configurationNode configuration node from which the message should be fetched
+     * @param objects objects used in formatting the fetched string
+     * @return formatted message component
+     */
+    private MessageParts getFormattedMessagePart(String configurationNode, Object... objects) {
+        return new MessageParts(this.messageConfig.getFormatted(configurationNode, objects));
     }
 
     private String getHeading() {
@@ -84,5 +96,15 @@ public final class UnvoteInterface extends PlayerClickableChatInterface {
         messagePartsList.addLine(this.getFormattedMessagePart(MessageConfigNodes.UI_CANCEL));
 
         return messagePartsList;
+    }
+
+    @Override
+    protected MessagePartsList getInterfaceHeader() {
+        return new MessagePartsList(this.getFormattedMessagePart(MessageConfigNodes.UI_HEADER));
+    }
+
+    @Override
+    protected MessagePartsList getInterfaceFooter() {
+        return new MessagePartsList(this.getFormattedMessagePart(MessageConfigNodes.UI_FOOTER));
     }
 }

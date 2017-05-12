@@ -20,14 +20,16 @@ import java.util.function.Predicate;
  */
 public abstract class FormChatInterface extends PlayerClickableChatInterface {
     private final PlayerChatInterceptor chatInterceptor;
+    private final JSONConfiguration messageConfig;
 
     private Long formInputCancelRunnableId;
 
-    public FormChatInterface(Player player, JSONConfiguration messageConfiguration,
+    public FormChatInterface(Player player, JSONConfiguration messageConfig,
             RunnableHashTable runnableHashTable, PlayerChatInterceptor chatInterceptor) {
-        super(player, messageConfiguration, runnableHashTable);
+        super(player, runnableHashTable);
         this.chatInterceptor = chatInterceptor;
         this.formInputCancelRunnableId = null;
+        this.messageConfig = messageConfig;
     }
 
     /**
@@ -40,6 +42,17 @@ public abstract class FormChatInterface extends PlayerClickableChatInterface {
         super.revokeSession();
         this.chatInterceptor.cancelAnyInterception(this.targetPlayer, "UI session has been revoked.");
         this.revokeCancelInputButton();
+    }
+
+    /**
+     * Get a message formatted with the given array of Object arguments(optional)
+     * @param configurationNode configuration node from which the message should be fetched
+     * @param objects objects used in formatting the fetched string
+     * @return formatted message component
+     */
+    @Deprecated
+    private MessageParts getFormattedMessagePart(String configurationNode, Object... objects) {
+        return new MessageParts(this.messageConfig.getFormatted(configurationNode, objects));
     }
 
     private void revokeCancelInputButton() {

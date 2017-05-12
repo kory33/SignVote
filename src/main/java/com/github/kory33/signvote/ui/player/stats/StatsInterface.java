@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
+import com.github.ucchyocean.messaging.tellraw.MessageParts;
 import org.bukkit.entity.Player;
 
 import com.github.kory33.messaging.tellraw.MessagePartsList;
@@ -23,15 +24,19 @@ import com.github.kory33.signvote.ui.player.model.BrowseablePageInterface;
  */
 public abstract class StatsInterface extends BrowseablePageInterface {
     private final VoteSession targetVoteSession;
-    StatsInterface(Player player, VoteSession targetVoteSession, JSONConfiguration messageConfiguration,
+    private final JSONConfiguration messageConfig;
+
+    StatsInterface(Player player, VoteSession targetVoteSession, JSONConfiguration messageConfig,
                    RunnableHashTable runnableHashTable, PlayerInteractiveInterfaceManager interfaceManager, int pageIndex) {
-        super(player, messageConfiguration, runnableHashTable, interfaceManager, pageIndex);
+        super(player, messageConfig, runnableHashTable, interfaceManager, pageIndex);
         this.targetVoteSession = targetVoteSession;
+        this.messageConfig = messageConfig;
     }
 
     protected StatsInterface(StatsInterface oldInterface, int newPageIndex) {
         super(oldInterface, newPageIndex);
         this.targetVoteSession = oldInterface.targetVoteSession;
+        this.messageConfig = oldInterface.messageConfig;
     }
 
     /**
@@ -73,6 +78,17 @@ public abstract class StatsInterface extends BrowseablePageInterface {
         return null;
     }
 
+    /**
+     * Get a message formatted with the given array of Object arguments(optional)
+     * @param configurationNode configuration node from which the message should be fetched
+     * @param objects objects used in formatting the fetched string
+     * @return formatted message component
+     */
+    @Deprecated
+    private MessageParts getFormattedMessagePart(String configurationNode, Object... objects) {
+        return new MessageParts(this.messageConfig.getFormatted(configurationNode, objects));
+    }
+
     @Override
     protected MessagePartsList getHeading() {
         MessagePartsList messagePartsList = new MessagePartsList();
@@ -103,5 +119,15 @@ public abstract class StatsInterface extends BrowseablePageInterface {
         }
 
         return entryList;
+    }
+
+    @Override
+    protected MessagePartsList getInterfaceHeader() {
+        return new MessagePartsList(this.getFormattedMessagePart(MessageConfigNodes.UI_HEADER));
+    }
+
+    @Override
+    protected MessagePartsList getInterfaceFooter() {
+        return new MessagePartsList(this.getFormattedMessagePart(MessageConfigNodes.UI_FOOTER));
     }
 }

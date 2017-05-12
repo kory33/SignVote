@@ -7,8 +7,6 @@ import org.bukkit.entity.Player;
 
 import com.github.kory33.messaging.tellraw.MessagePartsList;
 import com.github.kory33.signvote.collection.RunnableHashTable;
-import com.github.kory33.signvote.configurable.JSONConfiguration;
-import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.utils.tellraw.TellRawUtility;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
@@ -20,17 +18,14 @@ import lombok.Getter;
  * @author kory
  */
 public abstract class PlayerClickableChatInterface extends PlayerChatInterface {
-    protected final JSONConfiguration messageConfig;
     @Getter private final RunnableHashTable runnableHashTable;
     private boolean isValidSession;
 
     private final Set<Long> registeredRunnableIds;
 
-    public PlayerClickableChatInterface(Player player, JSONConfiguration messageConfiguration,
-            RunnableHashTable runnableHashTable) {
+    public PlayerClickableChatInterface(Player player, RunnableHashTable runnableHashTable) {
         super(player);
 
-        this.messageConfig = messageConfiguration;
         this.runnableHashTable = runnableHashTable;
         this.isValidSession = true;
         this.registeredRunnableIds = new HashSet<>();
@@ -58,16 +53,6 @@ public abstract class PlayerClickableChatInterface extends PlayerChatInterface {
     public void revokeSession() {
         this.isValidSession = false;
         this.revokeAllRunnables();
-    }
-
-    /**
-     * Get a message formatted with the given array of Object arguments(optional)
-     * @param configurationNode configuration node from which the message should be fetched
-     * @param objects objects used in formatting the fetched string
-     * @return formatted message component
-     */
-    protected final MessageParts getFormattedMessagePart(String configurationNode, Object... objects) {
-        return new MessageParts(this.messageConfig.getFormatted(configurationNode, objects));
     }
 
     /**
@@ -102,6 +87,18 @@ public abstract class PlayerClickableChatInterface extends PlayerChatInterface {
     protected abstract MessagePartsList getBodyMessages();
 
     /**
+     * Get the header line of the interface
+     * @return message component list representing the header
+     */
+    protected abstract MessagePartsList getInterfaceHeader();
+
+    /**
+     * Get the footer line of the interface
+     * @return message component list representing the footer
+     */
+    protected abstract MessagePartsList getInterfaceFooter();
+
+    /**
      * Construct the interface in a form of:<br>
      * [header]<br>
      * [body content] <br>
@@ -112,13 +109,10 @@ public abstract class PlayerClickableChatInterface extends PlayerChatInterface {
      */
     @Override
     protected MessagePartsList constructInterfaceMessages() {
-        MessageParts header = this.getFormattedMessagePart(MessageConfigNodes.UI_HEADER);
-        MessageParts footer = this.getFormattedMessagePart(MessageConfigNodes.UI_FOOTER);
-
         MessagePartsList messagePartsList = new MessagePartsList();
-        messagePartsList.addLine(header);
+        messagePartsList.addLine(this.getInterfaceHeader());
         messagePartsList.addAll(this.getBodyMessages());
-        messagePartsList.add(footer);
+        messagePartsList.addAll(this.getInterfaceFooter());
 
         return messagePartsList;
     }

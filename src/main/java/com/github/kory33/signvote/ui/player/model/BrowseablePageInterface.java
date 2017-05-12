@@ -24,6 +24,7 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
     @Setter private int entryPerPage;
 
     @Getter private int requestedPageIndex;
+    private final JSONConfiguration messageConfig;
     protected final PlayerInteractiveInterfaceManager interfaceManager;
 
     /**
@@ -45,12 +46,13 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
      */
     protected abstract MessagePartsList getHeading();
 
-    public BrowseablePageInterface(Player player, JSONConfiguration messageConfiguration,
+    public BrowseablePageInterface(Player player, JSONConfiguration messageConfig,
             RunnableHashTable runnableHashTable, PlayerInteractiveInterfaceManager interfaceManager, int pageIndex) {
-        super(player, messageConfiguration, runnableHashTable);
+        super(player, runnableHashTable);
         this.interfaceManager = interfaceManager;
         this.requestedPageIndex = pageIndex;
         this.entryPerPage = 10;
+        this.messageConfig = messageConfig;
     }
 
     /**
@@ -60,10 +62,22 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
      * @param newIndex page number(starts from 0) of the new interface
      */
     public BrowseablePageInterface(BrowseablePageInterface oldInterface, int newIndex) {
-        super(oldInterface.getTargetPlayer(), oldInterface.messageConfig, oldInterface.getRunnableHashTable());
+        super(oldInterface.getTargetPlayer(), oldInterface.getRunnableHashTable());
         this.interfaceManager = oldInterface.interfaceManager;
         this.requestedPageIndex = newIndex;
         this.entryPerPage = oldInterface.entryPerPage;
+        this.messageConfig = oldInterface.messageConfig;
+    }
+
+    /**
+     * Get a message formatted with the given array of Object arguments(optional)
+     * @param configurationNode configuration node from which the message should be fetched
+     * @param objects objects used in formatting the fetched string
+     * @return formatted message component
+     */
+    @Deprecated
+    private MessageParts getFormattedMessagePart(String configurationNode, Object... objects) {
+        return new MessageParts(this.messageConfig.getFormatted(configurationNode, objects));
     }
 
     /**

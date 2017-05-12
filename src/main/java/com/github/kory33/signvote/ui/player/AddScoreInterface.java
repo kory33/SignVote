@@ -20,14 +20,16 @@ import com.github.ucchyocean.messaging.tellraw.MessageParts;
  */
 public final class AddScoreInterface extends FormChatInterface {
     private final VoteSession session;
+    private final JSONConfiguration messageConfig;
     private Integer score;
     private Integer voteLimit;
     private String permission;
 
-    public AddScoreInterface(Player player, VoteSession session, JSONConfiguration messageConfiguration,
+    public AddScoreInterface(Player player, VoteSession session, JSONConfiguration messageConfig,
             RunnableHashTable runnableHashTable, PlayerChatInterceptor chatInterceptor) {
-        super(player, messageConfiguration, runnableHashTable, chatInterceptor);
+        super(player, messageConfig, runnableHashTable, chatInterceptor);
         this.session = session;
+        this.messageConfig = messageConfig;
     }
 
     private String getVoteLimitString() {
@@ -68,6 +70,16 @@ public final class AddScoreInterface extends FormChatInterface {
                 limitString, score, session.getName(), convertedPermission));
 
         this.revokeSession();
+    }
+
+    /**
+     * Get a message formatted with the given array of Object arguments(optional)
+     * @param configurationNode configuration node from which the message should be fetched
+     * @param objects objects used in formatting the fetched string
+     * @return formatted message component
+     */
+    private MessageParts getFormattedMessagePart(String configurationNode, Object... objects) {
+        return new MessageParts(this.messageConfig.getFormatted(configurationNode, objects));
     }
 
     private MessageParts getHeading() {
@@ -116,5 +128,15 @@ public final class AddScoreInterface extends FormChatInterface {
         messagePartsList.addAll(permissionForm);
         messagePartsList.addLine(submitButton);
         return messagePartsList;
+    }
+
+    @Override
+    protected MessagePartsList getInterfaceHeader() {
+        return new MessagePartsList(this.getFormattedMessagePart(MessageConfigNodes.UI_HEADER));
+    }
+
+    @Override
+    protected MessagePartsList getInterfaceFooter() {
+        return new MessagePartsList(this.getFormattedMessagePart(MessageConfigNodes.UI_FOOTER));
     }
 }

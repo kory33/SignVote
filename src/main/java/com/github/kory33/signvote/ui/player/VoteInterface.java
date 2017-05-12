@@ -30,7 +30,7 @@ public final class VoteInterface extends PlayerClickableChatInterface {
 
     public VoteInterface(Player player, VoteSession session, VotePoint votePoint,
             JSONConfiguration messageConfig, RunnableHashTable runnableHashTable) {
-        super(player, messageConfig, runnableHashTable);
+        super(player, runnableHashTable);
         this.session = session;
         this.votePoint = votePoint;
         this.messageConfig = messageConfig;
@@ -65,6 +65,16 @@ public final class VoteInterface extends PlayerClickableChatInterface {
         this.targetPlayer.sendMessage(resultMessage);
 
         this.revokeSession();
+    }
+
+    /**
+     * Get a message formatted with the given array of Object arguments(optional)
+     * @param configurationNode configuration node from which the message should be fetched
+     * @param objects objects used in formatting the fetched string
+     * @return formatted message component
+     */
+    private MessageParts getFormattedMessagePart(String configurationNode, Object... objects) {
+        return new MessageParts(this.messageConfig.getFormatted(configurationNode, objects));
     }
 
     private void cancelAction() {
@@ -116,5 +126,15 @@ public final class VoteInterface extends PlayerClickableChatInterface {
         messagePartsList.addLine(this.getFormattedMessagePart(MessageConfigNodes.UI_CANCEL));
 
         return messagePartsList;
+    }
+
+    @Override
+    protected MessagePartsList getInterfaceHeader() {
+        return new MessagePartsList(this.getFormattedMessagePart(MessageConfigNodes.UI_HEADER));
+    }
+
+    @Override
+    protected MessagePartsList getInterfaceFooter() {
+        return new MessagePartsList(this.getFormattedMessagePart(MessageConfigNodes.UI_FOOTER));
     }
 }
