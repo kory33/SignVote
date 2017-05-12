@@ -24,7 +24,7 @@ public final class ListSessionInterface extends BrowseablePageInterface {
 
     public ListSessionInterface(Player player, VoteSessionManager voteSessionManager, JSONConfiguration messageConfig,
             RunnableHashTable runnableHashTable, PlayerInteractiveInterfaceManager interfaceManager, int pageIndex) {
-        super(player, messageConfig, runnableHashTable, interfaceManager, pageIndex);
+        super(player, runnableHashTable, interfaceManager, pageIndex);
         this.voteSessionManager = voteSessionManager;
         this.messageConfig = messageConfig;
     }
@@ -68,6 +68,27 @@ public final class ListSessionInterface extends BrowseablePageInterface {
         MessagePartsList heading = new MessagePartsList();
         heading.addLine(messageConfig.getString(MessageConfigNodes.LIST_UI_HEADING));
         return heading;
+    }
+
+    @Override
+    protected String getPrevButton(boolean isActive) {
+        String color = this.messageConfig.getString(isActive ?
+                MessageConfigNodes.UI_ACTIVE_BUTTON_COLOR :
+                MessageConfigNodes.UI_INACTIVE_BUTTON_COLOR);
+        return color + this.messageConfig.getString(MessageConfigNodes.UI_PREV_BUTTON);
+    }
+
+    @Override
+    protected String getNextButton(boolean isActive) {
+        String color = this.messageConfig.getString(isActive ?
+                MessageConfigNodes.UI_ACTIVE_BUTTON_COLOR :
+                MessageConfigNodes.UI_INACTIVE_BUTTON_COLOR);
+        return color + this.messageConfig.getString(MessageConfigNodes.UI_NEXT_BUTTON);
+    }
+
+    @Override
+    protected String getPageDisplayComponent(int currentPageNumber, int maxPageNumber) {
+        return this.messageConfig.getFormatted(MessageConfigNodes.F_UI_PAGE_DISPLAY, currentPageNumber, maxPageNumber);
     }
 
     @Override

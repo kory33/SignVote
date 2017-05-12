@@ -86,7 +86,7 @@ public final class UnvoteInterface extends PlayerClickableChatInterface {
             return this.getSessionClosedMessage();
         }
 
-        MessageParts defaultButtonMessage = this.getFormattedMessagePart(MessageConfigNodes.UI_BUTTON);
+        String defaultButtonMessage = this.messageConfig.getString(MessageConfigNodes.UI_BUTTON);
 
         MessagePartsList messagePartsList = new MessagePartsList();
         messagePartsList.addLine(this.getHeading());

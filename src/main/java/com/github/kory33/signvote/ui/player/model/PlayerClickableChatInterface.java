@@ -60,8 +60,24 @@ public abstract class PlayerClickableChatInterface extends PlayerChatInterface {
      * @param runnable runnable to be run(synchronously) when the player clicks the button
      * @param button message that gets displayed as the button
      * @return a button message component that is bound to the runnable object
+     * @deprecated this methods goes against immutability of message component.
+     * Use {@link PlayerClickableChatInterface#getButton(Runnable, String)} instead.
      */
+    @Deprecated
     protected final MessageParts getButton(Runnable runnable, MessageParts button) {
+        long runnableId = TellRawUtility.bindRunnableToMessageParts(this.runnableHashTable, button, runnable);
+        this.registeredRunnableIds.add(runnableId);
+        return button;
+    }
+
+    /**
+     * Get a message component which invokes the given runnable object when clicked.
+     * @param runnable runnable to be run(synchronously) when the player clicks the button
+     * @param buttonString message that gets displayed as the button
+     * @return a button message component that is bound to the runnable object
+     */
+    protected final MessageParts getButton(Runnable runnable, String buttonString) {
+        MessageParts button = new MessageParts(buttonString);
         long runnableId = TellRawUtility.bindRunnableToMessageParts(this.runnableHashTable, button, runnable);
         this.registeredRunnableIds.add(runnableId);
         return button;

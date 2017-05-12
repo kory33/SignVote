@@ -119,7 +119,7 @@ public final class AddScoreInterface extends FormChatInterface {
             );
 
         MessageParts submitButton = this.getButton(this::addScoreLimit,
-                this.getFormattedMessagePart(MessageConfigNodes.ADDSCORE_UI_SUBMIT));
+                this.messageConfig.getString(MessageConfigNodes.ADDSCORE_UI_SUBMIT));
 
         MessagePartsList messagePartsList = new MessagePartsList();
         messagePartsList.addLine(this.getHeading());
@@ -138,5 +138,20 @@ public final class AddScoreInterface extends FormChatInterface {
     @Override
     protected MessagePartsList getInterfaceFooter() {
         return new MessagePartsList(this.getFormattedMessagePart(MessageConfigNodes.UI_FOOTER));
+    }
+
+    @Override
+    protected String getEditButtonString() {
+        return this.messageConfig.getString(MessageConfigNodes.UI_FORM_EDIT_BUTTON);
+    }
+
+    @Override
+    protected String getLabelString(String labelName) {
+        return this.messageConfig.getFormatted(MessageConfigNodes.F_UI_FORM_LABEL, labelName);
+    }
+
+    @Override
+    protected String getValueString(String value) {
+        return this.messageConfig.getFormatted(MessageConfigNodes.F_UI_FORM_VALUE, value);
     }
 }

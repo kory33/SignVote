@@ -28,7 +28,7 @@ public abstract class StatsInterface extends BrowseablePageInterface {
 
     StatsInterface(Player player, VoteSession targetVoteSession, JSONConfiguration messageConfig,
                    RunnableHashTable runnableHashTable, PlayerInteractiveInterfaceManager interfaceManager, int pageIndex) {
-        super(player, messageConfig, runnableHashTable, interfaceManager, pageIndex);
+        super(player, runnableHashTable, interfaceManager, pageIndex);
         this.targetVoteSession = targetVoteSession;
         this.messageConfig = messageConfig;
     }
@@ -84,7 +84,6 @@ public abstract class StatsInterface extends BrowseablePageInterface {
      * @param objects objects used in formatting the fetched string
      * @return formatted message component
      */
-    @Deprecated
     private MessageParts getFormattedMessagePart(String configurationNode, Object... objects) {
         return new MessageParts(this.messageConfig.getFormatted(configurationNode, objects));
     }
@@ -119,6 +118,27 @@ public abstract class StatsInterface extends BrowseablePageInterface {
         }
 
         return entryList;
+    }
+
+    @Override
+    protected String getPrevButton(boolean isActive) {
+        String color = this.messageConfig.getString(isActive ?
+                MessageConfigNodes.UI_ACTIVE_BUTTON_COLOR :
+                MessageConfigNodes.UI_INACTIVE_BUTTON_COLOR);
+        return color + this.messageConfig.getString(MessageConfigNodes.UI_PREV_BUTTON);
+    }
+
+    @Override
+    protected String getNextButton(boolean isActive) {
+        String color = this.messageConfig.getString(isActive ?
+                MessageConfigNodes.UI_ACTIVE_BUTTON_COLOR :
+                MessageConfigNodes.UI_INACTIVE_BUTTON_COLOR);
+        return color + this.messageConfig.getString(MessageConfigNodes.UI_NEXT_BUTTON);
+    }
+
+    @Override
+    protected String getPageDisplayComponent(int currentPageNumber, int maxPageNumber) {
+        return this.messageConfig.getFormatted(MessageConfigNodes.F_UI_PAGE_DISPLAY, currentPageNumber, maxPageNumber);
     }
 
     @Override

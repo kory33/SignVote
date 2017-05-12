@@ -8,8 +8,6 @@ import org.bukkit.entity.Player;
 
 import com.github.kory33.messaging.tellraw.MessagePartsList;
 import com.github.kory33.signvote.collection.RunnableHashTable;
-import com.github.kory33.signvote.configurable.JSONConfiguration;
-import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.manager.PlayerInteractiveInterfaceManager;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
@@ -24,7 +22,6 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
     @Setter private int entryPerPage;
 
     @Getter private int requestedPageIndex;
-    private final JSONConfiguration messageConfig;
     protected final PlayerInteractiveInterfaceManager interfaceManager;
 
     /**
@@ -46,13 +43,28 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
      */
     protected abstract MessagePartsList getHeading();
 
-    public BrowseablePageInterface(Player player, JSONConfiguration messageConfig,
-            RunnableHashTable runnableHashTable, PlayerInteractiveInterfaceManager interfaceManager, int pageIndex) {
+    /**
+     * Get a string representing a button to go to the previous page
+     * @param isActive boolean value true if and only if the button is active
+     * @return button string
+     */
+    protected abstract String getPrevButton(boolean isActive);
+
+    /**
+     * Get a string representing a button to go to the next page
+     * @param isActive boolean value true if and only if the button is active
+     * @return button string
+     */
+    protected abstract String getNextButton(boolean isActive);
+
+    protected abstract String getPageDisplayComponent(int currentPageNumber, int maxPageNumber);
+
+    public BrowseablePageInterface(Player player, RunnableHashTable runnableHashTable,
+                                   PlayerInteractiveInterfaceManager interfaceManager, int pageIndex) {
         super(player, runnableHashTable);
         this.interfaceManager = interfaceManager;
         this.requestedPageIndex = pageIndex;
         this.entryPerPage = 10;
-        this.messageConfig = messageConfig;
     }
 
     /**
@@ -66,18 +78,6 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
         this.interfaceManager = oldInterface.interfaceManager;
         this.requestedPageIndex = newIndex;
         this.entryPerPage = oldInterface.entryPerPage;
-        this.messageConfig = oldInterface.messageConfig;
-    }
-
-    /**
-     * Get a message formatted with the given array of Object arguments(optional)
-     * @param configurationNode configuration node from which the message should be fetched
-     * @param objects objects used in formatting the fetched string
-     * @return formatted message component
-     */
-    @Deprecated
-    private MessageParts getFormattedMessagePart(String configurationNode, Object... objects) {
-        return new MessageParts(this.messageConfig.getFormatted(configurationNode, objects));
     }
 
     /**
@@ -93,20 +93,19 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
                     BrowseablePageInterface newInterface = this.yieldPage(finalPageIndex - 1);
                     this.interfaceManager.registerInterface(newInterface);
                     newInterface.send();
-                }, this.getFormattedMessagePart(MessageConfigNodes.UI_PREV_BUTTON)):
-                this.getFormattedMessagePart(MessageConfigNodes.UI_PREV_BUTTON_INACTIVE);
+                }, this.getPrevButton(true)):
+                new MessageParts(this.getPrevButton(false));
 
         MessageParts nextButton = (finalPageIndex != maximumPageIndex)?
                 this.getButton(() -> {
                     BrowseablePageInterface newInterface = this.yieldPage(finalPageIndex + 1);
                     this.interfaceManager.registerInterface(newInterface);
                     newInterface.send();
-                }, this.getFormattedMessagePart(MessageConfigNodes.UI_NEXT_BUTTON)):
-                this.getFormattedMessagePart(MessageConfigNodes.UI_NEXT_BUTTON_INACTIVE);
+                }, this.getNextButton(true)):
+                new MessageParts(this.getNextButton(false));
 
         // add one to the displayed page numbers to make them start from 1
-        MessageParts pageDisplay = this.getFormattedMessagePart(MessageConfigNodes.F_UI_PAGE_DISPLAY,
-                finalPageIndex + 1, maximumPageIndex + 1);
+        MessageParts pageDisplay = new MessageParts(this.getPageDisplayComponent(finalPageIndex + 1, maximumPageIndex + 1));
 
         messagePartsList.add(prevButton);
         messagePartsList.add(pageDisplay);

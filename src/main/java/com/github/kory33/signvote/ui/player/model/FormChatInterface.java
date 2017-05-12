@@ -44,17 +44,6 @@ public abstract class FormChatInterface extends PlayerClickableChatInterface {
         this.revokeCancelInputButton();
     }
 
-    /**
-     * Get a message formatted with the given array of Object arguments(optional)
-     * @param configurationNode configuration node from which the message should be fetched
-     * @param objects objects used in formatting the fetched string
-     * @return formatted message component
-     */
-    @Deprecated
-    private MessageParts getFormattedMessagePart(String configurationNode, Object... objects) {
-        return new MessageParts(this.messageConfig.getFormatted(configurationNode, objects));
-    }
-
     private void revokeCancelInputButton() {
         if (this.formInputCancelRunnableId != null) {
             this.getRunnableHashTable().cancelTask(this.formInputCancelRunnableId);
@@ -107,6 +96,28 @@ public abstract class FormChatInterface extends PlayerClickableChatInterface {
     }
 
     /**
+     * Get a string that is used as a button to edit the value in the form.
+     * @return a string that represents an edit-button
+     */
+    protected abstract String getEditButtonString();
+
+    /**
+     * Get a label component string
+     * @param labelName name of the form field
+     * @return a formatted string that gets displayed as a label of a field.
+     */
+    protected abstract String getLabelString(String labelName);
+
+    /**
+     * Get a value component string.<br>
+     * Concrete implementation of this method may color
+     * the value or even return as it is given as an argument.
+     * @param value value of the form field.
+     * @return a formatted string that gets displayed as a value of a field.
+     */
+    protected abstract String getValueString(String value);
+
+    /**
      * Get a list representing a form to which the target player can input string data.
      * @param onPlayerSendString action which is invoked after the target player inputs a validated string.
      * @param validator predicate which determines if a given input string is valid.
@@ -116,18 +127,18 @@ public abstract class FormChatInterface extends PlayerClickableChatInterface {
      * @return a list of message parts representing an input form
      */
     protected final MessagePartsList getForm(Consumer<String> onPlayerSendString, Predicate<String> validator, String label, String value) {
-        MessageParts formName = this.getFormattedMessagePart(MessageConfigNodes.F_UI_FORM_NAME, label);
+        MessageParts formName = new MessageParts(this.getLabelString(label));
 
         if (value == null || value.isEmpty()) {
             value = this.messageConfig.getString(MessageConfigNodes.UI_FORM_NOTSET);
         }
-        MessageParts formValue = this.getFormattedMessagePart(MessageConfigNodes.F_UI_FORM_VALUE, value);
+        MessageParts formValue = new MessageParts(this.getValueString(value));
 
         MessageParts editButton = this.getButton(() -> {
             this.revokeAllRunnables();
             this.promptInput(label);
             this.getInputToForm(onPlayerSendString, validator);
-        }, this.getFormattedMessagePart(MessageConfigNodes.UI_FORM_EDIT_BUTTON));
+        }, this.getEditButtonString());
 
         MessagePartsList form = new MessagePartsList();
 
