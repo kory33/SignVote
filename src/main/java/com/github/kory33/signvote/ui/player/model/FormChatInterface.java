@@ -2,8 +2,6 @@ package com.github.kory33.signvote.ui.player.model;
 
 import com.github.kory33.messaging.tellraw.MessagePartsList;
 import com.github.kory33.signvote.collection.RunnableHashTable;
-import com.github.kory33.signvote.configurable.JSONConfiguration;
-import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.listeners.PlayerChatInterceptor;
 import com.github.kory33.signvote.utils.tellraw.TellRawUtility;
 import com.github.ucchyocean.messaging.tellraw.MessageComponent;
@@ -20,16 +18,13 @@ import java.util.function.Predicate;
  */
 public abstract class FormChatInterface extends PlayerClickableChatInterface {
     private final PlayerChatInterceptor chatInterceptor;
-    private final JSONConfiguration messageConfig;
 
     private Long formInputCancelRunnableId;
 
-    public FormChatInterface(Player player, JSONConfiguration messageConfig,
-            RunnableHashTable runnableHashTable, PlayerChatInterceptor chatInterceptor) {
+    public FormChatInterface(Player player, RunnableHashTable runnableHashTable, PlayerChatInterceptor chatInterceptor) {
         super(player, runnableHashTable);
         this.chatInterceptor = chatInterceptor;
         this.formInputCancelRunnableId = null;
-        this.messageConfig = messageConfig;
     }
 
     /**
@@ -52,20 +47,26 @@ public abstract class FormChatInterface extends PlayerClickableChatInterface {
     }
 
     private MessageParts getCancelInputButton() {
-        MessageParts button = new MessageParts(messageConfig.getString(MessageConfigNodes.UI_CANCEL_INPUT_BUTTON));
+        MessageParts button = new MessageParts(this.getInputCancelButton());
         formInputCancelRunnableId = TellRawUtility.bindRunnableToMessageParts(getRunnableHashTable(), button, () -> {
             this.chatInterceptor.cancelAnyInterception(this.targetPlayer, "Input cancelled.");
-            this.targetPlayer.sendMessage(this.messageConfig.getString(MessageConfigNodes.UI_FOOTER));
-            this.targetPlayer.sendMessage(this.messageConfig.getString(MessageConfigNodes.UI_INPUT_CANCELLED));
             this.revokeCancelInputButton();
+
+            // send footer
+            (new MessageComponent(this.getInterfaceFooter())).send(this.targetPlayer);
+
+            // notify cancellation
+            this.notifyInputCancellation();
+
+            // re-send the interface
             this.send();
         });
 
         return button;
     }
 
-    private void promptInput(String formName) {
-        String message = this.messageConfig.getFormatted(MessageConfigNodes.F_UI_FORM_PROMPT, formName);
+    private void promptInput(String fieldName) {
+        String message = this.getFieldInputPromptMessage(fieldName);
         MessageParts cancelInputButton = this.getCancelInputButton();
 
         MessagePartsList messagePartsList = new MessagePartsList();
@@ -76,10 +77,7 @@ public abstract class FormChatInterface extends PlayerClickableChatInterface {
         (new MessageComponent(messagePartsList)).send(this.targetPlayer);
     }
 
-    private void notifyInvalidInput() {
-        String message = this.messageConfig.getString(MessageConfigNodes.UI_FORM_INVALID_INPUT);
-        this.targetPlayer.sendMessage(message);
-    }
+    protected abstract void notifyInvalidInput();
 
     private void getInputToForm(Consumer<String> onPlayerSendString, Predicate<String> validator) {
         chatInterceptor.interceptFirstMessageFrom(this.targetPlayer)
@@ -109,13 +107,36 @@ public abstract class FormChatInterface extends PlayerClickableChatInterface {
     protected abstract String getLabelString(String labelName);
 
     /**
-     * Get a value component string.<br>
+     * Get a value component string.
+     * <p>
      * Concrete implementation of this method may color
      * the value or even return as it is given as an argument.
+     * <p>
+     * When <code>value</code> argument is null,
+     * this method should return a string indicating that no value is set to the field.
      * @param value value of the form field.
      * @return a formatted string that gets displayed as a value of a field.
+     * "Not set" state should be indicated when null.
      */
     protected abstract String getValueString(String value);
+
+    /**
+     * Notify the player that the field input prompt has been cancelled.
+     */
+    protected abstract void notifyInputCancellation();
+
+    /**
+     * Get a string that represents a button to cancel the input prompt
+     * @return a button string
+     */
+    protected abstract String getInputCancelButton();
+
+    /**
+     * Get a message that prompts the player to input a value to the field.
+     * @param fieldName name of the field.
+     * @return message that prompts the player to input a value to the field.
+     */
+    protected abstract String getFieldInputPromptMessage(String fieldName);
 
     /**
      * Get a list representing a form to which the target player can input string data.
@@ -129,9 +150,6 @@ public abstract class FormChatInterface extends PlayerClickableChatInterface {
     protected final MessagePartsList getForm(Consumer<String> onPlayerSendString, Predicate<String> validator, String label, String value) {
         MessageParts formName = new MessageParts(this.getLabelString(label));
 
-        if (value == null || value.isEmpty()) {
-            value = this.messageConfig.getString(MessageConfigNodes.UI_FORM_NOTSET);
-        }
         MessageParts formValue = new MessageParts(this.getValueString(value));
 
         MessageParts editButton = this.getButton(() -> {

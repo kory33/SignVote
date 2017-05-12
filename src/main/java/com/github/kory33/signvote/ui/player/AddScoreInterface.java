@@ -27,7 +27,7 @@ public final class AddScoreInterface extends FormChatInterface {
 
     public AddScoreInterface(Player player, VoteSession session, JSONConfiguration messageConfig,
             RunnableHashTable runnableHashTable, PlayerChatInterceptor chatInterceptor) {
-        super(player, messageConfig, runnableHashTable, chatInterceptor);
+        super(player, runnableHashTable, chatInterceptor);
         this.session = session;
         this.messageConfig = messageConfig;
     }
@@ -141,6 +141,12 @@ public final class AddScoreInterface extends FormChatInterface {
     }
 
     @Override
+    protected void notifyInvalidInput() {
+        String message = this.messageConfig.getString(MessageConfigNodes.UI_FORM_INVALID_INPUT);
+        this.targetPlayer.sendMessage(message);
+    }
+
+    @Override
     protected String getEditButtonString() {
         return this.messageConfig.getString(MessageConfigNodes.UI_FORM_EDIT_BUTTON);
     }
@@ -152,6 +158,25 @@ public final class AddScoreInterface extends FormChatInterface {
 
     @Override
     protected String getValueString(String value) {
-        return this.messageConfig.getFormatted(MessageConfigNodes.F_UI_FORM_VALUE, value);
+        String displayedValue =
+                (value == null || value.isEmpty()) ?
+                this.messageConfig.getString(MessageConfigNodes.UI_FORM_NOTSET) :
+                value;
+        return this.messageConfig.getFormatted(MessageConfigNodes.F_UI_FORM_VALUE, displayedValue);
+    }
+
+    @Override
+    protected void notifyInputCancellation() {
+        this.targetPlayer.sendMessage(this.messageConfig.getString(MessageConfigNodes.UI_INPUT_CANCELLED));
+    }
+
+    @Override
+    protected String getInputCancelButton() {
+        return messageConfig.getString(MessageConfigNodes.UI_CANCEL_INPUT_BUTTON);
+    }
+
+    @Override
+    protected String getFieldInputPromptMessage(String fieldName) {
+        return this.messageConfig.getFormatted(MessageConfigNodes.F_UI_FORM_PROMPT, fieldName);
     }
 }
