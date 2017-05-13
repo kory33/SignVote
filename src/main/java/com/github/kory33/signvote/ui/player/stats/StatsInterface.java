@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
+import com.github.kory33.signvote.constants.SubCommands;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 import org.bukkit.entity.Player;
 
@@ -149,5 +150,10 @@ public abstract class StatsInterface extends BrowseablePageInterface {
     @Override
     protected MessagePartsList getInterfaceFooter() {
         return new MessagePartsList(this.getFormattedMessagePart(MessageConfigNodes.UI_FOOTER));
+    }
+
+    @Override
+    public String getRunCommandRoot() {
+        return SubCommands.ROOT + " " + SubCommands.RUN;
     }
 }

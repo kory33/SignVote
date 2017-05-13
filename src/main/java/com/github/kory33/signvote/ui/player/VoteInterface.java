@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Optional;
 
+import com.github.kory33.signvote.constants.SubCommands;
 import org.bukkit.entity.Player;
 
 import com.github.kory33.messaging.tellraw.MessagePartsList;
@@ -136,5 +137,10 @@ public final class VoteInterface extends PlayerClickableChatInterface {
     @Override
     protected MessagePartsList getInterfaceFooter() {
         return new MessagePartsList(this.getFormattedMessagePart(MessageConfigNodes.UI_FOOTER));
+    }
+
+    @Override
+    public String getRunCommandRoot() {
+        return SubCommands.ROOT + " " + SubCommands.RUN;
     }
 }

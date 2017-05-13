@@ -2,6 +2,7 @@ package com.github.kory33.signvote.ui.player;
 
 import java.util.Optional;
 
+import com.github.kory33.signvote.constants.SubCommands;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 import org.bukkit.entity.Player;
 
@@ -106,5 +107,10 @@ public final class UnvoteInterface extends PlayerClickableChatInterface {
     @Override
     protected MessagePartsList getInterfaceFooter() {
         return new MessagePartsList(this.getFormattedMessagePart(MessageConfigNodes.UI_FOOTER));
+    }
+
+    @Override
+    public String getRunCommandRoot() {
+        return SubCommands.ROOT + " " + SubCommands.RUN;
     }
 }

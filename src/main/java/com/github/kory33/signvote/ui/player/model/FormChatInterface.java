@@ -3,7 +3,6 @@ package com.github.kory33.signvote.ui.player.model;
 import com.github.kory33.messaging.tellraw.MessagePartsList;
 import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.listeners.PlayerChatInterceptor;
-import com.github.kory33.signvote.utils.tellraw.TellRawUtility;
 import com.github.ucchyocean.messaging.tellraw.MessageComponent;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 import org.bukkit.entity.Player;
@@ -19,12 +18,11 @@ import java.util.function.Predicate;
 public abstract class FormChatInterface extends PlayerClickableChatInterface {
     private final PlayerChatInterceptor chatInterceptor;
 
-    private Long formInputCancelRunnableId;
+    private MessageParts inputCancelButton;
 
     public FormChatInterface(Player player, RunnableHashTable runnableHashTable, PlayerChatInterceptor chatInterceptor) {
         super(player, runnableHashTable);
         this.chatInterceptor = chatInterceptor;
-        this.formInputCancelRunnableId = null;
     }
 
     /**
@@ -36,21 +34,13 @@ public abstract class FormChatInterface extends PlayerClickableChatInterface {
     public void revokeSession() {
         super.revokeSession();
         this.chatInterceptor.cancelAnyInterception(this.targetPlayer, "UI session has been revoked.");
-        this.revokeCancelInputButton();
-    }
-
-    private void revokeCancelInputButton() {
-        if (this.formInputCancelRunnableId != null) {
-            this.getRunnableHashTable().cancelTask(this.formInputCancelRunnableId);
-            this.formInputCancelRunnableId = null;
-        }
+        this.inputCancelButton = null;
     }
 
     private MessageParts getCancelInputButton() {
-        MessageParts button = new MessageParts(this.getInputCancelButton());
-        formInputCancelRunnableId = TellRawUtility.bindRunnableToMessageParts(getRunnableHashTable(), button, () -> {
+        this.inputCancelButton = super.getButton(() -> {
             this.chatInterceptor.cancelAnyInterception(this.targetPlayer, "Input cancelled.");
-            this.revokeCancelInputButton();
+            super.revokeButton(this.inputCancelButton);
 
             // send footer
             (new MessageComponent(this.getInterfaceFooter())).send(this.targetPlayer);
@@ -60,9 +50,8 @@ public abstract class FormChatInterface extends PlayerClickableChatInterface {
 
             // re-send the interface
             this.send();
-        });
-
-        return button;
+        }, this.getInputCancelButton());
+        return this.inputCancelButton;
     }
 
     private void promptInput(String fieldName) {
@@ -86,6 +75,7 @@ public abstract class FormChatInterface extends PlayerClickableChatInterface {
                         return;
                     }
                     onPlayerSendString.accept(input);
+                    super.revokeButton(this.inputCancelButton);
                     this.send();
                 })
                 .exceptionally((error) -> null);
