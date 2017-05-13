@@ -1,6 +1,7 @@
 package com.github.kory33.signvote.ui.player;
 
-import com.github.kory33.signvote.constants.SubCommands;
+import com.github.kory33.signvote.ui.player.defaults.IDefaultFormInterface;
+import lombok.Getter;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.entity.Player;
 
@@ -19,9 +20,9 @@ import com.github.ucchyocean.messaging.tellraw.MessageParts;
  * Represents an interface that allows the player to add a new vote score limit.
  * @author Kory
  */
-public final class AddScoreInterface extends FormChatInterface {
+public final class AddScoreInterface extends FormChatInterface implements IDefaultFormInterface {
     private final VoteSession session;
-    private final JSONConfiguration messageConfig;
+    @Getter private final JSONConfiguration messageConfig;
     private Integer score;
     private Integer voteLimit;
     private String permission;
@@ -132,57 +133,52 @@ public final class AddScoreInterface extends FormChatInterface {
     }
 
     @Override
-    protected MessagePartsList getInterfaceHeader() {
-        return new MessagePartsList(this.getFormattedMessagePart(MessageConfigNodes.UI_HEADER));
+    public MessagePartsList getInterfaceHeader() {
+        return IDefaultFormInterface.super.getInterfaceHeader();
     }
 
     @Override
-    protected MessagePartsList getInterfaceFooter() {
-        return new MessagePartsList(this.getFormattedMessagePart(MessageConfigNodes.UI_FOOTER));
+    public MessagePartsList getInterfaceFooter() {
+        return IDefaultFormInterface.super.getInterfaceFooter();
     }
 
     @Override
     public String getRunCommandRoot() {
-        return SubCommands.ROOT + " " + SubCommands.RUN;
+        return IDefaultFormInterface.super.getRunCommandRoot();
     }
 
     @Override
-    protected void notifyInvalidInput() {
-        String message = this.messageConfig.getString(MessageConfigNodes.UI_FORM_INVALID_INPUT);
-        this.targetPlayer.sendMessage(message);
+    public void notifyInvalidInput() {
+        IDefaultFormInterface.super.notifyInvalidInput();
     }
 
     @Override
-    protected String getEditButtonString() {
-        return this.messageConfig.getString(MessageConfigNodes.UI_FORM_EDIT_BUTTON);
+    public String getEditButtonString() {
+        return IDefaultFormInterface.super.getEditButtonString();
     }
 
     @Override
-    protected String getLabelString(String labelName) {
-        return this.messageConfig.getFormatted(MessageConfigNodes.F_UI_FORM_LABEL, labelName);
+    public String getLabelString(String labelName) {
+        return IDefaultFormInterface.super.getLabelString(labelName);
     }
 
     @Override
-    protected String getValueString(String value) {
-        String displayedValue =
-                (value == null || value.isEmpty()) ?
-                this.messageConfig.getString(MessageConfigNodes.UI_FORM_NOTSET) :
-                value;
-        return this.messageConfig.getFormatted(MessageConfigNodes.F_UI_FORM_VALUE, displayedValue);
+    public String getValueString(String value) {
+        return IDefaultFormInterface.super.getValueString(value);
     }
 
     @Override
-    protected void notifyInputCancellation() {
-        this.targetPlayer.sendMessage(this.messageConfig.getString(MessageConfigNodes.UI_INPUT_CANCELLED));
+    public void notifyInputCancellation() {
+        IDefaultFormInterface.super.notifyInputCancellation();
     }
 
     @Override
-    protected String getInputCancelButton() {
-        return messageConfig.getString(MessageConfigNodes.UI_CANCEL_INPUT_BUTTON);
+    public String getInputCancelButton() {
+        return IDefaultFormInterface.super.getInputCancelButton();
     }
 
     @Override
-    protected String getFieldInputPromptMessage(String fieldName) {
-        return this.messageConfig.getFormatted(MessageConfigNodes.F_UI_FORM_PROMPT, fieldName);
+    public String getFieldInputPromptMessage(String fieldName) {
+        return IDefaultFormInterface.super.getFieldInputPromptMessage(fieldName);
     }
 }

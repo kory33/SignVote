@@ -5,8 +5,9 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
-import com.github.kory33.signvote.constants.SubCommands;
+import com.github.kory33.signvote.ui.player.defaults.IDefaultBrowseableInterface;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
+import lombok.Getter;
 import org.bukkit.entity.Player;
 
 import com.github.kory33.messaging.tellraw.MessagePartsList;
@@ -23,9 +24,9 @@ import com.github.kory33.signvote.ui.player.model.BrowseablePageInterface;
  * Abstraction of statistics interface which can be browsed by a player.
  * @author Kory
  */
-public abstract class StatsInterface extends BrowseablePageInterface {
+public abstract class StatsInterface extends BrowseablePageInterface implements IDefaultBrowseableInterface {
     private final VoteSession targetVoteSession;
-    private final JSONConfiguration messageConfig;
+    @Getter private final JSONConfiguration messageConfig;
 
     StatsInterface(Player player, VoteSession targetVoteSession, JSONConfiguration messageConfig,
                    RunnableHashTable runnableHashTable, PlayerInteractiveInterfaceManager interfaceManager, int pageIndex) {
@@ -90,15 +91,6 @@ public abstract class StatsInterface extends BrowseablePageInterface {
     }
 
     @Override
-    protected MessagePartsList getHeading() {
-        MessagePartsList messagePartsList = new MessagePartsList();
-        String statsType = this.messageConfig.getString(this.getStatsType().getTypeMessageNode());
-        messagePartsList.addLine(getFormattedMessagePart(MessageConfigNodes.F_STATS_UI_HEADING,
-                targetVoteSession.getName(), statsType));
-        return messagePartsList;
-    }
-
-    @Override
     protected ArrayList<MessagePartsList> getEntryList() {
         ArrayList<MessagePartsList> entryList = new ArrayList<>();
 
@@ -122,38 +114,41 @@ public abstract class StatsInterface extends BrowseablePageInterface {
     }
 
     @Override
-    protected String getPrevButton(boolean isActive) {
-        String color = this.messageConfig.getString(isActive ?
-                MessageConfigNodes.UI_ACTIVE_BUTTON_COLOR :
-                MessageConfigNodes.UI_INACTIVE_BUTTON_COLOR);
-        return color + this.messageConfig.getString(MessageConfigNodes.UI_PREV_BUTTON);
+    public MessagePartsList getHeading() {
+        MessagePartsList messagePartsList = new MessagePartsList();
+        String statsType = this.messageConfig.getString(this.getStatsType().getTypeMessageNode());
+        messagePartsList.addLine(getFormattedMessagePart(MessageConfigNodes.F_STATS_UI_HEADING,
+                targetVoteSession.getName(), statsType));
+        return messagePartsList;
     }
 
     @Override
-    protected String getNextButton(boolean isActive) {
-        String color = this.messageConfig.getString(isActive ?
-                MessageConfigNodes.UI_ACTIVE_BUTTON_COLOR :
-                MessageConfigNodes.UI_INACTIVE_BUTTON_COLOR);
-        return color + this.messageConfig.getString(MessageConfigNodes.UI_NEXT_BUTTON);
+    public String getPrevButton(boolean isActive) {
+        return IDefaultBrowseableInterface.super.getPrevButton(isActive);
     }
 
     @Override
-    protected String getPageDisplayComponent(int currentPageNumber, int maxPageNumber) {
-        return this.messageConfig.getFormatted(MessageConfigNodes.F_UI_PAGE_DISPLAY, currentPageNumber, maxPageNumber);
+    public String getNextButton(boolean isActive) {
+        return IDefaultBrowseableInterface.super.getNextButton(isActive);
     }
 
     @Override
-    protected MessagePartsList getInterfaceHeader() {
-        return new MessagePartsList(this.getFormattedMessagePart(MessageConfigNodes.UI_HEADER));
+    public String getPageDisplayComponent(int currentPageNumber, int maxPageNumber) {
+        return IDefaultBrowseableInterface.super.getPageDisplayComponent(currentPageNumber, maxPageNumber);
     }
 
     @Override
-    protected MessagePartsList getInterfaceFooter() {
-        return new MessagePartsList(this.getFormattedMessagePart(MessageConfigNodes.UI_FOOTER));
+    public MessagePartsList getInterfaceHeader() {
+        return IDefaultBrowseableInterface.super.getInterfaceHeader();
+    }
+
+    @Override
+    public MessagePartsList getInterfaceFooter() {
+        return IDefaultBrowseableInterface.super.getInterfaceFooter();
     }
 
     @Override
     public String getRunCommandRoot() {
-        return SubCommands.ROOT + " " + SubCommands.RUN;
+        return IDefaultBrowseableInterface.super.getRunCommandRoot();
     }
 }

@@ -2,8 +2,9 @@ package com.github.kory33.signvote.ui.player;
 
 import java.util.Optional;
 
-import com.github.kory33.signvote.constants.SubCommands;
+import com.github.kory33.signvote.ui.player.defaults.IDefaultClickableInterface;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
+import lombok.Getter;
 import org.bukkit.entity.Player;
 
 import com.github.kory33.messaging.tellraw.MessagePartsList;
@@ -19,10 +20,10 @@ import com.github.kory33.signvote.ui.player.model.PlayerClickableChatInterface;
  * Represents an interface which confirms and executes player's un-vote.
  * @author Kory
  */
-public final class UnvoteInterface extends PlayerClickableChatInterface {
+public final class UnvoteInterface extends PlayerClickableChatInterface implements IDefaultClickableInterface {
     private final VoteSession session;
     private final VotePoint votePoint;
-    private final JSONConfiguration messageConfig;
+    @Getter private final JSONConfiguration messageConfig;
 
     private void unVote() {
         if (!this.isValidSession()) {
@@ -100,17 +101,17 @@ public final class UnvoteInterface extends PlayerClickableChatInterface {
     }
 
     @Override
-    protected MessagePartsList getInterfaceHeader() {
-        return new MessagePartsList(this.getFormattedMessagePart(MessageConfigNodes.UI_HEADER));
+    public MessagePartsList getInterfaceHeader() {
+        return IDefaultClickableInterface.super.getInterfaceHeader();
     }
 
     @Override
-    protected MessagePartsList getInterfaceFooter() {
-        return new MessagePartsList(this.getFormattedMessagePart(MessageConfigNodes.UI_FOOTER));
+    public MessagePartsList getInterfaceFooter() {
+        return IDefaultClickableInterface.super.getInterfaceFooter();
     }
 
     @Override
     public String getRunCommandRoot() {
-        return SubCommands.ROOT + " " + SubCommands.RUN;
+        return IDefaultClickableInterface.super.getRunCommandRoot();
     }
 }

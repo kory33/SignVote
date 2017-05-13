@@ -4,7 +4,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Optional;
 
-import com.github.kory33.signvote.constants.SubCommands;
+import com.github.kory33.signvote.ui.player.defaults.IDefaultClickableInterface;
+import lombok.Getter;
 import org.bukkit.entity.Player;
 
 import com.github.kory33.messaging.tellraw.MessagePartsList;
@@ -24,10 +25,10 @@ import com.github.ucchyocean.messaging.tellraw.MessageParts;
  * Represents an interface which allows a player to vote to a vote point.
  * @author Kory
  */
-public final class VoteInterface extends PlayerClickableChatInterface {
+public final class VoteInterface extends PlayerClickableChatInterface implements IDefaultClickableInterface {
     private final VoteSession session;
     private final VotePoint votePoint;
-    private final JSONConfiguration messageConfig;
+    @Getter private final JSONConfiguration messageConfig;
 
     public VoteInterface(Player player, VoteSession session, VotePoint votePoint,
             JSONConfiguration messageConfig, RunnableHashTable runnableHashTable) {
@@ -130,17 +131,17 @@ public final class VoteInterface extends PlayerClickableChatInterface {
     }
 
     @Override
-    protected MessagePartsList getInterfaceHeader() {
-        return new MessagePartsList(this.getFormattedMessagePart(MessageConfigNodes.UI_HEADER));
+    public MessagePartsList getInterfaceHeader() {
+        return IDefaultClickableInterface.super.getInterfaceHeader();
     }
 
     @Override
-    protected MessagePartsList getInterfaceFooter() {
-        return new MessagePartsList(this.getFormattedMessagePart(MessageConfigNodes.UI_FOOTER));
+    public MessagePartsList getInterfaceFooter() {
+        return IDefaultClickableInterface.super.getInterfaceFooter();
     }
 
     @Override
     public String getRunCommandRoot() {
-        return SubCommands.ROOT + " " + SubCommands.RUN;
+        return IDefaultClickableInterface.super.getRunCommandRoot();
     }
 }

@@ -2,8 +2,9 @@ package com.github.kory33.signvote.ui.player;
 
 import java.util.ArrayList;
 
-import com.github.kory33.signvote.constants.SubCommands;
+import com.github.kory33.signvote.ui.player.defaults.IDefaultBrowseableInterface;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
+import lombok.Getter;
 import org.bukkit.entity.Player;
 
 import com.github.kory33.messaging.tellraw.MessagePartsList;
@@ -19,9 +20,9 @@ import com.github.kory33.signvote.ui.player.model.BrowseablePageInterface;
  * Represents an interface which displays a list of existing sessions
  * @author Kory
  */
-public final class ListSessionInterface extends BrowseablePageInterface {
+public final class ListSessionInterface extends BrowseablePageInterface implements IDefaultBrowseableInterface {
     private final VoteSessionManager voteSessionManager;
-    private final JSONConfiguration messageConfig;
+    @Getter private final JSONConfiguration messageConfig;
 
     public ListSessionInterface(Player player, VoteSessionManager voteSessionManager, JSONConfiguration messageConfig,
             RunnableHashTable runnableHashTable, PlayerInteractiveInterfaceManager interfaceManager, int pageIndex) {
@@ -65,45 +66,39 @@ public final class ListSessionInterface extends BrowseablePageInterface {
     }
 
     @Override
-    protected MessagePartsList getHeading() {
+    public MessagePartsList getHeading() {
         MessagePartsList heading = new MessagePartsList();
-        heading.addLine(messageConfig.getString(MessageConfigNodes.LIST_UI_HEADING));
+        heading.addLine(getMessageConfig().getString(MessageConfigNodes.LIST_UI_HEADING));
         return heading;
     }
 
     @Override
-    protected String getPrevButton(boolean isActive) {
-        String color = this.messageConfig.getString(isActive ?
-                MessageConfigNodes.UI_ACTIVE_BUTTON_COLOR :
-                MessageConfigNodes.UI_INACTIVE_BUTTON_COLOR);
-        return color + this.messageConfig.getString(MessageConfigNodes.UI_PREV_BUTTON);
+    public String getPrevButton(boolean isActive) {
+        return IDefaultBrowseableInterface.super.getPrevButton(isActive);
     }
 
     @Override
-    protected String getNextButton(boolean isActive) {
-        String color = this.messageConfig.getString(isActive ?
-                MessageConfigNodes.UI_ACTIVE_BUTTON_COLOR :
-                MessageConfigNodes.UI_INACTIVE_BUTTON_COLOR);
-        return color + this.messageConfig.getString(MessageConfigNodes.UI_NEXT_BUTTON);
+    public String getNextButton(boolean isActive) {
+        return IDefaultBrowseableInterface.super.getNextButton(isActive);
     }
 
     @Override
-    protected String getPageDisplayComponent(int currentPageNumber, int maxPageNumber) {
-        return this.messageConfig.getFormatted(MessageConfigNodes.F_UI_PAGE_DISPLAY, currentPageNumber, maxPageNumber);
+    public String getPageDisplayComponent(int currentPageNumber, int maxPageNumber) {
+        return IDefaultBrowseableInterface.super.getPageDisplayComponent(currentPageNumber, maxPageNumber);
     }
 
     @Override
-    protected MessagePartsList getInterfaceHeader() {
-        return new MessagePartsList(this.getFormattedMessagePart(MessageConfigNodes.UI_HEADER));
+    public MessagePartsList getInterfaceHeader() {
+        return IDefaultBrowseableInterface.super.getInterfaceHeader();
     }
 
     @Override
-    protected MessagePartsList getInterfaceFooter() {
-        return new MessagePartsList(this.getFormattedMessagePart(MessageConfigNodes.UI_FOOTER));
+    public MessagePartsList getInterfaceFooter() {
+        return IDefaultBrowseableInterface.super.getInterfaceFooter();
     }
 
     @Override
     public String getRunCommandRoot() {
-        return SubCommands.ROOT + " " + SubCommands.RUN;
+        return IDefaultBrowseableInterface.super.getRunCommandRoot();
     }
 }
