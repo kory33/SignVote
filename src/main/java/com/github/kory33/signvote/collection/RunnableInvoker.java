@@ -2,8 +2,13 @@ package com.github.kory33.signvote.collection;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
+import com.github.kory33.signvote.io.CommandFilter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
@@ -20,6 +25,8 @@ public class RunnableInvoker extends BukkitCommand {
     private static final String ASYNC_MODIFIER = "async";
     private static final String FALLBACK_PREFIX = "runnableinvoker";
 
+    private static Set<JavaPlugin> invocationSuppressedPlugins = new HashSet<>();
+
     private final HashMap<Long, Runnable> runnableTable;
     private final JavaPlugin plugin;
     private final Random randomGenerator;
@@ -35,8 +42,12 @@ public class RunnableInvoker extends BukkitCommand {
 
     }
 
+    private String getRootCommandString() {
+        return "/" + FALLBACK_PREFIX + ":" + this.getName();
+    }
+
     private String getCommandString(long runnableId, boolean async) {
-        return "/" + FALLBACK_PREFIX + ":" + this.getName() + " " + runnableId + (async ? " " + ASYNC_MODIFIER : "");
+        return this.getRootCommandString() + " " + runnableId + (async ? " " + ASYNC_MODIFIER : "");
     }
 
     /**
@@ -92,7 +103,15 @@ public class RunnableInvoker extends BukkitCommand {
         return true;
     }
 
-    public static RunnableInvoker getRegisteredInstance(JavaPlugin plugin, String runCommandRoot) {
+    private void addInvocationSuppressFilter() {
+        if (invocationSuppressedPlugins.contains(this.plugin)) {
+            return;
+        }
+        ((Logger) LogManager.getRootLogger()).addFilter(new CommandFilter(this.getRootCommandString()));
+        invocationSuppressedPlugins.add(this.plugin);
+    }
+
+    public static RunnableInvoker getRegisteredInstance(JavaPlugin plugin, String runCommandRoot, boolean suppressCommand) {
         RunnableInvoker commandExecutor = new RunnableInvoker(plugin, runCommandRoot);
 
         try {
@@ -100,6 +119,10 @@ public class RunnableInvoker extends BukkitCommand {
             bukkitCommandMap.setAccessible(true);
             CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
             commandMap.register(commandExecutor.getName(), FALLBACK_PREFIX, commandExecutor);
+
+            if (suppressCommand) {
+                commandExecutor.addInvocationSuppressFilter();
+            }
 
             return commandExecutor;
         } catch (NoSuchFieldException | IllegalAccessException e) {
@@ -109,6 +132,6 @@ public class RunnableInvoker extends BukkitCommand {
     }
 
     public static RunnableInvoker getRegisteredInstance(JavaPlugin plugin) {
-        return getRegisteredInstance(plugin, DEFAULT_COMMAND_ROOT);
+        return getRegisteredInstance(plugin, DEFAULT_COMMAND_ROOT, true);
     }
 }

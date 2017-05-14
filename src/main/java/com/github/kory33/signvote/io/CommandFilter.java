@@ -21,13 +21,13 @@ import com.github.kory33.signvote.constants.SubCommands;
  *
  * However, this can cause a lot of spam in the console. This class is useful in preventing such logs.
  */
-public class RunCommandFilter extends AbstractFilter implements Filter {
-    private static final String runCommand = SubCommands.ROOT + " " + SubCommands.RUN;
-    private static final String commandLogRegex = "^\\w{3,16} issued server command: " + runCommand + " .*";
-    private static final Pattern matchPattern = Pattern.compile(commandLogRegex);
-
-    public RunCommandFilter() {
+public class CommandFilter extends AbstractFilter implements Filter {
+    private final Pattern commandMatchPattern;
+    public CommandFilter(String command) {
         super(Result.DENY, Result.NEUTRAL);
+        String commandLogRegex = "^\\w{3,16} issued server command: " + command + ".*";
+        this.commandMatchPattern = Pattern.compile(commandLogRegex);
+
     }
 
     @Override
@@ -66,7 +66,7 @@ public class RunCommandFilter extends AbstractFilter implements Filter {
             return super.onMismatch;
         }
 
-        final Matcher matcher = matchPattern.matcher(text);
+        final Matcher matcher = this.commandMatchPattern.matcher(text);
         if (matcher.find()) {
             return super.onMatch;
         }

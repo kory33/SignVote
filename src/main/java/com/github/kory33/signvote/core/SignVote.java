@@ -5,10 +5,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 
 import com.github.kory33.signvote.collection.RunnableInvoker;
-import com.github.kory33.signvote.collection.RunnableInvoker;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Filter;
-import org.apache.logging.log4j.core.Logger;
 import org.bstats.Metrics;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
@@ -18,7 +15,6 @@ import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.ConfigNodes;
 import com.github.kory33.signvote.constants.FilePaths;
 import com.github.kory33.signvote.io.PluginDataAutoSaver;
-import com.github.kory33.signvote.io.RunCommandFilter;
 import com.github.kory33.signvote.listeners.PlayerChatInterceptor;
 import com.github.kory33.signvote.listeners.PlayerVoteListener;
 import com.github.kory33.signvote.listeners.SignListener;
@@ -39,8 +35,6 @@ public class SignVote extends GithubUpdateNotifyPlugin {
     @Getter private RunnableInvoker runnableInvoker;
     @Getter private PlayerInteractiveInterfaceManager interfaceManager;
     @Getter private PlayerChatInterceptor chatInterceptor;
-
-    private static Filter runnableCommandFilter = null;
 
     private boolean isEnabled = false;
 
@@ -86,7 +80,7 @@ public class SignVote extends GithubUpdateNotifyPlugin {
             return;
         }
 
-        // setup runnable hash table
+        // setup runnable invoker
         if (this.runnableInvoker == null) {
             this.runnableInvoker = RunnableInvoker.getRegisteredInstance(this);
         }
@@ -94,13 +88,6 @@ public class SignVote extends GithubUpdateNotifyPlugin {
         // setup player interface manager
         if (this.interfaceManager == null) {
             this.interfaceManager = new PlayerInteractiveInterfaceManager();
-        }
-
-        // add filter for runnable command
-        if (runnableCommandFilter == null) {
-            Filter runCommandFilter = new RunCommandFilter();
-            runnableCommandFilter = runCommandFilter;
-            ((Logger) LogManager.getRootLogger()).addFilter(runCommandFilter);
         }
 
         // setup session manager
