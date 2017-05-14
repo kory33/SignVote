@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 
+import com.github.kory33.signvote.collection.RunnableInvoker;
+import com.github.kory33.signvote.collection.RunnableInvoker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.Logger;
@@ -11,7 +13,6 @@ import org.bstats.Metrics;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 
-import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.command.SignVoteCommandExecutor;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.ConfigNodes;
@@ -35,7 +36,7 @@ public class SignVote extends GithubUpdateNotifyPlugin {
     @Getter private VoteSessionManager voteSessionManager;
     @Getter private JSONConfiguration messagesConfiguration;
     @Getter private FileConfiguration configuration;
-    @Getter private RunnableHashTable runnableHashTable;
+    @Getter private RunnableInvoker runnableInvoker;
     @Getter private PlayerInteractiveInterfaceManager interfaceManager;
     @Getter private PlayerChatInterceptor chatInterceptor;
 
@@ -86,8 +87,8 @@ public class SignVote extends GithubUpdateNotifyPlugin {
         }
 
         // setup runnable hash table
-        if (this.runnableHashTable == null) {
-            this.runnableHashTable = new RunnableHashTable(this);
+        if (this.runnableInvoker == null) {
+            this.runnableInvoker = RunnableInvoker.getRegisteredInstance(this);
         }
 
         // setup player interface manager

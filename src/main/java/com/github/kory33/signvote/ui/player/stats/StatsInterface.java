@@ -5,13 +5,14 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
+import com.github.kory33.signvote.collection.RunnableInvoker;
+import com.github.kory33.signvote.collection.RunnableInvoker;
 import com.github.kory33.signvote.ui.player.defaults.IDefaultBrowseableInterface;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 
 import com.github.kory33.messaging.tellraw.MessagePartsList;
-import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.StatsType;
@@ -29,8 +30,8 @@ public abstract class StatsInterface extends BrowseablePageInterface implements 
     @Getter private final JSONConfiguration messageConfig;
 
     StatsInterface(Player player, VoteSession targetVoteSession, JSONConfiguration messageConfig,
-                   RunnableHashTable runnableHashTable, PlayerInteractiveInterfaceManager interfaceManager, int pageIndex) {
-        super(player, runnableHashTable, interfaceManager, pageIndex);
+                   RunnableInvoker runnableInvoker, PlayerInteractiveInterfaceManager interfaceManager, int pageIndex) {
+        super(player, runnableInvoker, interfaceManager, pageIndex);
         this.targetVoteSession = targetVoteSession;
         this.messageConfig = messageConfig;
     }
@@ -64,16 +65,16 @@ public abstract class StatsInterface extends BrowseablePageInterface implements 
      * @return statistics interface instance
      */
     public static StatsInterface createNewInterface(Player sender, VoteSession session, String statsType, int pageIndex,
-            JSONConfiguration messageConfiguration, RunnableHashTable runnableHashTable, PlayerInteractiveInterfaceManager interfaceManager) {
+                                                    JSONConfiguration messageConfiguration, RunnableInvoker runnableInvoker, PlayerInteractiveInterfaceManager interfaceManager) {
         try {
             StatsType targetStatsType = StatsType.fromString(statsType);
             switch (targetStatsType) {
             case VOTES:
-                return new TotalVoteStats(sender, session, messageConfiguration, runnableHashTable, interfaceManager, pageIndex);
+                return new TotalVoteStats(sender, session, messageConfiguration, runnableInvoker, interfaceManager, pageIndex);
             case SCORE:
-                return new TotalScoreStats(sender, session, messageConfiguration, runnableHashTable, interfaceManager, pageIndex);
+                return new TotalScoreStats(sender, session, messageConfiguration, runnableInvoker, interfaceManager, pageIndex);
             case MEAN:
-                return new MeanScoreStats(sender, session, messageConfiguration, runnableHashTable, interfaceManager, pageIndex);
+                return new MeanScoreStats(sender, session, messageConfiguration, runnableInvoker, interfaceManager, pageIndex);
             }
         } catch (IllegalArgumentException ignored) {}
 
@@ -147,8 +148,4 @@ public abstract class StatsInterface extends BrowseablePageInterface implements 
         return IDefaultBrowseableInterface.super.getInterfaceFooter();
     }
 
-    @Override
-    public String getRunCommandRoot() {
-        return IDefaultBrowseableInterface.super.getRunCommandRoot();
-    }
 }

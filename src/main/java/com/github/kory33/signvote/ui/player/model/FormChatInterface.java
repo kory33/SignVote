@@ -1,7 +1,7 @@
 package com.github.kory33.signvote.ui.player.model;
 
 import com.github.kory33.messaging.tellraw.MessagePartsList;
-import com.github.kory33.signvote.collection.RunnableHashTable;
+import com.github.kory33.signvote.collection.RunnableInvoker;
 import com.github.kory33.signvote.listeners.PlayerChatInterceptor;
 import com.github.ucchyocean.messaging.tellraw.MessageComponent;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
@@ -20,8 +20,8 @@ public abstract class FormChatInterface extends PlayerClickableChatInterface {
 
     private MessageParts inputCancelButton;
 
-    public FormChatInterface(Player player, RunnableHashTable runnableHashTable, PlayerChatInterceptor chatInterceptor) {
-        super(player, runnableHashTable);
+    public FormChatInterface(Player player, RunnableInvoker runnableInvoker, PlayerChatInterceptor chatInterceptor) {
+        super(player, runnableInvoker);
         this.chatInterceptor = chatInterceptor;
     }
 

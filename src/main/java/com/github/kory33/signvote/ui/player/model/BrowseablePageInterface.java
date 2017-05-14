@@ -7,7 +7,7 @@ import lombok.Setter;
 import org.bukkit.entity.Player;
 
 import com.github.kory33.messaging.tellraw.MessagePartsList;
-import com.github.kory33.signvote.collection.RunnableHashTable;
+import com.github.kory33.signvote.collection.RunnableInvoker;
 import com.github.kory33.signvote.manager.PlayerInteractiveInterfaceManager;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
@@ -59,9 +59,9 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
 
     protected abstract String getPageDisplayComponent(int currentPageNumber, int maxPageNumber);
 
-    public BrowseablePageInterface(Player player, RunnableHashTable runnableHashTable,
+    public BrowseablePageInterface(Player player, RunnableInvoker runnableInvoker,
                                    PlayerInteractiveInterfaceManager interfaceManager, int pageIndex) {
-        super(player, runnableHashTable);
+        super(player, runnableInvoker);
         this.interfaceManager = interfaceManager;
         this.requestedPageIndex = pageIndex;
         this.entryPerPage = 10;
@@ -74,7 +74,7 @@ public abstract class BrowseablePageInterface extends PlayerClickableChatInterfa
      * @param newIndex page number(starts from 0) of the new interface
      */
     public BrowseablePageInterface(BrowseablePageInterface oldInterface, int newIndex) {
-        super(oldInterface.getTargetPlayer(), oldInterface.getRunnableHashTable());
+        super(oldInterface.getTargetPlayer(), oldInterface.getRunnableInvoker());
         this.interfaceManager = oldInterface.interfaceManager;
         this.requestedPageIndex = newIndex;
         this.entryPerPage = oldInterface.entryPerPage;

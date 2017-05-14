@@ -9,7 +9,7 @@ import lombok.Getter;
 import org.bukkit.entity.Player;
 
 import com.github.kory33.messaging.tellraw.MessagePartsList;
-import com.github.kory33.signvote.collection.RunnableHashTable;
+import com.github.kory33.signvote.collection.RunnableInvoker;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.exception.InvalidScoreVotedException;
@@ -31,8 +31,8 @@ public final class VoteInterface extends PlayerClickableChatInterface implements
     @Getter private final JSONConfiguration messageConfig;
 
     public VoteInterface(Player player, VoteSession session, VotePoint votePoint,
-            JSONConfiguration messageConfig, RunnableHashTable runnableHashTable) {
-        super(player, runnableHashTable);
+            JSONConfiguration messageConfig, RunnableInvoker runnableInvoker) {
+        super(player, runnableInvoker);
         this.session = session;
         this.votePoint = votePoint;
         this.messageConfig = messageConfig;
@@ -140,8 +140,4 @@ public final class VoteInterface extends PlayerClickableChatInterface implements
         return IDefaultClickableInterface.super.getInterfaceFooter();
     }
 
-    @Override
-    public String getRunCommandRoot() {
-        return IDefaultClickableInterface.super.getRunCommandRoot();
-    }
 }

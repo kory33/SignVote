@@ -1,12 +1,13 @@
 package com.github.kory33.signvote.ui.player;
 
+import com.github.kory33.signvote.collection.RunnableInvoker;
 import com.github.kory33.signvote.ui.player.defaults.IDefaultFormInterface;
 import lombok.Getter;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.entity.Player;
 
 import com.github.kory33.messaging.tellraw.MessagePartsList;
-import com.github.kory33.signvote.collection.RunnableHashTable;
+import com.github.kory33.signvote.collection.RunnableInvoker;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MagicNumbers;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
@@ -28,8 +29,8 @@ public final class AddScoreInterface extends FormChatInterface implements IDefau
     private String permission;
 
     public AddScoreInterface(Player player, VoteSession session, JSONConfiguration messageConfig,
-            RunnableHashTable runnableHashTable, PlayerChatInterceptor chatInterceptor) {
-        super(player, runnableHashTable, chatInterceptor);
+                             RunnableInvoker runnableInvoker, PlayerChatInterceptor chatInterceptor) {
+        super(player, runnableInvoker, chatInterceptor);
         this.session = session;
         this.messageConfig = messageConfig;
     }
@@ -140,11 +141,6 @@ public final class AddScoreInterface extends FormChatInterface implements IDefau
     @Override
     public MessagePartsList getInterfaceFooter() {
         return IDefaultFormInterface.super.getInterfaceFooter();
-    }
-
-    @Override
-    public String getRunCommandRoot() {
-        return IDefaultFormInterface.super.getRunCommandRoot();
     }
 
     @Override

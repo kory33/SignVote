@@ -2,11 +2,12 @@ package com.github.kory33.signvote.command.subcommand;
 
 import java.util.ArrayList;
 
+import com.github.kory33.signvote.collection.RunnableInvoker;
+import com.github.kory33.signvote.collection.RunnableInvoker;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
@@ -25,13 +26,13 @@ import com.github.kory33.signvote.ui.player.stats.StatsInterface;
 public class StatsCommandExecutor implements SubCommandExecutor {
     private final JSONConfiguration messageConfig;
     private final VoteSessionManager sessionManager;
-    private final RunnableHashTable runnableHashTable;
+    private final RunnableInvoker runnableInvoker;
     private final PlayerInteractiveInterfaceManager interfaceManager;
 
     public StatsCommandExecutor(SignVote signVote) {
         this.messageConfig = signVote.getMessagesConfiguration();
         this.sessionManager = signVote.getVoteSessionManager();
-        this.runnableHashTable = signVote.getRunnableHashTable();
+        this.runnableInvoker = signVote.getRunnableInvoker();
         this.interfaceManager = signVote.getInterfaceManager();
     }
 
@@ -80,7 +81,7 @@ public class StatsCommandExecutor implements SubCommandExecutor {
         }
 
         chatInterface = StatsInterface.createNewInterface(player, session, statsType, pageIndex, messageConfig,
-                runnableHashTable, interfaceManager);
+                runnableInvoker, interfaceManager);
 
         if (chatInterface == null) {
             sender.sendMessage(messageConfig.getString(MessageConfigNodes.STATS_INVALID_TYPE));

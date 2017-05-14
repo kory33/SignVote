@@ -2,13 +2,14 @@ package com.github.kory33.signvote.ui.player;
 
 import java.util.ArrayList;
 
+import com.github.kory33.signvote.collection.RunnableInvoker;
+import com.github.kory33.signvote.collection.RunnableInvoker;
 import com.github.kory33.signvote.ui.player.defaults.IDefaultBrowseableInterface;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 
 import com.github.kory33.messaging.tellraw.MessagePartsList;
-import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.manager.PlayerInteractiveInterfaceManager;
@@ -25,8 +26,8 @@ public final class ListSessionInterface extends BrowseablePageInterface implemen
     @Getter private final JSONConfiguration messageConfig;
 
     public ListSessionInterface(Player player, VoteSessionManager voteSessionManager, JSONConfiguration messageConfig,
-            RunnableHashTable runnableHashTable, PlayerInteractiveInterfaceManager interfaceManager, int pageIndex) {
-        super(player, runnableHashTable, interfaceManager, pageIndex);
+                                RunnableInvoker runnableInvoker, PlayerInteractiveInterfaceManager interfaceManager, int pageIndex) {
+        super(player, runnableInvoker, interfaceManager, pageIndex);
         this.voteSessionManager = voteSessionManager;
         this.messageConfig = messageConfig;
     }
@@ -97,8 +98,4 @@ public final class ListSessionInterface extends BrowseablePageInterface implemen
         return IDefaultBrowseableInterface.super.getInterfaceFooter();
     }
 
-    @Override
-    public String getRunCommandRoot() {
-        return IDefaultBrowseableInterface.super.getRunCommandRoot();
-    }
 }

@@ -1,11 +1,13 @@
 package com.github.kory33.signvote.ui.player.model;
 
 import com.github.kory33.signvote.collection.BijectiveHashMap;
+import com.github.kory33.signvote.collection.RunnableCommand;
+import com.github.kory33.signvote.collection.RunnableInvoker;
 import com.github.ucchyocean.messaging.tellraw.ClickEventType;
 import org.bukkit.entity.Player;
 
 import com.github.kory33.messaging.tellraw.MessagePartsList;
-import com.github.kory33.signvote.collection.RunnableHashTable;
+import com.github.kory33.signvote.collection.RunnableInvoker;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
 import lombok.Getter;
@@ -16,15 +18,15 @@ import lombok.Getter;
  * @author kory
  */
 public abstract class PlayerClickableChatInterface extends PlayerChatInterface {
-    @Getter private final RunnableHashTable runnableHashTable;
+    @Getter private final RunnableInvoker runnableInvoker;
     private boolean isValidSession;
 
     private final BijectiveHashMap<MessageParts, Long> buttonIdMapping;
 
-    public PlayerClickableChatInterface(Player player, RunnableHashTable runnableHashTable) {
+    public PlayerClickableChatInterface(Player player, RunnableInvoker runnableInvoker) {
         super(player);
 
-        this.runnableHashTable = runnableHashTable;
+        this.runnableInvoker = runnableInvoker;
         this.isValidSession = true;
         this.buttonIdMapping = new BijectiveHashMap<>();
     }
@@ -38,7 +40,7 @@ public abstract class PlayerClickableChatInterface extends PlayerChatInterface {
      */
     protected final void revokeAllRunnables() {
         // remove all the bound runnable objects
-        this.buttonIdMapping.getInverse().keySet().forEach(this.runnableHashTable::cancelTask);
+        this.buttonIdMapping.getInverse().keySet().forEach(this.runnableInvoker::cancelTask);
         this.buttonIdMapping.keySet().forEach(this.buttonIdMapping::remove);
     }
 
@@ -51,7 +53,7 @@ public abstract class PlayerClickableChatInterface extends PlayerChatInterface {
             return;
         }
 
-        this.runnableHashTable.cancelTask(runnableId);
+        this.runnableInvoker.cancelTask(runnableId);
         this.buttonIdMapping.remove(buttonMessagePart);
     }
 
@@ -73,12 +75,9 @@ public abstract class PlayerClickableChatInterface extends PlayerChatInterface {
      */
     protected final MessageParts getButton(Runnable runnable, String buttonString) {
         MessageParts button = new MessageParts(buttonString);
-        long runnableId = this.runnableHashTable.registerRunnable(runnable);
-
-        String command = String.join(" ", this.getRunCommandRoot(), String.valueOf(runnableId));
-        button.setClickEvent(ClickEventType.RUN_COMMAND, command);
-
-        this.buttonIdMapping.put(button, runnableId);
+        RunnableCommand command = this.runnableInvoker.registerRunnable(runnable, false);
+        button.setClickEvent(ClickEventType.RUN_COMMAND, command.getCommandString());
+        this.buttonIdMapping.put(button, command.getRunnableId());
         return button;
     }
 
@@ -112,12 +111,6 @@ public abstract class PlayerClickableChatInterface extends PlayerChatInterface {
      * @return message component list representing the footer
      */
     protected abstract MessagePartsList getInterfaceFooter();
-
-    /**
-     * Get a root component of the "run command" which is executed when a player clicks on a button.
-     * @return run command root string
-     */
-    public abstract String getRunCommandRoot();
 
     /**
      * Construct the interface in a form of:<br>

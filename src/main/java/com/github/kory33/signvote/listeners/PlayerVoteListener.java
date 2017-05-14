@@ -1,5 +1,6 @@
 package com.github.kory33.signvote.listeners;
 
+import com.github.kory33.signvote.collection.RunnableInvoker;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
@@ -9,7 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import com.github.kory33.signvote.collection.RunnableHashTable;
+import com.github.kory33.signvote.collection.RunnableInvoker;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.core.SignVote;
 import com.github.kory33.signvote.manager.PlayerInteractiveInterfaceManager;
@@ -26,14 +27,14 @@ import com.github.kory33.signvote.ui.player.model.PlayerClickableChatInterface;
 public class PlayerVoteListener implements Listener {
     private final VoteSessionManager voteSessionManager;
     private final JSONConfiguration messageConfig;
-    private final RunnableHashTable runnableHashTable;
+    private final RunnableInvoker runnableInvoker;
     private final PlayerInteractiveInterfaceManager interfaceManager;
 
     public PlayerVoteListener(SignVote plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         this.voteSessionManager = plugin.getVoteSessionManager();
         this.messageConfig = plugin.getMessagesConfiguration();
-        this.runnableHashTable = plugin.getRunnableHashTable();
+        this.runnableInvoker = plugin.getRunnableInvoker();
         this.interfaceManager = plugin.getInterfaceManager();
     }
 
@@ -64,9 +65,9 @@ public class PlayerVoteListener implements Listener {
 
         PlayerClickableChatInterface chatInterface;
         if (session.getVoteManager().hasVoted(clickPlayer.getUniqueId(), votePoint)) {
-            chatInterface = new UnvoteInterface(clickPlayer, session, votePoint, messageConfig, runnableHashTable);
+            chatInterface = new UnvoteInterface(clickPlayer, session, votePoint, messageConfig, runnableInvoker);
         } else {
-            chatInterface = new VoteInterface(clickPlayer, session, votePoint, messageConfig, runnableHashTable);
+            chatInterface = new VoteInterface(clickPlayer, session, votePoint, messageConfig, runnableInvoker);
         }
 
         this.interfaceManager.registerInterface(chatInterface);

@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 import org.bukkit.entity.Player;
 
-import com.github.kory33.signvote.collection.RunnableHashTable;
+import com.github.kory33.signvote.collection.RunnableInvoker;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.StatsType;
 import com.github.kory33.signvote.manager.PlayerInteractiveInterfaceManager;
@@ -18,8 +18,8 @@ import com.github.kory33.signvote.ui.player.model.BrowseablePageInterface;
  */
 public final class MeanScoreStats extends StatsInterface {
     MeanScoreStats(Player player, VoteSession targetVoteSession, JSONConfiguration messageConfiguration,
-                   RunnableHashTable runnableHashTable, PlayerInteractiveInterfaceManager interfaceManager, int pageIndex) {
-        super(player, targetVoteSession, messageConfiguration, runnableHashTable, interfaceManager, pageIndex);
+                   RunnableInvoker runnableInvoker, PlayerInteractiveInterfaceManager interfaceManager, int pageIndex) {
+        super(player, targetVoteSession, messageConfiguration, runnableInvoker, interfaceManager, pageIndex);
     }
 
     private MeanScoreStats(MeanScoreStats oldInterface, int newIndex) {
