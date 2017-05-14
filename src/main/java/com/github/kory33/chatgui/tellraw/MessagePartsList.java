@@ -1,4 +1,4 @@
-package com.github.kory33.messaging.tellraw;
+package com.github.kory33.chatgui.tellraw;
 
 import java.util.ArrayList;
 import java.util.Collection;

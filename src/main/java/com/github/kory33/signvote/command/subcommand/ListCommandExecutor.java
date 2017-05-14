@@ -2,7 +2,7 @@ package com.github.kory33.signvote.command.subcommand;
 
 import java.util.ArrayList;
 
-import com.github.kory33.signvote.collection.RunnableInvoker;
+import com.github.kory33.chatgui.command.RunnableInvoker;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -12,12 +12,12 @@ import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.core.SignVote;
-import com.github.kory33.signvote.manager.PlayerInteractiveInterfaceManager;
+import com.github.kory33.chatgui.manager.PlayerInteractiveInterfaceManager;
 import com.github.kory33.signvote.manager.VoteSessionManager;
-import com.github.kory33.signvote.ui.ChatInterface;
+import com.github.kory33.chatgui.model.ChatInterface;
 import com.github.kory33.signvote.ui.console.ConsoleListSessionInterface;
 import com.github.kory33.signvote.ui.player.ListSessionInterface;
-import com.github.kory33.signvote.ui.player.model.PlayerClickableChatInterface;
+import com.github.kory33.chatgui.model.player.PlayerClickableChatInterface;
 
 /**
  * Executor class of "list" sub-command

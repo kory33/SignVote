@@ -1,4 +1,4 @@
-package com.github.kory33.signvote.collection;
+package com.github.kory33.chatgui.util.collection;
 
 import java.util.HashMap;
 

@@ -1,4 +1,4 @@
-package com.github.kory33.signvote.listeners;
+package com.github.kory33.chatgui.listener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +11,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.github.kory33.signvote.exception.ChatInterceptionCancelledException;
+import com.github.kory33.chatgui.exception.ChatInterceptionCancelledException;
 
 /**
  * A Bukkit listener class which can be used to intercept a player message.

@@ -2,20 +2,19 @@ package com.github.kory33.signvote.ui.player;
 
 import java.util.Optional;
 
-import com.github.kory33.signvote.collection.RunnableInvoker;
-import com.github.kory33.signvote.collection.RunnableInvoker;
+import com.github.kory33.chatgui.command.RunnableInvoker;
 import com.github.kory33.signvote.ui.player.defaults.IDefaultClickableInterface;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 
-import com.github.kory33.messaging.tellraw.MessagePartsList;
+import com.github.kory33.chatgui.tellraw.MessagePartsList;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.exception.VotePointNotVotedException;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
-import com.github.kory33.signvote.ui.player.model.PlayerClickableChatInterface;
+import com.github.kory33.chatgui.model.player.PlayerClickableChatInterface;
 
 /**
  * Represents an interface which confirms and executes player's un-vote.

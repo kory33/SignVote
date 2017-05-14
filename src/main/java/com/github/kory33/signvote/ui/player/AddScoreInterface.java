@@ -1,20 +1,19 @@
 package com.github.kory33.signvote.ui.player;
 
-import com.github.kory33.signvote.collection.RunnableInvoker;
+import com.github.kory33.chatgui.command.RunnableInvoker;
 import com.github.kory33.signvote.ui.player.defaults.IDefaultFormInterface;
 import lombok.Getter;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.entity.Player;
 
-import com.github.kory33.messaging.tellraw.MessagePartsList;
-import com.github.kory33.signvote.collection.RunnableInvoker;
+import com.github.kory33.chatgui.tellraw.MessagePartsList;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MagicNumbers;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
-import com.github.kory33.signvote.listeners.PlayerChatInterceptor;
+import com.github.kory33.chatgui.listener.PlayerChatInterceptor;
 import com.github.kory33.signvote.session.VoteSession;
-import com.github.kory33.signvote.ui.player.model.FormChatInterface;
+import com.github.kory33.chatgui.model.player.FormChatInterface;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
 /**

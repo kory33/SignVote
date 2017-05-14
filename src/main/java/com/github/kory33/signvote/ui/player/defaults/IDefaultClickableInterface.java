@@ -1,6 +1,6 @@
 package com.github.kory33.signvote.ui.player.defaults;
 
-import com.github.kory33.messaging.tellraw.MessagePartsList;
+import com.github.kory33.chatgui.tellraw.MessagePartsList;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import org.bukkit.entity.Player;

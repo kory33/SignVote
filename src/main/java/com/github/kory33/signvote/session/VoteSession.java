@@ -1,6 +1,6 @@
 package com.github.kory33.signvote.session;
 
-import com.github.kory33.signvote.collection.BijectiveHashMap;
+import com.github.kory33.chatgui.util.collection.BijectiveHashMap;
 import com.github.kory33.signvote.collection.VoteScoreLimits;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.*;

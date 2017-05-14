@@ -2,16 +2,15 @@ package com.github.kory33.signvote.ui.player.stats;
 
 import java.util.Comparator;
 
-import com.github.kory33.signvote.collection.RunnableInvoker;
+import com.github.kory33.chatgui.command.RunnableInvoker;
 import org.bukkit.entity.Player;
 
-import com.github.kory33.signvote.collection.RunnableInvoker;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.StatsType;
-import com.github.kory33.signvote.manager.PlayerInteractiveInterfaceManager;
+import com.github.kory33.chatgui.manager.PlayerInteractiveInterfaceManager;
 import com.github.kory33.signvote.model.VotePointStats;
 import com.github.kory33.signvote.session.VoteSession;
-import com.github.kory33.signvote.ui.player.model.BrowseablePageInterface;
+import com.github.kory33.chatgui.model.player.BrowseablePageInterface;
 
 /**
  * Implementation of stats interface which sorts vote point statistics by total voted score.

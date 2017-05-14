@@ -1,8 +1,9 @@
-package com.github.kory33.signvote.io;
+package com.github.kory33.chatgui.io;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.github.kory33.chatgui.model.player.PlayerClickableChatInterface;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.core.Filter;
@@ -11,12 +12,10 @@ import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.core.filter.AbstractFilter;
 import org.apache.logging.log4j.message.Message;
 
-import com.github.kory33.signvote.constants.SubCommands;
-
 /**
  * This class acts as a "filter" for runnable invocation commands.
  *
- * When a player clicks on a button in {@link com.github.kory33.signvote.ui.player.model.PlayerClickableChatInterface},
+ * When a player clicks on a button in {@link PlayerClickableChatInterface},
  * a command `/signvote:signvote run` is run in order to invoke a registered runnable.
  *
  * However, this can cause a lot of spam in the console. This class is useful in preventing such logs.

@@ -1,8 +1,8 @@
-package com.github.kory33.signvote.ui.player.model;
+package com.github.kory33.chatgui.model.player;
 
-import com.github.kory33.messaging.tellraw.MessagePartsList;
-import com.github.kory33.signvote.collection.RunnableInvoker;
-import com.github.kory33.signvote.listeners.PlayerChatInterceptor;
+import com.github.kory33.chatgui.tellraw.MessagePartsList;
+import com.github.kory33.chatgui.command.RunnableInvoker;
+import com.github.kory33.chatgui.listener.PlayerChatInterceptor;
 import com.github.ucchyocean.messaging.tellraw.MessageComponent;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 import org.bukkit.entity.Player;

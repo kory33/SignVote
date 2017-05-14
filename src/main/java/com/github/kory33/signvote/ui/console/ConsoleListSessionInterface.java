@@ -1,11 +1,11 @@
 package com.github.kory33.signvote.ui.console;
 
-import com.github.kory33.messaging.tellraw.MessagePartsList;
+import com.github.kory33.chatgui.tellraw.MessagePartsList;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.session.VoteSession;
-import com.github.kory33.signvote.ui.ChatInterface;
+import com.github.kory33.chatgui.model.ChatInterface;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
 /**

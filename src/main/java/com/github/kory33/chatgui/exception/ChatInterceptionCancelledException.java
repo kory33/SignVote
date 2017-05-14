@@ -1,4 +1,4 @@
-package com.github.kory33.signvote.exception;
+package com.github.kory33.chatgui.exception;
 
 import lombok.Getter;
 

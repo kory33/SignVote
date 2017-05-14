@@ -1,4 +1,4 @@
-package com.github.kory33.signvote.collection;
+package com.github.kory33.chatgui.command;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-import com.github.kory33.signvote.io.CommandFilter;
+import com.github.kory33.chatgui.io.CommandFilter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 import org.bukkit.Bukkit;

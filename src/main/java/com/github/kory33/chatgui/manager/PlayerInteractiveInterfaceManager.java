@@ -1,11 +1,11 @@
-package com.github.kory33.signvote.manager;
+package com.github.kory33.chatgui.manager;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.entity.Player;
 
-import com.github.kory33.signvote.ui.player.model.PlayerClickableChatInterface;
+import com.github.kory33.chatgui.model.player.PlayerClickableChatInterface;
 
 /**
  * A class which holds the association of player onto a single session.

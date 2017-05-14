@@ -4,8 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 
-import com.github.kory33.signvote.collection.RunnableInvoker;
-import org.apache.logging.log4j.core.Filter;
+import com.github.kory33.chatgui.command.RunnableInvoker;
 import org.bstats.Metrics;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
@@ -15,10 +14,10 @@ import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.ConfigNodes;
 import com.github.kory33.signvote.constants.FilePaths;
 import com.github.kory33.signvote.io.PluginDataAutoSaver;
-import com.github.kory33.signvote.listeners.PlayerChatInterceptor;
+import com.github.kory33.chatgui.listener.PlayerChatInterceptor;
 import com.github.kory33.signvote.listeners.PlayerVoteListener;
 import com.github.kory33.signvote.listeners.SignListener;
-import com.github.kory33.signvote.manager.PlayerInteractiveInterfaceManager;
+import com.github.kory33.chatgui.manager.PlayerInteractiveInterfaceManager;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.updatenotificationplugin.bukkit.github.GithubUpdateNotifyPlugin;
 

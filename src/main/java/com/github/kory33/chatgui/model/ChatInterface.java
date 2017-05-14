@@ -1,8 +1,8 @@
-package com.github.kory33.signvote.ui;
+package com.github.kory33.chatgui.model;
 
 import org.bukkit.command.CommandSender;
 
-import com.github.kory33.messaging.tellraw.MessagePartsList;
+import com.github.kory33.chatgui.tellraw.MessagePartsList;
 import com.github.ucchyocean.messaging.tellraw.MessageComponent;
 
 /**

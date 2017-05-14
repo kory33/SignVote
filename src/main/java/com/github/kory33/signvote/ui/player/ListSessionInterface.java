@@ -2,20 +2,19 @@ package com.github.kory33.signvote.ui.player;
 
 import java.util.ArrayList;
 
-import com.github.kory33.signvote.collection.RunnableInvoker;
-import com.github.kory33.signvote.collection.RunnableInvoker;
+import com.github.kory33.chatgui.command.RunnableInvoker;
 import com.github.kory33.signvote.ui.player.defaults.IDefaultBrowseableInterface;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 
-import com.github.kory33.messaging.tellraw.MessagePartsList;
+import com.github.kory33.chatgui.tellraw.MessagePartsList;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
-import com.github.kory33.signvote.manager.PlayerInteractiveInterfaceManager;
+import com.github.kory33.chatgui.manager.PlayerInteractiveInterfaceManager;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.session.VoteSession;
-import com.github.kory33.signvote.ui.player.model.BrowseablePageInterface;
+import com.github.kory33.chatgui.model.player.BrowseablePageInterface;
 
 /**
  * Represents an interface which displays a list of existing sessions

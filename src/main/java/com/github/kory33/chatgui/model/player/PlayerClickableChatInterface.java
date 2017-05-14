@@ -1,12 +1,12 @@
-package com.github.kory33.signvote.ui.player.model;
+package com.github.kory33.chatgui.model.player;
 
-import com.github.kory33.signvote.collection.BijectiveHashMap;
-import com.github.kory33.signvote.collection.RunnableCommand;
-import com.github.kory33.signvote.collection.RunnableInvoker;
+import com.github.kory33.chatgui.util.collection.BijectiveHashMap;
+import com.github.kory33.chatgui.command.RunnableCommand;
+import com.github.kory33.chatgui.command.RunnableInvoker;
 import com.github.ucchyocean.messaging.tellraw.ClickEventType;
 import org.bukkit.entity.Player;
 
-import com.github.kory33.messaging.tellraw.MessagePartsList;
+import com.github.kory33.chatgui.tellraw.MessagePartsList;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
 import lombok.Getter;
