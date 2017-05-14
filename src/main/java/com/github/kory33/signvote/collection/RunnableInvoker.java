@@ -18,6 +18,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 public class RunnableInvoker extends BukkitCommand {
     private static final String DEFAULT_COMMAND_ROOT = "run";
     private static final String ASYNC_MODIFIER = "async";
+    private static final String FALLBACK_PREFIX = "runnableinvoker";
 
     private final HashMap<Long, Runnable> runnableTable;
     private final JavaPlugin plugin;
@@ -35,12 +36,14 @@ public class RunnableInvoker extends BukkitCommand {
     }
 
     private String getCommandString(long runnableId, boolean async) {
-        return "/" + this.getName() + " " + runnableId + (async ? " " + ASYNC_MODIFIER : "");
+        return "/" + FALLBACK_PREFIX + ":" + this.getName() + " " + runnableId + (async ? " " + ASYNC_MODIFIER : "");
     }
 
     /**
-     * Register a runnable object and return.
-     * @return An id value which can be passed to RunnableInvokerCommand::run to run the runnable
+     * Get a command that is able to invoke the given runnable object
+     * @param runnable target runnable object
+     * @param isAsync specify whether or not the runnable should be invoked asynchronously
+     * @return {@link RunnableCommand} object containing runnable id and command to cancel/invoke the runnable
      */
     public RunnableCommand registerRunnable(Runnable runnable, boolean isAsync) {
         while (true) {
@@ -96,7 +99,7 @@ public class RunnableInvoker extends BukkitCommand {
             final Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
             bukkitCommandMap.setAccessible(true);
             CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
-            commandMap.register(commandExecutor.getName(), commandExecutor);
+            commandMap.register(commandExecutor.getName(), FALLBACK_PREFIX, commandExecutor);
 
             return commandExecutor;
         } catch (NoSuchFieldException | IllegalAccessException e) {
