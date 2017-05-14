@@ -7,7 +7,6 @@ import com.github.ucchyocean.messaging.tellraw.ClickEventType;
 import org.bukkit.entity.Player;
 
 import com.github.kory33.messaging.tellraw.MessagePartsList;
-import com.github.kory33.signvote.collection.RunnableInvoker;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
 import lombok.Getter;
@@ -41,7 +40,7 @@ public abstract class PlayerClickableChatInterface extends PlayerChatInterface {
     protected final void revokeAllRunnables() {
         // remove all the bound runnable objects
         this.buttonIdMapping.getInverse().keySet().forEach(this.runnableInvoker::cancelTask);
-        this.buttonIdMapping.keySet().forEach(this.buttonIdMapping::remove);
+        this.buttonIdMapping.clear();
     }
 
     /**

@@ -79,8 +79,7 @@ public final class UnvoteInterface extends PlayerClickableChatInterface implemen
     }
 
     private void cancelAction() {
-        MessageParts cancelMessage = this.getFormattedMessagePart(MessageConfigNodes.UI_CANCELLED);
-        this.cancelAction(cancelMessage.build());
+        super.cancelAction(this.messageConfig.getString(MessageConfigNodes.UI_CANCELLED));
     }
 
     @Override

@@ -80,8 +80,7 @@ public final class VoteInterface extends PlayerClickableChatInterface implements
     }
 
     private void cancelAction() {
-        MessageParts cancelMessage = this.getFormattedMessagePart(MessageConfigNodes.UI_CANCELLED);
-        this.cancelAction(cancelMessage.build());
+        super.cancelAction(this.messageConfig.getString(MessageConfigNodes.UI_CANCELLED));
     }
 
     private String getScoreSelectionLine(int score, Optional<Integer> remaining) {
