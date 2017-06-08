@@ -63,6 +63,11 @@
             <artifactId>bstats-bukkit</artifactId>
             <version>1.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.kory33</groupId>
+            <artifactId>ChatGUI</artifactId>
+            <version>0.1.0-alpha</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
