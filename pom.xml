@@ -21,10 +21,6 @@
             <url>https://jitpack.io</url>
         </repository>
         <repository>
-            <id>ucchy-github</id>
-            <url>https://raw.github.com/ucchyocean/mvn-repo/master</url>
-        </repository>
-        <repository>
             <id>bstats-repo</id>
             <url>http://repo.bstats.org/content/repositories/releases/</url>
         </repository>
@@ -43,20 +39,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>2.0-beta9</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.github.Kory33</groupId>
             <artifactId>UpdateNotificationPlugin</artifactId>
             <version>0.1.5</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.ucchyocean</groupId>
-            <artifactId>MessagingUtility</artifactId>
-            <version>0.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.bstats</groupId>
@@ -66,7 +51,7 @@
         <dependency>
             <groupId>com.github.kory33</groupId>
             <artifactId>ChatGUI</artifactId>
-            <version>0.1.0-alpha</version>
+            <version>0.1.0-beta</version>
         </dependency>
     </dependencies>
     <build>
@@ -123,7 +108,7 @@
                             <artifactSet>
                                 <includes>
                                     <include>com.github.Kory33:UpdateNotificationPlugin</include>
-                                    <include>com.github.ucchyocean:MessagingUtility</include>
+                                    <include>com.github.kory33:ChatGUI</include>
                                     <include>org.bstats:*</include>
                                 </includes>
                             </artifactSet>
