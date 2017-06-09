@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/kory33/SignVote.svg?branch=master)](https://travis-ci.org/kory33/SignVote)
+
 ### What is this?
 SignVote is a Bukkit plug-in which allows you to set-up voting sessions.
 
@@ -32,18 +34,18 @@ All the permissions used by this plugin starts with `signvote` node.
 Here's the list of permissions:
  - `signvote.vote` : allows a player to vote
  - `signvote.votemore` : default permission node for `op` permission specifier in `addscore` command
- - `signvote.unvote:`: allows a player to cancel a vote
- - `signvote.createsign:`: allows a player to create a new vote point
- - `signvote.createsession:`: allows a player to create a vote session
- - `signvote.modifysession:`: allows a player to modify the existing session
- - `signvote.listsession:`: allows a player to obtain the session list
- - `signvote.opensession:`: allows a player to re-open a closed session
- - `signvote.closesession:`: allows a player to close an opened session
- - `signvote.deletesession:`: allows a player to delete an existing session
- - `signvote.deletevotepoint:`: allows a player to delete a vote point
- - `signvote.viewstats:`: allows a player to view the statistics of a vote session
- - `signvote.reload:`: allows a player to reload the plugin
- - `signvote.save:`: allows a player to save plugin data
+ - `signvote.unvote`: allows a player to cancel a vote
+ - `signvote.createsign`: allows a player to create a new vote point
+ - `signvote.createsession`: allows a player to create a vote session
+ - `signvote.modifysession`: allows a player to modify the existing session
+ - `signvote.listsession`: allows a player to obtain the session list
+ - `signvote.opensession`: allows a player to re-open a closed session
+ - `signvote.closesession`: allows a player to close an opened session
+ - `signvote.deletesession`: allows a player to delete an existing session
+ - `signvote.deletevotepoint`: allows a player to delete a vote point
+ - `signvote.viewstats`: allows a player to view the statistics of a vote session
+ - `signvote.reload`: allows a player to reload the plugin
+ - `signvote.save`: allows a player to save plugin data
 
 All permissions except `signvote.vote` and `signvote.unvote` are only enabled for OPs by default.
 
