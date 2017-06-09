@@ -92,7 +92,7 @@ public class SignVote extends GithubUpdateNotifyPlugin {
         // setup session manager
         this.voteSessionManager = new VoteSessionManager(this.getLogger(), sessionsDir);
 
-        // register listners
+        // register listeners
         this.chatInterceptor = new PlayerChatInterceptor(this);
         new SignListener(this);
         new PlayerVoteListener(this);
