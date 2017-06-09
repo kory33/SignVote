@@ -2,22 +2,22 @@ package com.github.kory33.signvote.command.subcommand;
 
 import java.util.ArrayList;
 
+import com.github.kory33.chatgui.command.RunnableInvoker;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.core.SignVote;
-import com.github.kory33.signvote.manager.PlayerInteractiveInterfaceManager;
+import com.github.kory33.chatgui.manager.PlayerInteractiveInterfaceManager;
 import com.github.kory33.signvote.manager.VoteSessionManager;
-import com.github.kory33.signvote.ui.ChatInterface;
+import com.github.kory33.chatgui.model.ChatInterface;
 import com.github.kory33.signvote.ui.console.ConsoleListSessionInterface;
 import com.github.kory33.signvote.ui.player.ListSessionInterface;
-import com.github.kory33.signvote.ui.player.model.PlayerClickableChatInterface;
+import com.github.kory33.chatgui.model.player.PlayerClickableChatInterface;
 
 /**
  * Executor class of "list" sub-command
@@ -26,13 +26,13 @@ import com.github.kory33.signvote.ui.player.model.PlayerClickableChatInterface;
 public class ListCommandExecutor implements SubCommandExecutor {
     private final JSONConfiguration messageConfig;
     private final VoteSessionManager voteSessionManager;
-    private final RunnableHashTable runnableHashTable;
+    private final RunnableInvoker runnableInvoker;
     private final PlayerInteractiveInterfaceManager interfaceManager;
 
     public ListCommandExecutor(SignVote plugin) {
         this.messageConfig = plugin.getMessagesConfiguration();
         this.voteSessionManager = plugin.getVoteSessionManager();
-        this.runnableHashTable = plugin.getRunnableHashTable();
+        this.runnableInvoker = plugin.getRunnableInvoker();
         this.interfaceManager = plugin.getInterfaceManager();
     }
 
@@ -58,7 +58,7 @@ public class ListCommandExecutor implements SubCommandExecutor {
         String pageIndexString = args.size() != 0 ? args.remove(0) : String.valueOf("0");
         int pageIndex = NumberUtils.isNumber(pageIndexString) ? NumberUtils.createInteger(pageIndexString) : 0;
 
-        PlayerClickableChatInterface listInterface = new ListSessionInterface(player, voteSessionManager, messageConfig, runnableHashTable, interfaceManager, pageIndex);
+        PlayerClickableChatInterface listInterface = new ListSessionInterface(player, voteSessionManager, messageConfig, runnableInvoker, interfaceManager, pageIndex);
         interfaceManager.registerInterface(listInterface);
         listInterface.send();
 

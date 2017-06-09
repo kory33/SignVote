@@ -76,10 +76,10 @@ public class MessageConfigNodes {
     public static final String UI_CANCEL                = UI_ROOT + ".cancel";
     public static final String UI_CANCELLED             = UI_ROOT + ".cancelled";
 
+    public static final String UI_ACTIVE_BUTTON_COLOR   = UI_ROOT + ".activeButtonColor";
+    public static final String UI_INACTIVE_BUTTON_COLOR = UI_ROOT + ".inactiveButtonColor";
     public static final String UI_PREV_BUTTON           = UI_ROOT + ".prevbutton";
     public static final String UI_NEXT_BUTTON           = UI_ROOT + ".nextbutton";
-    public static final String UI_PREV_BUTTON_INACTIVE  = UI_ROOT + ".inactiveprevbutton";
-    public static final String UI_NEXT_BUTTON_INACTIVE  = UI_ROOT + ".inactivenextbutton";
     public static final String F_UI_PAGE_DISPLAY        = UI_ROOT + ".pagedisp";
 
     private static final String VOTE_UI_ROOT            = UI_ROOT + ".vote";
@@ -110,7 +110,7 @@ public class MessageConfigNodes {
     public static final String F_STATS_ENTRY_TEMPLATE   = STATS_UI + ".template";
 
     private static final String UI_FORM_ROOT            = UI_ROOT + ".form";
-    public static final String F_UI_FORM_NAME           = UI_FORM_ROOT + ".name";
+    public static final String F_UI_FORM_LABEL = UI_FORM_ROOT + ".label";
     public static final String F_UI_FORM_VALUE          = UI_FORM_ROOT + ".value";
     public static final String UI_FORM_NOTSET           = UI_FORM_ROOT + ".notset";
     public static final String UI_FORM_EDIT_BUTTON      = UI_FORM_ROOT + ".editbutton";

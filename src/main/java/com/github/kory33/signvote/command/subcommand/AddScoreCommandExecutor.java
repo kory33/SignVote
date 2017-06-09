@@ -2,22 +2,22 @@ package com.github.kory33.signvote.command.subcommand;
 
 import java.util.ArrayList;
 
+import com.github.kory33.chatgui.command.RunnableInvoker;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MagicNumbers;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.core.SignVote;
-import com.github.kory33.signvote.listeners.PlayerChatInterceptor;
-import com.github.kory33.signvote.manager.PlayerInteractiveInterfaceManager;
+import com.github.kory33.chatgui.listener.PlayerChatInterceptor;
+import com.github.kory33.chatgui.manager.PlayerInteractiveInterfaceManager;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.ui.player.AddScoreInterface;
-import com.github.kory33.signvote.ui.player.model.FormChatInterface;
+import com.github.kory33.chatgui.model.player.FormChatInterface;
 
 /**
  * Executor class of "addscore" sub-command
@@ -26,14 +26,14 @@ import com.github.kory33.signvote.ui.player.model.FormChatInterface;
 public class AddScoreCommandExecutor implements SubCommandExecutor{
     private final JSONConfiguration messageConfiguration;
     private final VoteSessionManager voteSessionManager;
-    private final RunnableHashTable runnableHashTable;
+    private final RunnableInvoker runnableInvoker;
     private final PlayerInteractiveInterfaceManager interfaceManager;
     private final PlayerChatInterceptor chatInterceptor;
 
     public AddScoreCommandExecutor(SignVote plugin) {
         this.messageConfiguration = plugin.getMessagesConfiguration();
         this.voteSessionManager = plugin.getVoteSessionManager();
-        this.runnableHashTable = plugin.getRunnableHashTable();
+        this.runnableInvoker = plugin.getRunnableInvoker();
         this.interfaceManager = plugin.getInterfaceManager();
         this.chatInterceptor = plugin.getChatInterceptor();
     }
@@ -51,7 +51,7 @@ public class AddScoreCommandExecutor implements SubCommandExecutor{
      */
     private void sendAddScoreInterface(Player player, VoteSession session) {
         FormChatInterface chatInterface = new AddScoreInterface(player, session, messageConfiguration,
-                runnableHashTable, chatInterceptor);
+                runnableInvoker, chatInterceptor);
         this.interfaceManager.registerInterface(chatInterface);
         chatInterface.send();
     }

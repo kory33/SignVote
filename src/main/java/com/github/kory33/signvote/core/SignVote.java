@@ -4,24 +4,20 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.Filter;
-import org.apache.logging.log4j.core.Logger;
+import com.github.kory33.chatgui.command.RunnableInvoker;
 import org.bstats.Metrics;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 
-import com.github.kory33.signvote.collection.RunnableHashTable;
 import com.github.kory33.signvote.command.SignVoteCommandExecutor;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.ConfigNodes;
 import com.github.kory33.signvote.constants.FilePaths;
 import com.github.kory33.signvote.io.PluginDataAutoSaver;
-import com.github.kory33.signvote.io.RunCommandFilter;
-import com.github.kory33.signvote.listeners.PlayerChatInterceptor;
+import com.github.kory33.chatgui.listener.PlayerChatInterceptor;
 import com.github.kory33.signvote.listeners.PlayerVoteListener;
 import com.github.kory33.signvote.listeners.SignListener;
-import com.github.kory33.signvote.manager.PlayerInteractiveInterfaceManager;
+import com.github.kory33.chatgui.manager.PlayerInteractiveInterfaceManager;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.updatenotificationplugin.bukkit.github.GithubUpdateNotifyPlugin;
 
@@ -35,11 +31,9 @@ public class SignVote extends GithubUpdateNotifyPlugin {
     @Getter private VoteSessionManager voteSessionManager;
     @Getter private JSONConfiguration messagesConfiguration;
     @Getter private FileConfiguration configuration;
-    @Getter private RunnableHashTable runnableHashTable;
+    @Getter private RunnableInvoker runnableInvoker;
     @Getter private PlayerInteractiveInterfaceManager interfaceManager;
     @Getter private PlayerChatInterceptor chatInterceptor;
-
-    private static Filter runnableCommandFilter = null;
 
     private boolean isEnabled = false;
 
@@ -85,21 +79,14 @@ public class SignVote extends GithubUpdateNotifyPlugin {
             return;
         }
 
-        // setup runnable hash table
-        if (this.runnableHashTable == null) {
-            this.runnableHashTable = new RunnableHashTable(this);
+        // setup runnable invoker
+        if (this.runnableInvoker == null) {
+            this.runnableInvoker = RunnableInvoker.getRegisteredInstance(this);
         }
 
         // setup player interface manager
         if (this.interfaceManager == null) {
             this.interfaceManager = new PlayerInteractiveInterfaceManager();
-        }
-
-        // add filter for runnable command
-        if (runnableCommandFilter == null) {
-            Filter runCommandFilter = new RunCommandFilter();
-            runnableCommandFilter = runCommandFilter;
-            ((Logger) LogManager.getRootLogger()).addFilter(runCommandFilter);
         }
 
         // setup session manager

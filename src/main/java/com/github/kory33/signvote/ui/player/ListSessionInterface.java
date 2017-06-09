@@ -2,33 +2,49 @@ package com.github.kory33.signvote.ui.player;
 
 import java.util.ArrayList;
 
+import com.github.kory33.chatgui.command.RunnableInvoker;
+import com.github.kory33.signvote.ui.player.defaults.IDefaultBrowseableInterface;
+import com.github.ucchyocean.messaging.tellraw.MessageParts;
+import lombok.Getter;
 import org.bukkit.entity.Player;
 
-import com.github.kory33.messaging.tellraw.MessagePartsList;
-import com.github.kory33.signvote.collection.RunnableHashTable;
+import com.github.kory33.chatgui.tellraw.MessagePartsList;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
-import com.github.kory33.signvote.manager.PlayerInteractiveInterfaceManager;
+import com.github.kory33.chatgui.manager.PlayerInteractiveInterfaceManager;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.session.VoteSession;
-import com.github.kory33.signvote.ui.player.model.BrowseablePageInterface;
+import com.github.kory33.chatgui.model.player.BrowseablePageInterface;
 
 /**
  * Represents an interface which displays a list of existing sessions
  * @author Kory
  */
-public final class ListSessionInterface extends BrowseablePageInterface {
+public final class ListSessionInterface extends BrowseablePageInterface implements IDefaultBrowseableInterface {
     private final VoteSessionManager voteSessionManager;
+    @Getter private final JSONConfiguration messageConfig;
 
-    public ListSessionInterface(Player player, VoteSessionManager voteSessionManager, JSONConfiguration messageConfiguration,
-            RunnableHashTable runnableHashTable, PlayerInteractiveInterfaceManager interfaceManager, int pageIndex) {
-        super(player, messageConfiguration, runnableHashTable, interfaceManager, pageIndex);
+    public ListSessionInterface(Player player, VoteSessionManager voteSessionManager, JSONConfiguration messageConfig,
+                                RunnableInvoker runnableInvoker, PlayerInteractiveInterfaceManager interfaceManager, int pageIndex) {
+        super(player, runnableInvoker, interfaceManager, pageIndex);
         this.voteSessionManager = voteSessionManager;
+        this.messageConfig = messageConfig;
     }
 
     private ListSessionInterface(ListSessionInterface oldInterface, int newIndex) {
         super(oldInterface, newIndex);
         this.voteSessionManager = oldInterface.voteSessionManager;
+        this.messageConfig = oldInterface.messageConfig;
+    }
+
+    /**
+     * Get a message formatted with the given array of Object arguments(optional)
+     * @param configurationNode configuration node from which the message should be fetched
+     * @param objects objects used in formatting the fetched string
+     * @return formatted message component
+     */
+    private MessageParts getFormattedMessagePart(String configurationNode, Object... objects) {
+        return new MessageParts(this.messageConfig.getFormatted(configurationNode, objects));
     }
 
     private MessagePartsList getEntry(VoteSession session) {
@@ -50,9 +66,35 @@ public final class ListSessionInterface extends BrowseablePageInterface {
     }
 
     @Override
-    protected MessagePartsList getHeading() {
+    public MessagePartsList getHeading() {
         MessagePartsList heading = new MessagePartsList();
-        heading.addLine(messageConfig.getString(MessageConfigNodes.LIST_UI_HEADING));
+        heading.addLine(getMessageConfig().getString(MessageConfigNodes.LIST_UI_HEADING));
         return heading;
     }
+
+    @Override
+    public String getPrevButton(boolean isActive) {
+        return IDefaultBrowseableInterface.super.getPrevButton(isActive);
+    }
+
+    @Override
+    public String getNextButton(boolean isActive) {
+        return IDefaultBrowseableInterface.super.getNextButton(isActive);
+    }
+
+    @Override
+    public String getPageDisplayComponent(int currentPageNumber, int maxPageNumber) {
+        return IDefaultBrowseableInterface.super.getPageDisplayComponent(currentPageNumber, maxPageNumber);
+    }
+
+    @Override
+    public MessagePartsList getInterfaceHeader() {
+        return IDefaultBrowseableInterface.super.getInterfaceHeader();
+    }
+
+    @Override
+    public MessagePartsList getInterfaceFooter() {
+        return IDefaultBrowseableInterface.super.getInterfaceFooter();
+    }
+
 }

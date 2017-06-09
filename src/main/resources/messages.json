@@ -100,10 +100,10 @@
         "button": "§3[+] §r",
         "cancel": "§eCANCEL",
         "cancelled": "§eOperation cancelled.",
-        "prevbutton": "§6[Prev <<<]§r",
-        "nextbutton": "§6[>>> Next]§r",
-        "inactiveprevbutton": "§7[Prev <<<]§r",
-        "inactivenextbutton": "§7[>>> Next]§r",
+        "prevbutton": "[Prev <<<]§r",
+        "nextbutton": "[>>> Next]§r",
+        "activeButtonColor": "§6",
+        "inactiveButtonColor": "§7",
         "pagedisp": " §6 {0} / {1} §r ",
         "vote": {
             "heading": "§aSelect a point to vote to §6{0}",
@@ -135,7 +135,7 @@
             "template": "§6{0}§7. §6{1}     §3({2})"
         },
         "form": {
-            "name": "§6{0} : ",
+            "label": "§6{0} : ",
             "value": "§b{0}",
             "editbutton": " §3[edit]§r",
             "notset": "(not set)",

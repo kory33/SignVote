@@ -19,7 +19,6 @@ import com.github.kory33.signvote.command.subcommand.HelpCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.ListCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.OpenCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.ReloadCommandExecutor;
-import com.github.kory33.signvote.command.subcommand.RunCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.SaveCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.StatsCommandExecutor;
 import com.github.kory33.signvote.command.subcommand.SubCommandExecutor;
@@ -64,9 +63,6 @@ public class SignVoteCommandExecutor implements CommandExecutor{
         commandMaps.put(SubCommands.STATS,     new StatsCommandExecutor(plugin));
 
         this.defaultCommandExecutor = new HelpCommandExecutor(plugin, new HashMap<>(commandMaps));
-
-        // Internal command should not be exposed to help command
-        commandMaps.put(SubCommands.RUN,       new RunCommandExecutor(plugin));
 
         this.subCommandExecutorMap = Collections.unmodifiableMap(commandMaps);
     }

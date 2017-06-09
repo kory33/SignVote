@@ -180,7 +180,7 @@ public class VoteManager {
             }
         }
         for (Vote vote: this.votePointVotes.get(votePoint)) {
-            if (vote.getVoterUuid() == playerUUID) {
+            if (vote.getVoterUuid().equals(playerUUID)) {
                 this.votePointVotes.get(votePoint).remove(vote);
                 return;
             }

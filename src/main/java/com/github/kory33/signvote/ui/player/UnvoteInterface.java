@@ -2,25 +2,28 @@ package com.github.kory33.signvote.ui.player;
 
 import java.util.Optional;
 
+import com.github.kory33.chatgui.command.RunnableInvoker;
+import com.github.kory33.signvote.ui.player.defaults.IDefaultClickableInterface;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
+import lombok.Getter;
 import org.bukkit.entity.Player;
 
-import com.github.kory33.messaging.tellraw.MessagePartsList;
-import com.github.kory33.signvote.collection.RunnableHashTable;
+import com.github.kory33.chatgui.tellraw.MessagePartsList;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.exception.VotePointNotVotedException;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
-import com.github.kory33.signvote.ui.player.model.PlayerClickableChatInterface;
+import com.github.kory33.chatgui.model.player.PlayerClickableChatInterface;
 
 /**
  * Represents an interface which confirms and executes player's un-vote.
  * @author Kory
  */
-public final class UnvoteInterface extends PlayerClickableChatInterface {
+public final class UnvoteInterface extends PlayerClickableChatInterface implements IDefaultClickableInterface {
     private final VoteSession session;
     private final VotePoint votePoint;
+    @Getter private final JSONConfiguration messageConfig;
 
     private void unVote() {
         if (!this.isValidSession()) {
@@ -38,11 +41,22 @@ public final class UnvoteInterface extends PlayerClickableChatInterface {
     }
 
     public UnvoteInterface(Player player, VoteSession session, VotePoint votePoint,
-            JSONConfiguration messageConfig, RunnableHashTable runnableHashTable) {
-        super(player, messageConfig, runnableHashTable);
+            JSONConfiguration messageConfig, RunnableInvoker runnableInvoker) {
+        super(player, runnableInvoker);
 
         this.session = session;
         this.votePoint = votePoint;
+        this.messageConfig = messageConfig;
+    }
+
+    /**
+     * Get a message formatted with the given array of Object arguments(optional)
+     * @param configurationNode configuration node from which the message should be fetched
+     * @param objects objects used in formatting the fetched string
+     * @return formatted message component
+     */
+    private MessageParts getFormattedMessagePart(String configurationNode, Object... objects) {
+        return new MessageParts(this.messageConfig.getFormatted(configurationNode, objects));
     }
 
     private String getHeading() {
@@ -64,8 +78,7 @@ public final class UnvoteInterface extends PlayerClickableChatInterface {
     }
 
     private void cancelAction() {
-        MessageParts cancelMessage = this.getFormattedMessagePart(MessageConfigNodes.UI_CANCELLED);
-        this.cancelAction(cancelMessage.build());
+        super.cancelAction(this.messageConfig.getString(MessageConfigNodes.UI_CANCELLED));
     }
 
     @Override
@@ -74,7 +87,7 @@ public final class UnvoteInterface extends PlayerClickableChatInterface {
             return this.getSessionClosedMessage();
         }
 
-        MessageParts defaultButtonMessage = this.getFormattedMessagePart(MessageConfigNodes.UI_BUTTON);
+        String defaultButtonMessage = this.messageConfig.getString(MessageConfigNodes.UI_BUTTON);
 
         MessagePartsList messagePartsList = new MessagePartsList();
         messagePartsList.addLine(this.getHeading());
@@ -85,4 +98,15 @@ public final class UnvoteInterface extends PlayerClickableChatInterface {
 
         return messagePartsList;
     }
+
+    @Override
+    public MessagePartsList getInterfaceHeader() {
+        return IDefaultClickableInterface.super.getInterfaceHeader();
+    }
+
+    @Override
+    public MessagePartsList getInterfaceFooter() {
+        return IDefaultClickableInterface.super.getInterfaceFooter();
+    }
+
 }

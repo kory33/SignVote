@@ -1,33 +1,37 @@
 package com.github.kory33.signvote.ui.player;
 
+import com.github.kory33.chatgui.command.RunnableInvoker;
+import com.github.kory33.signvote.ui.player.defaults.IDefaultFormInterface;
+import lombok.Getter;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.entity.Player;
 
-import com.github.kory33.messaging.tellraw.MessagePartsList;
-import com.github.kory33.signvote.collection.RunnableHashTable;
+import com.github.kory33.chatgui.tellraw.MessagePartsList;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MagicNumbers;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
-import com.github.kory33.signvote.listeners.PlayerChatInterceptor;
+import com.github.kory33.chatgui.listener.PlayerChatInterceptor;
 import com.github.kory33.signvote.session.VoteSession;
-import com.github.kory33.signvote.ui.player.model.FormChatInterface;
+import com.github.kory33.chatgui.model.player.FormChatInterface;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
 
 /**
  * Represents an interface that allows the player to add a new vote score limit.
  * @author Kory
  */
-public final class AddScoreInterface extends FormChatInterface {
+public final class AddScoreInterface extends FormChatInterface implements IDefaultFormInterface {
     private final VoteSession session;
+    @Getter private final JSONConfiguration messageConfig;
     private Integer score;
     private Integer voteLimit;
     private String permission;
 
-    public AddScoreInterface(Player player, VoteSession session, JSONConfiguration messageConfiguration,
-            RunnableHashTable runnableHashTable, PlayerChatInterceptor chatInterceptor) {
-        super(player, messageConfiguration, runnableHashTable, chatInterceptor);
+    public AddScoreInterface(Player player, VoteSession session, JSONConfiguration messageConfig,
+                             RunnableInvoker runnableInvoker, PlayerChatInterceptor chatInterceptor) {
+        super(player, runnableInvoker, chatInterceptor);
         this.session = session;
+        this.messageConfig = messageConfig;
     }
 
     private String getVoteLimitString() {
@@ -70,6 +74,16 @@ public final class AddScoreInterface extends FormChatInterface {
         this.revokeSession();
     }
 
+    /**
+     * Get a message formatted with the given array of Object arguments(optional)
+     * @param configurationNode configuration node from which the message should be fetched
+     * @param objects objects used in formatting the fetched string
+     * @return formatted message component
+     */
+    private MessageParts getFormattedMessagePart(String configurationNode, Object... objects) {
+        return new MessageParts(this.messageConfig.getFormatted(configurationNode, objects));
+    }
+
     private MessageParts getHeading() {
         return this.getFormattedMessagePart(MessageConfigNodes.ADDSCORE_UI_HEADING, this.session.getName());
     }
@@ -107,7 +121,7 @@ public final class AddScoreInterface extends FormChatInterface {
             );
 
         MessageParts submitButton = this.getButton(this::addScoreLimit,
-                this.getFormattedMessagePart(MessageConfigNodes.ADDSCORE_UI_SUBMIT));
+                this.messageConfig.getString(MessageConfigNodes.ADDSCORE_UI_SUBMIT));
 
         MessagePartsList messagePartsList = new MessagePartsList();
         messagePartsList.addLine(this.getHeading());
@@ -116,5 +130,50 @@ public final class AddScoreInterface extends FormChatInterface {
         messagePartsList.addAll(permissionForm);
         messagePartsList.addLine(submitButton);
         return messagePartsList;
+    }
+
+    @Override
+    public MessagePartsList getInterfaceHeader() {
+        return IDefaultFormInterface.super.getInterfaceHeader();
+    }
+
+    @Override
+    public MessagePartsList getInterfaceFooter() {
+        return IDefaultFormInterface.super.getInterfaceFooter();
+    }
+
+    @Override
+    public void notifyInvalidInput() {
+        IDefaultFormInterface.super.notifyInvalidInput();
+    }
+
+    @Override
+    public String getEditButtonString() {
+        return IDefaultFormInterface.super.getEditButtonString();
+    }
+
+    @Override
+    public String getLabelString(String labelName) {
+        return IDefaultFormInterface.super.getLabelString(labelName);
+    }
+
+    @Override
+    public String getValueString(String value) {
+        return IDefaultFormInterface.super.getValueString(value);
+    }
+
+    @Override
+    public void notifyInputCancellation() {
+        IDefaultFormInterface.super.notifyInputCancellation();
+    }
+
+    @Override
+    public String getInputCancelButton() {
+        return IDefaultFormInterface.super.getInputCancelButton();
+    }
+
+    @Override
+    public String getFieldInputPromptMessage(String fieldName) {
+        return IDefaultFormInterface.super.getFieldInputPromptMessage(fieldName);
     }
 }
