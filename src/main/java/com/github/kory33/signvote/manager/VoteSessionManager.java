@@ -8,7 +8,6 @@ import org.bukkit.block.Sign;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;

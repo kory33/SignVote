@@ -2,7 +2,6 @@ package com.github.kory33.signvote.listeners;
 
 import com.github.kory33.chatgui.command.RunnableInvoker;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,8 +18,6 @@ import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.ui.player.UnvoteInterface;
 import com.github.kory33.signvote.ui.player.VoteInterface;
 import com.github.kory33.chatgui.model.player.PlayerClickableChatInterface;
-
-import java.util.Optional;
 
 /**
  * A Listener implementation which listens to player's attempts to vote to a vote point

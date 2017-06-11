@@ -2,7 +2,6 @@ package com.github.kory33.signvote.listeners;
 
 import com.github.kory33.signvote.utils.BlockUtil;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,7 +19,6 @@ import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 import org.bukkit.material.MaterialData;
 
-import java.util.Optional;
 import java.util.Set;
 
 /**
