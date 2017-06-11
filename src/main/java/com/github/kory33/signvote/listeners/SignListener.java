@@ -1,5 +1,7 @@
 package com.github.kory33.signvote.listeners;
 
+import com.github.kory33.signvote.utils.BlockUtil;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
@@ -16,6 +18,10 @@ import com.github.kory33.signvote.core.SignVote;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
+import org.bukkit.material.MaterialData;
+
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * A Listener implementation which listens to player's interaction with sign.
@@ -23,8 +29,10 @@ import com.github.kory33.signvote.session.VoteSession;
 public class SignListener implements Listener {
     private final JSONConfiguration messageConfig;
     private final VoteSessionManager voteSessionManager;
+    private final SignVote plugin;
 
     public SignListener(SignVote plugin) {
+        this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
 
         this.messageConfig = plugin.getMessagesConfiguration();
@@ -86,17 +94,48 @@ public class SignListener implements Listener {
         }
 
         Sign sign = (Sign)state;
-        VotePoint votePoint = this.voteSessionManager.getVotePoint(sign);
-
-        if (votePoint == null) {
+        Optional<VoteSession> optionalSession = this.voteSessionManager.getVoteSession(sign);
+        if (!optionalSession.isPresent()) {
             return;
         }
 
-        String sessionName = voteSessionManager.getVoteSession(sign).getName();
-        String votepointName = votePoint.getName();
+        VoteSession session = optionalSession.get();
+
+        String sessionName = session.getName();
+        String votepointName = session.getVotePoint(sign).getName();
 
         event.setCancelled(true);
         event.getPlayer().sendMessage(messageConfig.getFormatted(MessageConfigNodes.F_VOTEPOINT_BREAK,
                 sessionName, votepointName));
+    }
+
+    @EventHandler
+    public void onVotePointBaseBlockBreak(BlockBreakEvent event) {
+        Block brokenBlock = event.getBlock();
+
+        Set<Block> attachedVotePoints = BlockUtil.getBlocksAdjacentTo(brokenBlock);
+        attachedVotePoints.removeIf(block -> {
+            // ignore if the block is not a sign
+            MaterialData state = block.getState().getData();
+            if (!(state instanceof org.bukkit.material.Sign)) {
+                return true;
+            }
+
+            // ignore if the sign is not attached to the broken block
+            org.bukkit.material.Sign signMaterial = (org.bukkit.material.Sign) state;
+            Block attachedBlock = block.getRelative(signMaterial.getAttachedFace());
+            if (!attachedBlock.equals(brokenBlock)) {
+                return true;
+            }
+
+            // ignore if the sign is not a SignVote's vote-point
+            return !this.plugin.getAPI().isSignVoteSign(block);
+        });
+
+        if (attachedVotePoints.isEmpty()) {
+            return;
+        }
+
+        event.setCancelled(true);
     }
 }

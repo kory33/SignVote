@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 
 import com.github.kory33.chatgui.command.RunnableInvoker;
+import com.github.kory33.signvote.api.SignVoteAPI;
 import org.bstats.Metrics;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
@@ -34,6 +35,7 @@ public class SignVote extends GithubUpdateNotifyPlugin {
     @Getter private RunnableInvoker runnableInvoker;
     @Getter private PlayerInteractiveInterfaceManager interfaceManager;
     @Getter private PlayerChatInterceptor chatInterceptor;
+    @Getter private SignVoteAPI API;
 
     private boolean isEnabled = false;
 
@@ -110,6 +112,8 @@ public class SignVote extends GithubUpdateNotifyPlugin {
 
         this.enableMetrics();
         this.isEnabled = true;
+
+        this.API = new SignVoteAPI(this);
     }
 
     @Override
