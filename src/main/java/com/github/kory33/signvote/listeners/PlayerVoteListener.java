@@ -30,8 +30,10 @@ public class PlayerVoteListener implements Listener {
     private final JSONConfiguration messageConfig;
     private final RunnableInvoker runnableInvoker;
     private final PlayerInteractiveInterfaceManager interfaceManager;
+    private final SignVote plugin;
 
     public PlayerVoteListener(SignVote plugin) {
+        this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         this.voteSessionManager = plugin.getVoteSessionManager();
         this.messageConfig = plugin.getMessagesConfiguration();
@@ -42,29 +44,16 @@ public class PlayerVoteListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteractWithVotePoint(PlayerInteractEvent event) {
         Block clickedBlock = event.getClickedBlock();
-        if (clickedBlock == null) {
+        if (!this.plugin.getAPI().isSignVoteSign(clickedBlock)) {
             return;
         }
 
-        BlockState state = clickedBlock.getState();
-        if (!(state instanceof Sign)) {
-            return;
-        }
-        Sign sign = (Sign) state;
+        Sign sign = (Sign) clickedBlock.getState();
 
-        Optional<VoteSession> optionalSession = this.voteSessionManager.getVoteSession(sign);
-        if (!optionalSession.isPresent()) {
-            return;
-        }
-        VoteSession session = optionalSession.get();
-
+        VoteSession session = this.voteSessionManager.getVoteSession(sign);
         VotePoint votePoint = session.getVotePoint(sign);
-        if (votePoint == null) {
-            return;
-        }
 
         Player clickPlayer = event.getPlayer();
-
         PlayerClickableChatInterface chatInterface;
         if (session.getVoteManager().hasVoted(clickPlayer.getUniqueId(), votePoint)) {
             chatInterface = new UnvoteInterface(clickPlayer, session, votePoint, messageConfig, runnableInvoker);

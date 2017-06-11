@@ -27,12 +27,16 @@ public class SignVoteAPI {
      * @return true if the sign is a vote-point
      */
     public boolean isSignVoteSign(Block block) {
+        if (block == null) {
+            return false;
+        }
+
         BlockState blockState = block.getState();
         if (!(blockState instanceof Sign)) {
             return false;
         }
 
         Sign sign = (Sign) blockState;
-        return this.plugin.getVoteSessionManager().getVoteSession(sign).isPresent();
+        return this.plugin.getVoteSessionManager().getVoteSession(sign) != null;
     }
 }

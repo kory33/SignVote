@@ -104,14 +104,14 @@ public class VoteSessionManager {
     }
 
     /**
-     * Get an optional vote point corresponding to the given sign
+     * Get a point corresponding to the given sign
      * @param votepointSign a vote point sign
-     * @return an Optional object containing vote session that is responsible for the given sign
+     * @return a vote session that is responsible for the given sign
      */
-    public Optional<VoteSession> getVoteSession(Sign votepointSign) {
+    public VoteSession getVoteSession(Sign votepointSign) {
         return this.sessionMap.values().stream()
                 .filter(session -> session.getVotePoint(votepointSign) != null)
-                .findFirst();
+                .findFirst().orElse(null);
     }
 
     /**
@@ -121,8 +121,11 @@ public class VoteSessionManager {
      * null if the sign is not a vote point.
      */
     public VotePoint getVotePoint(Sign sign) {
-        Optional<VoteSession> sessionOptional = this.getVoteSession(sign);
-        return sessionOptional.map(voteSession -> voteSession.getVotePoint(sign)).orElse(null);
+        VoteSession session = this.getVoteSession(sign);
+        if (session == null) {
+            return null;
+        }
+        return session.getVotePoint(sign);
     }
 
     public void deleteSession(VoteSession targetVoteSession) {

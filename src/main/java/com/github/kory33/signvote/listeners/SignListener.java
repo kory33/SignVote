@@ -88,18 +88,13 @@ public class SignListener implements Listener {
 
     @EventHandler
     public void onVotePointBreak(BlockBreakEvent event) {
-        BlockState state = event.getBlock().getState();
-        if (!(state instanceof Sign)) {
+        Block brokenBlock = event.getBlock();
+        if (!(this.plugin.getAPI().isSignVoteSign(brokenBlock))) {
             return;
         }
 
-        Sign sign = (Sign)state;
-        Optional<VoteSession> optionalSession = this.voteSessionManager.getVoteSession(sign);
-        if (!optionalSession.isPresent()) {
-            return;
-        }
-
-        VoteSession session = optionalSession.get();
+        Sign sign = (Sign) brokenBlock.getState();
+        VoteSession session = this.voteSessionManager.getVoteSession(sign);
 
         String sessionName = session.getName();
         String votepointName = session.getVotePoint(sign).getName();
