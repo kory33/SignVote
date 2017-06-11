@@ -20,6 +20,8 @@ import com.github.kory33.signvote.ui.player.UnvoteInterface;
 import com.github.kory33.signvote.ui.player.VoteInterface;
 import com.github.kory33.chatgui.model.player.PlayerClickableChatInterface;
 
+import java.util.Optional;
+
 /**
  * A Listener implementation which listens to player's attempts to vote to a vote point
  */
@@ -50,10 +52,11 @@ public class PlayerVoteListener implements Listener {
         }
         Sign sign = (Sign) state;
 
-        VoteSession session = this.voteSessionManager.getVoteSession(sign);
-        if (session == null) {
+        Optional<VoteSession> optionalSession = this.voteSessionManager.getVoteSession(sign);
+        if (!optionalSession.isPresent()) {
             return;
         }
+        VoteSession session = optionalSession.get();
 
         VotePoint votePoint = session.getVotePoint(sign);
         if (votePoint == null) {

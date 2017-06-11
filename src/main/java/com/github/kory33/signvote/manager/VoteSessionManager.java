@@ -1,18 +1,18 @@
 package com.github.kory33.signvote.manager;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.concurrent.CompletableFuture;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Stream;
-
-import org.bukkit.block.Sign;
-
 import com.github.kory33.chatgui.util.collection.BijectiveHashMap;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.utils.FileUtils;
+import org.bukkit.block.Sign;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 public class VoteSessionManager {
     private final BijectiveHashMap<String, VoteSession> sessionMap;
@@ -104,19 +104,14 @@ public class VoteSessionManager {
     }
 
     /**
-     * Get vote point corresponding to the given sign
+     * Get an optional vote point corresponding to the given sign
      * @param votepointSign a vote point sign
-     * @return a vote session who is responsible for a give sign
-     * null if no such vote session exists
+     * @return an Optional object containing vote session that is responsible for the given sign
      */
-    public VoteSession getVoteSession(Sign votepointSign) {
-        for (VoteSession session: this.sessionMap.values()) {
-            if (session.getVotePoint(votepointSign) != null) {
-                return session;
-            }
-        }
-
-        return null;
+    public Optional<VoteSession> getVoteSession(Sign votepointSign) {
+        return this.sessionMap.values().stream()
+                .filter(session -> session.getVotePoint(votepointSign) != null)
+                .findFirst();
     }
 
     /**
@@ -126,15 +121,8 @@ public class VoteSessionManager {
      * null if the sign is not a vote point.
      */
     public VotePoint getVotePoint(Sign sign) {
-        for (VoteSession session: this.sessionMap.values()) {
-            VotePoint votePoint = session.getVotePoint(sign);
-
-            if (votePoint != null) {
-                return votePoint;
-            }
-        }
-
-        return null;
+        Optional<VoteSession> sessionOptional = this.getVoteSession(sign);
+        return sessionOptional.map(voteSession -> voteSession.getVotePoint(sign)).orElse(null);
     }
 
     public void deleteSession(VoteSession targetVoteSession) {
