@@ -39,9 +39,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.Kory33</groupId>
+            <groupId>com.github.kory33</groupId>
             <artifactId>UpdateNotificationPlugin</artifactId>
-            <version>0.1.5</version>
+            <version>0.1.6-alpha</version>
         </dependency>
         <dependency>
             <groupId>org.bstats</groupId>
@@ -107,7 +107,7 @@
                         <configuration>
                             <artifactSet>
                                 <includes>
-                                    <include>com.github.Kory33:UpdateNotificationPlugin</include>
+                                    <include>com.github.kory33:UpdateNotificationPlugin</include>
                                     <include>com.github.kory33:ChatGUI</include>
                                     <include>org.bstats:*</include>
                                 </includes>
