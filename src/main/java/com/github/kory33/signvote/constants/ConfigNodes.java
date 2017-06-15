@@ -9,4 +9,5 @@ public class ConfigNodes {
     public static final String IS_AUTOSAVE_ENABLED     = AUTOSAVE_ROOT + ".enabled";
     public static final String AUTOSAVE_INTERVAL_TICKS = AUTOSAVE_ROOT + ".interval-ticks";
     public static final String AUTOSAVE_SHOULD_LOG     = AUTOSAVE_ROOT + ".enable-log";
+    public static final String VOTE_POINT_PROTECTION   = "vote-point-protection";
 }

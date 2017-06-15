@@ -1,13 +1,5 @@
 package com.github.kory33.signvote.listeners;
 
-import com.github.kory33.signvote.utils.BlockUtil;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.SignChangeEvent;
-
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.Patterns;
@@ -17,9 +9,12 @@ import com.github.kory33.signvote.core.SignVote;
 import com.github.kory33.signvote.manager.VoteSessionManager;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
-import org.bukkit.material.MaterialData;
-
-import java.util.Set;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.SignChangeEvent;
 
 /**
  * A Listener implementation which listens to player's interaction with sign.
@@ -100,35 +95,5 @@ public class SignListener implements Listener {
         event.setCancelled(true);
         event.getPlayer().sendMessage(messageConfig.getFormatted(MessageConfigNodes.F_VOTEPOINT_BREAK,
                 sessionName, votepointName));
-    }
-
-    @EventHandler
-    public void onVotePointBaseBlockBreak(BlockBreakEvent event) {
-        Block brokenBlock = event.getBlock();
-
-        Set<Block> attachedVotePoints = BlockUtil.getBlocksAdjacentTo(brokenBlock);
-        attachedVotePoints.removeIf(block -> {
-            // ignore if the block is not a sign
-            MaterialData state = block.getState().getData();
-            if (!(state instanceof org.bukkit.material.Sign)) {
-                return true;
-            }
-
-            // ignore if the sign is not attached to the broken block
-            org.bukkit.material.Sign signMaterial = (org.bukkit.material.Sign) state;
-            Block attachedBlock = block.getRelative(signMaterial.getAttachedFace());
-            if (!attachedBlock.equals(brokenBlock)) {
-                return true;
-            }
-
-            // ignore if the sign is not a SignVote's vote-point
-            return !this.plugin.getAPI().isSignVoteSign(block);
-        });
-
-        if (attachedVotePoints.isEmpty()) {
-            return;
-        }
-
-        event.setCancelled(true);
     }
 }

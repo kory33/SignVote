@@ -6,6 +6,7 @@ import java.util.logging.Level;
 
 import com.github.kory33.chatgui.command.RunnableInvoker;
 import com.github.kory33.signvote.api.SignVoteAPI;
+import com.github.kory33.signvote.listeners.VotePointProtector;
 import org.bstats.Metrics;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
@@ -98,6 +99,9 @@ public class SignVote extends GithubUpdateNotifyPlugin {
         this.chatInterceptor = new PlayerChatInterceptor(this);
         new SignListener(this);
         new PlayerVoteListener(this);
+        if (this.configuration.getBoolean(ConfigNodes.VOTE_POINT_PROTECTION, true)) {
+            new VotePointProtector(this);
+        }
 
         // register command
         SignVoteCommandExecutor commandExecutor = new SignVoteCommandExecutor(this);
