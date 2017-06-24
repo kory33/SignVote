@@ -1,19 +1,21 @@
 package com.github.kory33.signvote.model;
 
-import java.util.UUID;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
-import lombok.Getter;
+import java.util.UUID;
 
 /**
  * Abstract representation of a vote.
  * @author Kory
  */
+@Data
+@RequiredArgsConstructor
 public class Vote {
-    @Getter private final int score;
-    @Getter private final UUID voterUuid;
+    private final VoteScore score;
+    private final UUID voterUuid;
 
     public Vote(int score, UUID voterUuid) {
-        this.score = score;
-        this.voterUuid = voterUuid;
+        this(new VoteScore(score), voterUuid);
     }
 }
