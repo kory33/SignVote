@@ -1,5 +1,6 @@
 package com.github.kory33.signvote.utils;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -13,6 +14,7 @@ import java.util.stream.Stream;
 
 import com.github.kory33.signvote.constants.Formats;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 /**
  * An util class which handles file I/O
@@ -66,6 +68,16 @@ public class FileUtils {
         } catch (IOException exception) {
             System.out.println("Failed to write to file " + targetFile.getAbsolutePath());
             exception.printStackTrace();
+        }
+    }
+
+    /**
+     * Read json data from the given target file
+     *
+     */
+    public static JsonObject readJSON(final File targetFile) throws IOException {
+        try (BufferedReader reader = Files.newBufferedReader(targetFile.toPath(), Formats.FILE_ENCODING)) {
+            return (new JsonParser()).parse(reader).getAsJsonObject();
         }
     }
 

@@ -2,7 +2,6 @@ package com.github.kory33.signvote.session;
 
 import com.github.kory33.chatgui.util.collection.BijectiveHashMap;
 import com.github.kory33.signvote.collection.VoteScoreLimits;
-import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.*;
 import com.github.kory33.signvote.exception.*;
 import com.github.kory33.signvote.manager.VoteManager;
@@ -47,7 +46,7 @@ public class VoteSession {
         // read information of this vote session
         File sessionDataFile = new File(sessionSaveLocation, FilePaths.SESSION_DATA_FILENAME);
 
-        JsonObject sessionConfigJson = (new JSONConfiguration(sessionDataFile)).getJsonObject();
+        JsonObject sessionConfigJson = FileUtils.readJSON(sessionDataFile);
         JsonObject voteLimits = sessionConfigJson.get(VoteSessionDataFileKeys.VOTE_SCORE_LIMITS).getAsJsonObject();
 
         this.voteScoreCountLimits = new VoteScoreLimits(voteLimits);

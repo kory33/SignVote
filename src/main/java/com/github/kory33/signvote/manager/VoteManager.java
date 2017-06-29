@@ -1,27 +1,20 @@
 package com.github.kory33.signvote.manager;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.regex.Matcher;
-
-import org.bukkit.Bukkit;
-
 import com.github.kory33.signvote.constants.Patterns;
 import com.github.kory33.signvote.exception.VotePointAlreadyVotedException;
 import com.github.kory33.signvote.exception.VotePointNotVotedException;
 import com.github.kory33.signvote.model.Vote;
 import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
+import com.github.kory33.signvote.utils.FileUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.regex.Matcher;
 
 /**
  * A class which handles all the vote data
@@ -53,20 +46,14 @@ public class VoteManager {
         File[] dirFiles = voteDataDirectory.listFiles();
         assert dirFiles != null;
         for (File playerVoteDataFile: dirFiles) {
-            JsonObject jsonObject = (new JsonParser()).parse(Files.newBufferedReader(playerVoteDataFile.toPath())).getAsJsonObject();
+            JsonObject jsonObject = FileUtils.readJSON(playerVoteDataFile);
 
             Matcher playerUUIDMatcher = Patterns.JSON_FILE_NAME.matcher(playerVoteDataFile.getName());
             if (!playerUUIDMatcher.find()) {
                 continue;
             }
 
-            String playerUUID = playerUUIDMatcher.group(1);
-            UUID uuid = UUID.fromString(playerUUID);
-            if (!Bukkit.getOfflinePlayer(uuid).hasPlayedBefore()) {
-                System.out.println("ignoring" + playerVoteDataFile.getName());
-                continue;
-            }
-
+            UUID uuid = UUID.fromString(playerUUIDMatcher.group(1));
             this.loadPlayerVoteData(uuid, jsonObject);
         }
     }
@@ -199,7 +186,7 @@ public class VoteManager {
         // purge votepoint names present in voteData
         votes.forEach(vote -> {
             try {
-                this.voteData.get(vote.getVoterUuid()).get(vote.getScore()).remove(votePoint.getName());
+                this.voteData.get(vote.getVoterUuid()).get(vote.getScore().toInt()).remove(votePoint.getName());
             } catch (NullPointerException exception) {
                 // NPE should be thrown If and Only If
                 // voteData and votePointVotes are not synchronized correctly
@@ -258,7 +245,7 @@ public class VoteManager {
     public void refreshVotePointName(VotePoint votePoint, String oldName) {
         HashSet<Vote> votes = this.getVotes(votePoint);
         votes.forEach(vote -> {
-            HashSet<String> votedPoints = this.voteData.get(vote.getVoterUuid()).get(vote.getScore());
+            HashSet<String> votedPoints = this.voteData.get(vote.getVoterUuid()).get(vote.getScore().toInt());
             votedPoints.remove(oldName);
             votedPoints.add(votePoint.toString());
         });
