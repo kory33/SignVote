@@ -20,14 +20,13 @@ public final class Limit {
         this.limit = null;
     }
 
-    public Limit(String limitString) throws InvalidLimitDataException {
+    public static Limit fromString(String limitString) throws InvalidLimitDataException {
         if (NumberUtils.isNumber(limitString)) {
-            this.limit = NumberUtils.createInteger(limitString);
-            return;
+            return new Limit(NumberUtils.createInteger(limitString));
         }
+
         if (INFINITY.equals(limitString)) {
-            this.limit = null;
-            return;
+            return new Limit();
         }
 
         throw new InvalidLimitDataException(limitString);
