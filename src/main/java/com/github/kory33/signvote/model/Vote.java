@@ -11,7 +11,7 @@ import java.util.UUID;
  */
 @Data
 @RequiredArgsConstructor
-public class Vote {
+public final class Vote {
     private final VoteScore score;
     private final UUID voterUuid;
 

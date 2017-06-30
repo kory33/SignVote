@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @EqualsAndHashCode
-public class VoteScore {
+public final class VoteScore {
     private final int score;
 
     public int toInt() {

@@ -7,7 +7,7 @@ import org.apache.commons.lang.math.NumberUtils;
 /**
  * An abstract representation of a limit of something
  */
-public abstract class Limit {
+public final class Limit {
     private static final String INFINITY = "infinity";
 
     @Getter private final Integer limit;
