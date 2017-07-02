@@ -3,6 +3,8 @@ package com.github.kory33.signvote.model;
 import com.github.kory33.signvote.exception.data.InvalidLimitDataException;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.bukkit.entity.Player;
@@ -14,17 +16,17 @@ import org.bukkit.entity.Player;
 @RequiredArgsConstructor
 public class VoteLimit {
     /** Json keys */
-
     private static final String JSON_SCORE_KEY = "score";
     private static final String JSON_LIMIT_KEY = "limit";
     private static final String JSON_PERMS_KEY = "permission";
 
-
-    private final int score;
+    private final VoteScore score;
     private final Limit limit;
+
+    @Getter(AccessLevel.NONE)
     private final String permission;
 
-    public VoteLimit(int score, Limit limit) {
+    public VoteLimit(VoteScore score, Limit limit) {
         this(score, limit, null);
     }
 
@@ -48,7 +50,7 @@ public class VoteLimit {
         JsonElement limitElement = jsonObject.get(JSON_LIMIT_KEY);
         JsonElement permissionElement = jsonObject.get(JSON_PERMS_KEY);
 
-        int score = scoreElement.getAsInt();
+        VoteScore score = new VoteScore(scoreElement.getAsInt());
         Limit limit = Limit.fromString(limitElement.getAsString());
 
         if (permissionElement.isJsonNull()) {
@@ -62,7 +64,7 @@ public class VoteLimit {
     public JsonObject toJsonObject() {
         JsonObject jsonObject = new JsonObject();
 
-        jsonObject.addProperty(JSON_SCORE_KEY, this.score);
+        jsonObject.addProperty(JSON_SCORE_KEY, this.score.toInt());
         jsonObject.addProperty(JSON_LIMIT_KEY, this.limit.toString());
         jsonObject.addProperty(JSON_SCORE_KEY, this.permission);
 

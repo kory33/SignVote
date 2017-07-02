@@ -1,23 +1,22 @@
 package com.github.kory33.signvote.model;
 
 import com.github.kory33.signvote.exception.data.InvalidLimitDataException;
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import org.apache.commons.lang.math.NumberUtils;
 
 /**
  * An abstract representation of a limit of something
  */
+@AllArgsConstructor
+@EqualsAndHashCode
 public final class Limit {
     private static final String INFINITY = "infinity";
 
-    @Getter private final Integer limit;
-
-    public Limit(Integer limit) {
-        this.limit = limit;
-    }
+    private final Integer limit;
 
     public Limit() {
-        this.limit = null;
+        this(null);
     }
 
     public static Limit fromString(String limitString) throws InvalidLimitDataException {
@@ -34,6 +33,26 @@ public final class Limit {
 
     public boolean isInfinite() {
         return this.limit == null;
+    }
+
+    private boolean greaterThan(Limit limit) {
+        if (limit.isInfinite()) {
+            return false;
+        }
+
+        return this.isInfinite() || this.limit > limit.limit;
+    }
+
+    public int compareTo(Limit limit) {
+        if (this.greaterThan(limit)) {
+            return 1;
+        }
+
+        if (limit.greaterThan(this)) {
+            return -1;
+        }
+
+        return 0;
     }
 
     public String toString() {
