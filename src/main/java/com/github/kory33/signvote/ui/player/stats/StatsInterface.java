@@ -16,7 +16,7 @@ import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.StatsType;
 import com.github.kory33.chatgui.manager.PlayerInteractiveInterfaceManager;
-import com.github.kory33.signvote.model.VotePointStats;
+import com.github.kory33.signvote.vote.VotePointStats;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.chatgui.model.player.BrowseablePageInterface;
 

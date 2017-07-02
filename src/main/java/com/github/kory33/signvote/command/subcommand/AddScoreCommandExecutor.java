@@ -3,15 +3,14 @@ package com.github.kory33.signvote.command.subcommand;
 import java.util.ArrayList;
 
 import com.github.kory33.chatgui.command.RunnableInvoker;
-import com.github.kory33.signvote.model.Limit;
-import com.github.kory33.signvote.model.VoteLimit;
-import com.github.kory33.signvote.model.VoteScore;
+import com.github.kory33.signvote.vote.Limit;
+import com.github.kory33.signvote.vote.VoteLimit;
+import com.github.kory33.signvote.vote.VoteScore;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.kory33.signvote.configurable.JSONConfiguration;
-import com.github.kory33.signvote.constants.MagicNumbers;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.core.SignVote;

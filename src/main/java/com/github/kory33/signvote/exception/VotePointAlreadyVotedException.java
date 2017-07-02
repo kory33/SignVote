@@ -1,6 +1,6 @@
 package com.github.kory33.signvote.exception;
 
-import com.github.kory33.signvote.model.VotePoint;
+import com.github.kory33.signvote.vote.VotePoint;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 

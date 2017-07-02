@@ -12,7 +12,7 @@ import com.github.kory33.chatgui.tellraw.MessagePartsList;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.exception.VotePointNotVotedException;
-import com.github.kory33.signvote.model.VotePoint;
+import com.github.kory33.signvote.vote.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.chatgui.model.player.PlayerClickableChatInterface;
 

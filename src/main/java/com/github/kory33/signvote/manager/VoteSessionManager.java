@@ -1,7 +1,7 @@
 package com.github.kory33.signvote.manager;
 
 import com.github.kory33.chatgui.util.collection.BijectiveHashMap;
-import com.github.kory33.signvote.model.VotePoint;
+import com.github.kory33.signvote.vote.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.utils.FileUtils;
 import org.bukkit.block.Sign;

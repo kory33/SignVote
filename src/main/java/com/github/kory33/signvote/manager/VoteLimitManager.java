@@ -1,9 +1,9 @@
 package com.github.kory33.signvote.manager;
 
 import com.github.kory33.signvote.exception.data.InvalidLimitDataException;
-import com.github.kory33.signvote.model.Limit;
-import com.github.kory33.signvote.model.VoteLimit;
-import com.github.kory33.signvote.model.VoteScore;
+import com.github.kory33.signvote.vote.Limit;
+import com.github.kory33.signvote.vote.VoteLimit;
+import com.github.kory33.signvote.vote.VoteScore;
 import com.google.gson.JsonArray;
 import org.bukkit.entity.Player;
 

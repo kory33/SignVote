@@ -1,7 +1,7 @@
 package com.github.kory33.signvote.exception;
 
-import com.github.kory33.signvote.model.VotePoint;
-import com.github.kory33.signvote.model.VoteScore;
+import com.github.kory33.signvote.vote.VotePoint;
+import com.github.kory33.signvote.vote.VoteScore;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.bukkit.entity.Player;

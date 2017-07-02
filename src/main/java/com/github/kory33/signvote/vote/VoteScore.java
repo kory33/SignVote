@@ -1,4 +1,4 @@
-package com.github.kory33.signvote.model;
+package com.github.kory33.signvote.vote;
 
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;

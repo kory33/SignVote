@@ -1,4 +1,4 @@
-package com.github.kory33.signvote.model;
+package com.github.kory33.signvote.vote;
 
 import java.util.Collections;
 import java.util.HashMap;
