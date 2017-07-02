@@ -1,20 +1,22 @@
 package com.github.kory33.signvote.ui.player;
 
 import com.github.kory33.chatgui.command.RunnableInvoker;
-import com.github.kory33.signvote.ui.player.defaults.IDefaultFormInterface;
-import lombok.Getter;
-import org.apache.commons.lang.math.NumberUtils;
-import org.bukkit.entity.Player;
-
+import com.github.kory33.chatgui.listener.PlayerChatInterceptor;
+import com.github.kory33.chatgui.model.player.FormChatInterface;
 import com.github.kory33.chatgui.tellraw.MessagePartsList;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MagicNumbers;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
-import com.github.kory33.chatgui.listener.PlayerChatInterceptor;
+import com.github.kory33.signvote.model.Limit;
+import com.github.kory33.signvote.model.VoteLimit;
+import com.github.kory33.signvote.model.VoteScore;
 import com.github.kory33.signvote.session.VoteSession;
-import com.github.kory33.chatgui.model.player.FormChatInterface;
+import com.github.kory33.signvote.ui.player.defaults.IDefaultFormInterface;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
+import lombok.Getter;
+import org.apache.commons.lang.math.NumberUtils;
+import org.bukkit.entity.Player;
 
 /**
  * Represents an interface that allows the player to add a new vote score limit.
@@ -24,7 +26,7 @@ public final class AddScoreInterface extends FormChatInterface implements IDefau
     private final VoteSession session;
     @Getter private final JSONConfiguration messageConfig;
     private Integer score;
-    private Integer voteLimit;
+    private Integer limitInteger;
     private String permission;
 
     public AddScoreInterface(Player player, VoteSession session, JSONConfiguration messageConfig,
@@ -35,25 +37,17 @@ public final class AddScoreInterface extends FormChatInterface implements IDefau
     }
 
     private String getVoteLimitString() {
-        if (this.voteLimit == null) {
-            return null;
-        }
-
-        if (this.voteLimit == MagicNumbers.VOTELIMIT_INFINITY) {
+        if (this.limitInteger == null) {
             return this.messageConfig.getString(MessageConfigNodes.INFINITE);
         }
 
-        return this.voteLimit.toString();
+        return this.limitInteger.toString();
     }
 
     private void addScoreLimit() {
         if (score == null) {
             targetPlayer.sendMessage(messageConfig.getString(MessageConfigNodes.ADDSCORE_UI_SCORE_NOT_SET));
             return;
-        }
-
-        if (voteLimit == null) {
-            voteLimit = MagicNumbers.VOTELIMIT_INFINITY;
         }
 
         String convertedPermission;
@@ -65,11 +59,19 @@ public final class AddScoreInterface extends FormChatInterface implements IDefau
             convertedPermission = permission;
         }
 
-        this.session.getVoteScoreCountLimits().addLimit(score, convertedPermission, voteLimit);
 
-        String limitString = voteLimit == MagicNumbers.VOTELIMIT_INFINITY ? "Infinity" : String.valueOf(voteLimit);
-        this.targetPlayer.sendMessage(messageConfig.getFormatted(MessageConfigNodes.F_SCORE_LIMIT_ADDED,
-                limitString, score, session.getName(), convertedPermission));
+        VoteScore voteScore = new VoteScore(score);
+        Limit limit = new Limit(this.limitInteger);
+        VoteLimit voteLimit = new VoteLimit(voteScore, limit, convertedPermission);
+
+        this.session.getVoteLimitManager().addVoteLimit(voteLimit);
+
+        String limitString = limit.isInfinite()
+                ? messageConfig.getString(MessageConfigNodes.INFINITE)
+                : limit.toString();
+
+        targetPlayer.sendMessage(messageConfig.getFormatted(MessageConfigNodes.F_SCORE_LIMIT_ADDED,
+                limitString, score, session.getName(), permission));
 
         this.revokeSession();
     }
@@ -107,7 +109,7 @@ public final class AddScoreInterface extends FormChatInterface implements IDefau
             );
 
         MessagePartsList limitForm = super.getForm(
-                input -> this.voteLimit = NumberUtils.createInteger(input),
+                input -> this.limitInteger = NumberUtils.createInteger(input),
                 this::validateLimitInput,
                 this.messageConfig.getString(MessageConfigNodes.ADDSCORE_UI_LIMIT),
                 this.getVoteLimitString()

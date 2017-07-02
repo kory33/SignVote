@@ -1,19 +1,27 @@
 package com.github.kory33.signvote.model;
 
 import com.github.kory33.signvote.exception.data.InvalidLimitDataException;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang.math.NumberUtils;
 
 /**
- * An abstract representation of a limit of something
+ * An abstract representation of a limit of something.
+ *
+ * <p>
+ * The limit number should either be 0, positive integer or infinity.
  */
-@AllArgsConstructor
 @EqualsAndHashCode
-public final class Limit {
+public final class Limit implements Comparable<Limit> {
     private static final String INFINITY = "infinity";
 
     private final Integer limit;
+
+    public Limit(Integer limit) {
+        if (limit != null && limit < 0) {
+            throw new IllegalArgumentException("Limit must not be negative.");
+        }
+        this.limit = limit;
+    }
 
     public Limit() {
         this(null);
@@ -53,6 +61,17 @@ public final class Limit {
         }
 
         return 0;
+    }
+
+    public Limit minus(Limit limit) {
+        if (this.isInfinite()) {
+            return new Limit(limit.limit);
+        }
+        if (limit.isInfinite()) {
+            return new Limit(0);
+        }
+
+        return new Limit(Math.max(this.limit - limit.limit, 0));
     }
 
     public String toString() {

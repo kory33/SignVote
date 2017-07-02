@@ -5,6 +5,7 @@ import com.github.kory33.signvote.exception.VotePointAlreadyVotedException;
 import com.github.kory33.signvote.exception.VotePointNotVotedException;
 import com.github.kory33.signvote.model.Vote;
 import com.github.kory33.signvote.model.VotePoint;
+import com.github.kory33.signvote.model.VoteScore;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.utils.FileUtils;
 import com.google.gson.Gson;
@@ -112,11 +113,11 @@ public class VoteManager {
      * @param uuid UUID of the player
      * @return A map containing vote scores as keys and vote counts(with the score of corresponding key) as values
      */
-    public HashMap<Integer, Integer> getVotedPointsCount(UUID uuid) {
+    public HashMap<VoteScore, Integer> getVotedPointsCount(UUID uuid) {
         HashMap<Integer, HashSet<String>> votePointsMap = this.getVotedPointsMap(uuid);
 
-        HashMap<Integer, Integer> voteCounts = new HashMap<>();
-        votePointsMap.forEach((score, voteSet) -> voteCounts.put(score, voteSet.size()));
+        HashMap<VoteScore, Integer> voteCounts = new HashMap<>();
+        votePointsMap.forEach((score, voteSet) -> voteCounts.put(new VoteScore(score), voteSet.size()));
 
         return voteCounts;
     }

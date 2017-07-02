@@ -1,12 +1,5 @@
 package com.github.kory33.signvote.command.subcommand;
 
-import java.util.ArrayList;
-import java.util.Optional;
-
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
@@ -16,8 +9,15 @@ import com.github.kory33.signvote.exception.ScoreCountLimitReachedException;
 import com.github.kory33.signvote.exception.VotePointAlreadyVotedException;
 import com.github.kory33.signvote.exception.VoteSessionClosedException;
 import com.github.kory33.signvote.manager.VoteSessionManager;
+import com.github.kory33.signvote.model.Limit;
 import com.github.kory33.signvote.model.VotePoint;
+import com.github.kory33.signvote.model.VoteScore;
 import com.github.kory33.signvote.session.VoteSession;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
 
 /**
  * Executor class of "vote" sub-command
@@ -70,17 +70,17 @@ public class VoteCommandExecutor implements SubCommandExecutor {
             return true;
         }
 
-        int voteScore;
+        VoteScore voteScore;
         try {
-            voteScore = Integer.parseInt(voteScoreString);
+            voteScore = new VoteScore(Integer.parseInt(voteScoreString));
         } catch (Exception exception) {
             player.sendMessage(this.messageConfiguration.getString(MessageConfigNodes.INVALID_VOTE_SCORE));
             return true;
         }
 
         // if the voter does not have vote score reserved
-        Optional<Integer> reservedVotes = session.getReservedVoteCounts(player).get(voteScore);
-        if (reservedVotes == null || reservedVotes.orElse(-1) == 0) {
+        Limit reservedVotes = session.getReservedVoteCounts(player).get(voteScore);
+        if (reservedVotes.compareTo(new Limit(0)) <= 0) {
             player.sendMessage(this.messageConfiguration.getString(MessageConfigNodes.INVALID_VOTE_SCORE));
             return true;
         }

@@ -3,6 +3,9 @@ package com.github.kory33.signvote.command.subcommand;
 import java.util.ArrayList;
 
 import com.github.kory33.chatgui.command.RunnableInvoker;
+import com.github.kory33.signvote.model.Limit;
+import com.github.kory33.signvote.model.VoteLimit;
+import com.github.kory33.signvote.model.VoteScore;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -82,10 +85,10 @@ public class AddScoreCommandExecutor implements SubCommandExecutor{
             return false;
         }
 
-        int score, limit;
+        int score, limitInteger;
         try {
             score = Integer.parseInt(args.remove(0));
-            limit = Integer.parseInt(args.remove(0));
+            limitInteger = Integer.parseInt(args.remove(0));
         } catch (NumberFormatException e) {
             sender.sendMessage(this.messageConfiguration.getString(MessageConfigNodes.INVALID_NUMBER));
             return true;
@@ -99,14 +102,19 @@ public class AddScoreCommandExecutor implements SubCommandExecutor{
             }
         }
 
+        VoteScore voteScore = new VoteScore(score);
+        Limit limit = new Limit(limitInteger);
         try {
-            session.getVoteScoreCountLimits().addLimit(score, permission, limit);
+            session.getVoteLimitManager().addVoteLimit(new VoteLimit(voteScore, limit, permission));
         } catch (IllegalArgumentException e) {
             sender.sendMessage(this.messageConfiguration.getString(MessageConfigNodes.INVALID_NUMBER));
             return true;
         }
 
-        String limitString = limit == MagicNumbers.VOTELIMIT_INFINITY ? "Infinity" : String.valueOf(limit);
+        String limitString = limit.isInfinite()
+                ? messageConfiguration.getString(MessageConfigNodes.INFINITE)
+                : limit.toString();
+
         sender.sendMessage(messageConfiguration.getFormatted(MessageConfigNodes.F_SCORE_LIMIT_ADDED,
                 limitString, score, session.getName(), permission));
         return true;
