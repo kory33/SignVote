@@ -21,6 +21,7 @@ import java.util.regex.Matcher;
  * A class which handles all the vote data
  */
 public class VoteManager {
+    // TODO make voteData use VoteScore instead of Integer
     private final HashMap<UUID, HashMap<Integer, HashSet<String>>> voteData;
     private final HashMap<VotePoint, HashSet<Vote>> votePointVotes;
     private final VoteSession parentSession;

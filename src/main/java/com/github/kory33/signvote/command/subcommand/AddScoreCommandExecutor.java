@@ -3,6 +3,7 @@ package com.github.kory33.signvote.command.subcommand;
 import java.util.ArrayList;
 
 import com.github.kory33.chatgui.command.RunnableInvoker;
+import com.github.kory33.signvote.exception.data.InvalidLimitDataException;
 import com.github.kory33.signvote.vote.Limit;
 import com.github.kory33.signvote.vote.VoteLimit;
 import com.github.kory33.signvote.vote.VoteScore;
@@ -84,11 +85,12 @@ public class AddScoreCommandExecutor implements SubCommandExecutor{
             return false;
         }
 
-        int score, limitInteger;
+        VoteScore voteScore;
+        Limit limit;
         try {
-            score = Integer.parseInt(args.remove(0));
-            limitInteger = Integer.parseInt(args.remove(0));
-        } catch (NumberFormatException e) {
+            voteScore = new VoteScore(Integer.parseInt(args.remove(0)));
+            limit = Limit.fromString(args.remove(0));
+        } catch (NumberFormatException | InvalidLimitDataException e) {
             sender.sendMessage(this.messageConfiguration.getString(MessageConfigNodes.INVALID_NUMBER));
             return true;
         }
@@ -101,8 +103,6 @@ public class AddScoreCommandExecutor implements SubCommandExecutor{
             }
         }
 
-        VoteScore voteScore = new VoteScore(score);
-        Limit limit = new Limit(limitInteger);
         try {
             session.getVoteLimitManager().addVoteLimit(new VoteLimit(voteScore, limit, permission));
         } catch (IllegalArgumentException e) {
@@ -115,7 +115,7 @@ public class AddScoreCommandExecutor implements SubCommandExecutor{
                 : limit.toString();
 
         sender.sendMessage(messageConfiguration.getFormatted(MessageConfigNodes.F_SCORE_LIMIT_ADDED,
-                limitString, score, session.getName(), permission));
+                limitString, voteScore.toInt(), session.getName(), permission));
         return true;
     }
 }

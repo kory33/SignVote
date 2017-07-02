@@ -44,7 +44,7 @@ public final class VoteInterface extends PlayerClickableChatInterface implements
         return new MessageParts(message);
     }
 
-    private void vote(int score) {
+    private void vote(VoteScore voteScore) {
         if (!this.isValidSession()) {
             return;
         }
@@ -52,7 +52,7 @@ public final class VoteInterface extends PlayerClickableChatInterface implements
         String resultMessage;
 
         try {
-            this.session.vote(this.targetPlayer, votePoint, new VoteScore(score));
+            this.session.vote(this.targetPlayer, votePoint, voteScore);
             resultMessage = this.messageConfig.getFormatted(MessageConfigNodes.VOTED);
         } catch (ScoreCountLimitReachedException exception) {
             resultMessage = this.messageConfig.getString(MessageConfigNodes.REACHED_VOTE_SCORE_LIMIT);
@@ -126,7 +126,7 @@ public final class VoteInterface extends PlayerClickableChatInterface implements
                     VoteScore score = entry.getKey();
                     Limit limit = entry.getValue();
 
-                    messagePartsList.add(this.getButton(() -> this.vote(score.toInt()), defaultButtonMessage));
+                    messagePartsList.add(this.getButton(() -> this.vote(score), defaultButtonMessage));
                     messagePartsList.addLine(this.getScoreSelectionLine(score, limit));
                 });
 
