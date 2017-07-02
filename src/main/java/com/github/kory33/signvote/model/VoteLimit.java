@@ -66,7 +66,7 @@ public class VoteLimit {
 
         jsonObject.addProperty(JSON_SCORE_KEY, this.score.toInt());
         jsonObject.addProperty(JSON_LIMIT_KEY, this.limit.toString());
-        jsonObject.addProperty(JSON_SCORE_KEY, this.permission);
+        jsonObject.addProperty(JSON_PERMS_KEY, this.permission);
 
         return jsonObject;
     }

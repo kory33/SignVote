@@ -65,7 +65,7 @@ public final class Limit implements Comparable<Limit> {
 
     public Limit minus(Limit limit) {
         if (this.isInfinite()) {
-            return new Limit(limit.limit);
+            return new Limit();
         }
         if (limit.isInfinite()) {
             return new Limit(0);
