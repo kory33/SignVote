@@ -93,8 +93,10 @@ public final class VoteInterface extends PlayerClickableChatInterface implements
     }
 
     private MessagePartsList getSessionClosedMessage() {
-        String message = this.messageConfig.getString(MessageConfigNodes.VOTE_SESSION_CLOSED);
-        return new MessagePartsList(message + "\n");
+        String message = this.messageConfig.getString(MessageConfigNodes.VOTE_UI_NONE_AVAILABLE);
+        MessagePartsList messagePartsList = new MessagePartsList();
+        messagePartsList.addLine(message);
+        return messagePartsList;
     }
 
     @Override

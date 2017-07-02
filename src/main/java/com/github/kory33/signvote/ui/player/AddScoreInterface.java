@@ -93,7 +93,7 @@ public final class AddScoreInterface extends FormChatInterface implements IDefau
     private boolean validateLimitInput(String input) {
         try {
             int limit = NumberUtils.createInteger(input);
-            return limit == MagicNumbers.VOTELIMIT_INFINITY || limit > 0;
+            return limit > 0;
         } catch (NumberFormatException exception) {
             return false;
         }
