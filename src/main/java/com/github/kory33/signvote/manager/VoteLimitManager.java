@@ -82,7 +82,7 @@ public class VoteLimitManager {
         return limitSet.stream()
                 .filter(voteLimit -> voteLimit.getScore().equals(score) && voteLimit.isApplicable(player))
                 .map(VoteLimit::getLimit)
-                .max(Limit::compareTo).orElse(new Limit(0));
+                .max(Limit::compareTo).orElse(Limit.zero);
     }
 
     /**

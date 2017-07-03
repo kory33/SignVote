@@ -80,7 +80,7 @@ public class VoteCommandExecutor implements SubCommandExecutor {
 
         // if the voter does not have vote score reserved
         Limit reservedVotes = session.getReservedVoteCounts(player).get(voteScore);
-        if (reservedVotes.equals(new Limit(0))) {
+        if (reservedVotes.isZero()) {
             player.sendMessage(this.messageConfiguration.getString(MessageConfigNodes.INVALID_VOTE_SCORE));
             return true;
         }

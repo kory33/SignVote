@@ -16,6 +16,8 @@ public final class Limit implements Comparable<Limit> {
 
     private final Integer limit;
 
+    public static final Limit zero = new Limit(0);
+
     public Limit(Integer limit) {
         if (limit != null && limit < 0) {
             throw new IllegalArgumentException("Limit must not be negative.");
@@ -63,15 +65,16 @@ public final class Limit implements Comparable<Limit> {
         return 0;
     }
 
-    public Limit minus(Limit limit) {
-        if (this.isInfinite()) {
+    public Limit minus(Integer integer) {
+        if (this.isInfinite() || integer == null) {
             return new Limit();
         }
-        if (limit.isInfinite()) {
-            return new Limit(0);
-        }
 
-        return new Limit(Math.max(this.limit - limit.limit, 0));
+        return new Limit(Math.max(this.limit - integer, 0));
+    }
+
+    public boolean isZero() {
+        return this.limit == 0;
     }
 
     public String toString() {

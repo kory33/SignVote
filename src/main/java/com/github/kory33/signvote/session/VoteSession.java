@@ -230,10 +230,10 @@ public class VoteSession {
             }
 
             Limit reservedVotes = availableCounts.remove(score);
-            Limit remainingVotes = reservedVotes.minus(new Limit(votedNum));
+            Limit remainingVotes = reservedVotes.minus(votedNum);
 
             // iff remaining != 0
-            if (remainingVotes.compareTo(new Limit(0)) > 0) {
+            if (!remainingVotes.isZero()) {
                 availableCounts.put(score, remainingVotes);
             }
         });
@@ -265,7 +265,7 @@ public class VoteSession {
      */
     public void vote(Player player, VotePoint votePoint, VoteScore voteScore)
             throws ScoreCountLimitReachedException, VotePointAlreadyVotedException, InvalidScoreVotedException, VoteSessionClosedException {
-        if (this.voteLimitManager.getLimit(voteScore, player).equals(new Limit(0))) {
+        if (this.voteLimitManager.getLimit(voteScore, player).isZero()) {
             throw new InvalidScoreVotedException(votePoint, player, voteScore);
         }
 
