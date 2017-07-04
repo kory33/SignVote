@@ -5,8 +5,7 @@ import com.github.kory33.signvote.exception.VotePointNotVotedException;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.utils.FileUtils;
 import com.github.kory33.signvote.utils.MapUtil;
-import com.github.kory33.signvote.utils.collection.CachingHashMap;
-import com.github.kory33.signvote.utils.collection.SetCachingHashMap;
+import com.github.kory33.signvote.utils.collection.CachingMap;
 import com.github.kory33.signvote.vote.Vote;
 import com.github.kory33.signvote.vote.VotePoint;
 import com.github.kory33.signvote.vote.VoteScore;
@@ -15,11 +14,8 @@ import com.google.gson.JsonObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
 
 /**
  * A class which handles all the vote data
@@ -83,7 +79,8 @@ public class VoteManager {
      * @return mapping of (player's)UUID -> json object containing votes of the player
      */
     public Map<UUID, JsonObject> getPlayersVoteData() {
-        return MapUtil.mapValues(this.uuidToPlayerVotesMap, cache -> new Gson().toJsonTree(cache).getAsJsonObject());
+        return MapUtil.mapValues(this.uuidToPlayerVotesMap.toImmutableMap(),
+                cache -> new Gson().toJsonTree(cache).getAsJsonObject());
     }
 
     /**
@@ -108,7 +105,7 @@ public class VoteManager {
      * @return A map containing vote scores as keys and vote counts(with the score of corresponding key) as values
      */
     public Map<VoteScore, Integer> getVotedPointsCount(UUID uuid) {
-        return MapUtil.mapValues(this.getVotedPointsMap(uuid), Set::size);
+        return MapUtil.mapValues(this.getVotedPointsMap(uuid).toImmutableMap(), Set::size);
     }
 
     /**
@@ -138,20 +135,25 @@ public class VoteManager {
     public void removeVote(UUID playerUUID, VotePoint votePoint) throws VotePointNotVotedException {
         VotesCacheByScores playerVotes = this.getVotedPointsMap(playerUUID);
 
-        for (VoteScore voteScore: playerVotes.keySet()) {
-            Set<VotePoint> votedPoints = playerVotes.get(voteScore);
-            if (votedPoints.remove(votePoint)) {
-                break;
-            }
-        }
-        for (Vote vote: this.votePointVotes.get(votePoint)) {
-            if (vote.getVoterUuid().equals(playerUUID)) {
-                this.votePointVotes.get(votePoint).remove(vote);
-                return;
-            }
+        Optional<Set<VotePoint>> targetVotePointSet = playerVotes.toImmutableMap()
+                .entrySet()
+                .stream()
+                .filter(voteScoreSetEntry -> voteScoreSetEntry.getValue().contains(votePoint))
+                .map(Entry::getValue)
+                .findFirst();
+
+        VotePointVotesCache votePointVotesCache = this.votePointVotes;
+        Optional<Vote> targetVoteCache = votePointVotesCache.get(votePoint)
+                .stream()
+                .filter(vote -> vote.getVoterUuid().equals(playerUUID))
+                .findFirst();
+
+        if (!targetVotePointSet.isPresent() || !targetVoteCache.isPresent()) {
+            throw new VotePointNotVotedException(playerUUID, votePoint, this.parentSession);
         }
 
-        throw new VotePointNotVotedException(playerUUID, votePoint, this.parentSession);
+        targetVotePointSet.get().remove(votePoint);
+        votePointVotesCache.get(votePoint).remove(targetVoteCache.get());
     }
 
     /**
@@ -193,7 +195,7 @@ public class VoteManager {
      * @return an Optional object containing score vote by the player
      */
     public Optional<Integer> getVotedScore(UUID playerUUID, VotePoint votePoint) {
-        return this.getVotedPointsMap(playerUUID).entrySet()
+        return this.getVotedPointsMap(playerUUID).toImmutableMap().entrySet()
                 .stream()
                 .filter(entry -> entry.getValue().contains(votePoint))
                 .map(Entry::getKey)
@@ -211,14 +213,21 @@ public class VoteManager {
         return this.getVotedScore(playerUUID, votePoint).isPresent();
     }
 
-    private class VotesCacheByScores extends SetCachingHashMap<VoteScore, VotePoint> {}
-
-    private class UUIDToPlayerVotesMap extends CachingHashMap<UUID, VotesCacheByScores> {
-        @Override
-        protected VotesCacheByScores createEmptyValue() {
-            return new VotesCacheByScores();
+    private class VotesCacheByScores extends CachingMap<VoteScore, Set<VotePoint>> {
+        VotesCacheByScores() {
+            super(HashSet::new);
         }
     }
 
-    private class VotePointVotesCache extends SetCachingHashMap<VotePoint, Vote> {}
+    private class UUIDToPlayerVotesMap extends CachingMap<UUID, VotesCacheByScores> {
+        UUIDToPlayerVotesMap() {
+            super(VotesCacheByScores::new);
+        }
+    }
+
+    private class VotePointVotesCache extends CachingMap<VotePoint, Set<Vote>> {
+        VotePointVotesCache() {
+            super(HashSet::new);
+        }
+    }
 }
