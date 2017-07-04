@@ -60,11 +60,7 @@ public class VoteSession {
 
         // load all the saved votepoints
         File votePointDirectory = new File(sessionSaveLocation, FilePaths.VOTE_POINTS_DIR);
-        File[] votePointFiles = votePointDirectory.listFiles();
-        assert votePointFiles != null;
-        for (File votePointFile: votePointFiles) {
-            this.addVotePoint(votePointFile);
-        }
+        FileUtils.getFileListStream(votePointDirectory).forEach(this::addVotePoint);
 
         // initialize vote manager
         this.voteManager = new VoteManager(new File(sessionSaveLocation, FilePaths.VOTE_DATA_DIR), this);

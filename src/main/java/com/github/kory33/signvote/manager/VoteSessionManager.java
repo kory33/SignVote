@@ -1,9 +1,9 @@
 package com.github.kory33.signvote.manager;
 
 import com.github.kory33.chatgui.util.collection.BijectiveHashMap;
-import com.github.kory33.signvote.vote.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.utils.FileUtils;
+import com.github.kory33.signvote.vote.VotePoint;
 import org.bukkit.block.Sign;
 
 import java.io.File;
@@ -41,15 +41,9 @@ public class VoteSessionManager {
         this.sessionSaveDirectory = sessionSaveDirectory;
         this.logger = logger;
 
-        File[] dirFiles = sessionSaveDirectory.listFiles();
-        assert dirFiles != null;
-        for (File sessionFolder: dirFiles) {
-            if (!sessionFolder.isDirectory()) {
-                continue;
-            }
-
-            this.loadSession(sessionFolder);
-        }
+        FileUtils.getFileListStream(sessionSaveDirectory)
+                .filter(File::isDirectory)
+                .forEach(this::loadSession);
     }
 
     public void addSession(VoteSession session) {

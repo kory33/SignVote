@@ -1,5 +1,9 @@
 package com.github.kory33.signvote.utils;
 
+import com.github.kory33.signvote.constants.Formats;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -11,10 +15,6 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.stream.Stream;
-
-import com.github.kory33.signvote.constants.Formats;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 /**
  * An util class which handles file I/O
@@ -87,6 +87,22 @@ public class FileUtils {
      * @return a stream containing reference to files in the given directory
      */
     public static Stream<File> getFileListStream(File directory) {
-        return Arrays.stream(directory.listFiles());
+        File[] files = directory.listFiles();
+        assert files != null;
+        return Arrays.stream(files);
+    }
+
+    /**
+     * Get the name of the file with it's extension removed.
+     * @param file target file
+     * @return file name without the extension
+     */
+    public static String getFileBaseName(File file) {
+        String fileName = file.getName();
+        int lastIndexOfDot = fileName.lastIndexOf(".");
+        if (lastIndexOfDot == 0) {
+            return fileName;
+        }
+        return fileName.substring(0, lastIndexOfDot);
     }
 }

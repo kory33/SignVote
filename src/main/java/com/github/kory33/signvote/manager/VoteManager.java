@@ -1,6 +1,5 @@
 package com.github.kory33.signvote.manager;
 
-import com.github.kory33.signvote.constants.Patterns;
 import com.github.kory33.signvote.exception.VotePointAlreadyVotedException;
 import com.github.kory33.signvote.exception.VotePointNotVotedException;
 import com.github.kory33.signvote.session.VoteSession;
@@ -21,7 +20,6 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.regex.Matcher;
 
 /**
  * A class which handles all the vote data
@@ -50,19 +48,17 @@ public class VoteManager {
             throw new IOException("Directory has to be specified for save location!");
         }
 
-        File[] dirFiles = voteDataDirectory.listFiles();
-        assert dirFiles != null;
-        for (File playerVoteDataFile: dirFiles) {
-            JsonObject jsonObject = FileUtils.readJSON(playerVoteDataFile);
-
-            Matcher playerUUIDMatcher = Patterns.JSON_FILE_NAME.matcher(playerVoteDataFile.getName());
-            if (!playerUUIDMatcher.find()) {
-                continue;
+        FileUtils.getFileListStream(voteDataDirectory).forEach(playerVoteDataFile -> {
+            JsonObject jsonObject = null;
+            try {
+                jsonObject = FileUtils.readJSON(playerVoteDataFile);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
-            UUID uuid = UUID.fromString(playerUUIDMatcher.group(1));
+            UUID uuid = UUID.fromString(FileUtils.getFileBaseName(playerVoteDataFile));
             this.loadPlayerVoteData(uuid, jsonObject);
-        }
+        });
     }
 
     private void loadPlayerVoteData(UUID playerUUID, JsonObject jsonObject) {
