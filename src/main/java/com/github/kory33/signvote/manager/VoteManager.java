@@ -6,6 +6,8 @@ import com.github.kory33.signvote.exception.VotePointNotVotedException;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.utils.FileUtils;
 import com.github.kory33.signvote.utils.MapUtil;
+import com.github.kory33.signvote.utils.collection.CachingHashMap;
+import com.github.kory33.signvote.utils.collection.SetCachingHashMap;
 import com.github.kory33.signvote.vote.Vote;
 import com.github.kory33.signvote.vote.VotePoint;
 import com.github.kory33.signvote.vote.VoteScore;
@@ -14,8 +16,11 @@ import com.google.gson.JsonObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import java.util.regex.Matcher;
 
 /**
@@ -107,7 +112,7 @@ public class VoteManager {
      * @return A map containing vote scores as keys and vote counts(with the score of corresponding key) as values
      */
     public Map<VoteScore, Integer> getVotedPointsCount(UUID uuid) {
-        return MapUtil.mapValues(this.getVotedPointsMap(uuid), HashSet::size);
+        return MapUtil.mapValues(this.getVotedPointsMap(uuid), Set::size);
     }
 
     /**
@@ -138,7 +143,7 @@ public class VoteManager {
         VotesCacheByScores playerVotes = this.getVotedPointsMap(playerUUID);
 
         for (VoteScore voteScore: playerVotes.keySet()) {
-            HashSet<VotePoint> votedPoints = playerVotes.get(voteScore);
+            Set<VotePoint> votedPoints = playerVotes.get(voteScore);
             if (votedPoints.remove(votePoint)) {
                 break;
             }
@@ -158,7 +163,7 @@ public class VoteManager {
      * @param votePoint vote point from which votes will be removed
      */
     public void removeAllVotes(VotePoint votePoint) {
-        HashSet<Vote> votes = this.votePointVotes.get(votePoint);
+        Set<Vote> votes = this.votePointVotes.get(votePoint);
 
         // purge votepoint names present in uuidToPlayerVotesMap
         votes.forEach(vote -> {
@@ -180,7 +185,7 @@ public class VoteManager {
      * @param votePoint target vote point
      * @return set containing all the votes casted to the vote point.
      */
-    public HashSet<Vote> getVotes(VotePoint votePoint) {
+    public Set<Vote> getVotes(VotePoint votePoint) {
         return this.votePointVotes.get(votePoint);
     }
 
@@ -210,33 +215,14 @@ public class VoteManager {
         return this.getVotedScore(playerUUID, votePoint).isPresent();
     }
 
-    private class VotesCacheByScores extends HashMap<VoteScore, HashSet<VotePoint>> {
+    private class VotesCacheByScores extends SetCachingHashMap<VoteScore, VotePoint> {}
+
+    private class UUIDToPlayerVotesMap extends CachingHashMap<UUID, VotesCacheByScores> {
         @Override
-        public HashSet<VotePoint> get(Object key) {
-            if (key instanceof VoteScore && !this.containsKey(key)) {
-                this.put((VoteScore) key, new HashSet<>());
-            }
-            return super.get(key);
+        protected VotesCacheByScores createEmptyValue() {
+            return new VotesCacheByScores();
         }
     }
 
-    private class UUIDToPlayerVotesMap extends HashMap<UUID, VotesCacheByScores> {
-        @Override
-        public VotesCacheByScores get(Object key) {
-            if (key instanceof UUID && !this.containsKey(key)) {
-                this.put((UUID) key, new VotesCacheByScores());
-            }
-            return super.get(key);
-        }
-    }
-
-    private class VotePointVotesCache extends HashMap<VotePoint, HashSet<Vote>> {
-        @Override
-        public HashSet<Vote> get(Object key) {
-            if (key instanceof VotePoint && !this.containsKey(key)) {
-                this.put((VotePoint) key, new HashSet<>());
-            }
-            return super.get(key);
-        }
-    }
+    private class VotePointVotesCache extends SetCachingHashMap<VotePoint, Vote> {}
 }
