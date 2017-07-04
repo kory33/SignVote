@@ -5,10 +5,10 @@ import com.github.kory33.signvote.constants.*;
 import com.github.kory33.signvote.exception.*;
 import com.github.kory33.signvote.manager.VoteLimitManager;
 import com.github.kory33.signvote.manager.VoteManager;
+import com.github.kory33.signvote.utils.FileUtils;
 import com.github.kory33.signvote.vote.Limit;
 import com.github.kory33.signvote.vote.VotePoint;
 import com.github.kory33.signvote.vote.VoteScore;
-import com.github.kory33.signvote.utils.FileUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.Getter;
@@ -196,25 +196,6 @@ public class VoteSession {
     }
 
     /**
-     * Rename the votepoint to a given name.
-     * @param oldName old name of the vote point
-     * @param newName new name of the vote point
-     */
-    public void renameVotePoint(String oldName, String newName) throws IllegalArgumentException{
-        VotePoint target = this.votePointNameMap.get(oldName);
-        if (target == null) {
-            throw new IllegalArgumentException("No votepoint with that name exists.");
-        }
-
-        if (this.votePointNameMap.containsKey(newName)) {
-            throw new IllegalArgumentException("A votepoint with name of \"" + newName + "\" already exists.");
-        }
-
-        target.setName(newName);
-        voteManager.refreshVotePointName(target, oldName);
-    }
-
-    /**
      * Get a score -> count map of available votes for a given player
      * @param player player instance
      * @return map of score -> reserved limit
@@ -281,7 +262,7 @@ public class VoteSession {
             throw new VoteSessionClosedException(this);
         }
 
-        this.voteManager.addVotePointData(player.getUniqueId(), voteScore.toInt(), votePoint);
+        this.voteManager.addVotePointData(player.getUniqueId(), voteScore, votePoint);
     }
 
     /**
