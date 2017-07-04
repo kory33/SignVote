@@ -85,10 +85,13 @@ public class FileUtils {
      * Get a stream of files that are present in the given directory
      * @param directory directory from which the list of files is fetched
      * @return a stream containing reference to files in the given directory
+     * or an empty stream if the given file does not represent a directory
      */
     public static Stream<File> getFileListStream(File directory) {
         File[] files = directory.listFiles();
-        assert files != null;
+        if (files == null) {
+            return Stream.empty();
+        }
         return Arrays.stream(files);
     }
 
