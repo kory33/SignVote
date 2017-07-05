@@ -74,7 +74,7 @@ public final class Limit implements Comparable<Limit> {
     }
 
     public boolean isZero() {
-        return this.limit == 0;
+        return this.limit != null && this.limit == 0;
     }
 
     public String toString() {

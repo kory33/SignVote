@@ -42,7 +42,7 @@ public class CachingMap<K, V> {
     public final V get(K key) {
         V result = map.get(key);
         if (result == null) {
-            this.map.computeIfAbsent(key, k -> this.valueInstanceSupplier.get());
+            return this.map.computeIfAbsent(key, k -> this.valueInstanceSupplier.get());
         }
         return result;
     }

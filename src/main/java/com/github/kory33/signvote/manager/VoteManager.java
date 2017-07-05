@@ -80,7 +80,7 @@ public class VoteManager {
      */
     public Map<UUID, JsonObject> getPlayersVoteData() {
         return MapUtil.mapValues(this.uuidToPlayerVotesMap.toImmutableMap(),
-                cache -> new Gson().toJsonTree(cache).getAsJsonObject());
+                cache -> new Gson().toJsonTree(cache.toImmutableMap()).getAsJsonObject());
     }
 
     /**
@@ -213,19 +213,19 @@ public class VoteManager {
         return this.getVotedScore(playerUUID, votePoint).isPresent();
     }
 
-    private class VotesCacheByScores extends CachingMap<VoteScore, Set<VotePoint>> {
+    private static class VotesCacheByScores extends CachingMap<VoteScore, Set<VotePoint>> {
         VotesCacheByScores() {
             super(HashSet::new);
         }
     }
 
-    private class UUIDToPlayerVotesMap extends CachingMap<UUID, VotesCacheByScores> {
+    private static class UUIDToPlayerVotesMap extends CachingMap<UUID, VotesCacheByScores> {
         UUIDToPlayerVotesMap() {
             super(VotesCacheByScores::new);
         }
     }
 
-    private class VotePointVotesCache extends CachingMap<VotePoint, Set<Vote>> {
+    private static class VotePointVotesCache extends CachingMap<VotePoint, Set<Vote>> {
         VotePointVotesCache() {
             super(HashSet::new);
         }
