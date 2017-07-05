@@ -24,13 +24,13 @@ public class PluginDataAutoSaver {
     private final ExecutorService saveTaskExecutor;
     
     private void scheduleNextAutoSaveTask() {
-        CompletableFuture.runAsync(PluginDataAutoSaver.this.plugin::saveSessionData, PluginDataAutoSaver.this.saveTaskExecutor);
+        CompletableFuture.runAsync(this.plugin::saveSessionData, this.saveTaskExecutor);
         if (this.shouldLog) {
-            PluginDataAutoSaver.this.plugin.getLogger().info("Session data is being saved asynchronously...");
+            this.plugin.getLogger().info("Session data is being saved asynchronously...");
         }
         
         this.nextAutoSaveTaskId = scheduler.scheduleSyncDelayedTask(this.plugin,
-                        PluginDataAutoSaver.this::scheduleNextAutoSaveTask, this.autosaveIntervalTicks);
+                this::scheduleNextAutoSaveTask, this.autosaveIntervalTicks);
     }
 
     /**
