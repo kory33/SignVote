@@ -4,7 +4,7 @@ import com.github.kory33.chatgui.util.collection.BijectiveHashMap;
 import com.github.kory33.signvote.constants.*;
 import com.github.kory33.signvote.exception.*;
 import com.github.kory33.signvote.manager.VoteLimitManager;
-import com.github.kory33.signvote.manager.VoteManager;
+import com.github.kory33.signvote.manager.vote.VoteManager;
 import com.github.kory33.signvote.utils.FileUtils;
 import com.github.kory33.signvote.vote.Limit;
 import com.github.kory33.signvote.vote.VotePoint;

@@ -1,28 +1,29 @@
-package com.github.kory33.signvote.manager;
+package com.github.kory33.signvote.manager.vote;
 
 import com.github.kory33.signvote.exception.VotePointAlreadyVotedException;
 import com.github.kory33.signvote.exception.VotePointNotVotedException;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.utils.FileUtils;
 import com.github.kory33.signvote.utils.MapUtil;
-import com.github.kory33.signvote.utils.collection.CachingMap;
 import com.github.kory33.signvote.vote.Vote;
 import com.github.kory33.signvote.vote.VotePoint;
 import com.github.kory33.signvote.vote.VoteScore;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * A class which handles all the vote data
  */
 public class VoteManager {
-    private final UUIDToPlayerVotesMap uuidToPlayerVotesMap;
-    private final VotePointVotesCache votePointVotes;
+    private final UUIDToPlayerVotesCacheMap cacheFromUUID;
+    private final VotePointToVoteSetCacheMap cacheFromVotePoint;
     private final VoteSession parentSession;
 
     /**
@@ -33,8 +34,8 @@ public class VoteManager {
      */
     public VoteManager(File voteDataDirectory, VoteSession parentSession) throws IOException {
         this.parentSession = parentSession;
-        this.uuidToPlayerVotesMap = new UUIDToPlayerVotesMap();
-        this.votePointVotes = new VotePointVotesCache();
+        this.cacheFromUUID = new UUIDToPlayerVotesCacheMap();
+        this.cacheFromVotePoint = new VotePointToVoteSetCacheMap();
 
         if (voteDataDirectory == null) {
             throw new IllegalArgumentException("Directory cannot be null!");
@@ -79,24 +80,23 @@ public class VoteManager {
      * @return mapping of (player's)UUID -> json object containing votes of the player
      */
     public Map<UUID, JsonObject> getPlayersVoteData() {
-        return MapUtil.mapValues(this.uuidToPlayerVotesMap.toImmutableMap(),
-                cache -> new Gson().toJsonTree(cache.toImmutableMap()).getAsJsonObject());
+        return MapUtil.mapValues(this.cacheFromUUID.toImmutableMap(), VoteScoreToVotePointCacheMap::toJsonObject);
     }
 
     /**
      * Construct an empty VoteManager object.
      */
     public VoteManager(VoteSession parentSession) {
-        this.uuidToPlayerVotesMap = new UUIDToPlayerVotesMap();
-        this.votePointVotes = new VotePointVotesCache();
+        this.cacheFromUUID = new UUIDToPlayerVotesCacheMap();
+        this.cacheFromVotePoint = new VotePointToVoteSetCacheMap();
         this.parentSession = parentSession;
     }
 
     /**
      * Get the mapping of voted score to a list of voted points
      */
-    private VotesCacheByScores getVotedPointsMap(UUID uuid) {
-        return this.uuidToPlayerVotesMap.get(uuid);
+    private VoteScoreToVotePointCacheMap getVotedPointsMap(UUID uuid) {
+        return this.cacheFromUUID.get(uuid);
     }
 
     /**
@@ -116,14 +116,14 @@ public class VoteManager {
      * @throws IllegalArgumentException when there is a duplicate in the vote
      */
     public void addVotePointData(UUID voterUUID, VoteScore voteScore, VotePoint votePoint) throws VotePointAlreadyVotedException {
-        VotesCacheByScores cacheByScores = this.uuidToPlayerVotesMap.get(voterUUID);
+        VoteScoreToVotePointCacheMap cacheByScores = this.cacheFromUUID.get(voterUUID);
 
         if (this.getVotedScore(voterUUID, votePoint).isPresent()) {
             throw new VotePointAlreadyVotedException(voterUUID, votePoint);
         }
 
         cacheByScores.get(voteScore).add(votePoint);
-        this.votePointVotes.get(votePoint).add(new Vote(voteScore, voterUUID));
+        this.cacheFromVotePoint.get(votePoint).add(new Vote(voteScore, voterUUID));
     }
 
     /**
@@ -133,17 +133,17 @@ public class VoteManager {
      * @throws VotePointNotVotedException when the player has not voted to the target vote point
      */
     public void removeVote(UUID playerUUID, VotePoint votePoint) throws VotePointNotVotedException {
-        VotesCacheByScores playerVotes = this.getVotedPointsMap(playerUUID);
+        VoteScoreToVotePointCacheMap playerVotes = this.getVotedPointsMap(playerUUID);
 
-        Optional<Set<VotePoint>> targetVotePointSet = playerVotes.toImmutableMap()
+        Optional<VotePointSet> targetVotePointSet = playerVotes.toImmutableMap()
                 .entrySet()
                 .stream()
                 .filter(voteScoreSetEntry -> voteScoreSetEntry.getValue().contains(votePoint))
                 .map(Entry::getValue)
                 .findFirst();
 
-        VotePointVotesCache votePointVotesCache = this.votePointVotes;
-        Optional<Vote> targetVoteCache = votePointVotesCache.get(votePoint)
+        VotePointToVoteSetCacheMap votePointToVoteSetCacheMap = this.cacheFromVotePoint;
+        Optional<Vote> targetVoteCache = votePointToVoteSetCacheMap.get(votePoint)
                 .stream()
                 .filter(vote -> vote.getVoterUuid().equals(playerUUID))
                 .findFirst();
@@ -153,7 +153,7 @@ public class VoteManager {
         }
 
         targetVotePointSet.get().remove(votePoint);
-        votePointVotesCache.get(votePoint).remove(targetVoteCache.get());
+        votePointToVoteSetCacheMap.get(votePoint).remove(targetVoteCache.get());
     }
 
     /**
@@ -161,21 +161,21 @@ public class VoteManager {
      * @param votePoint vote point from which votes will be removed
      */
     public void removeAllVotes(VotePoint votePoint) {
-        Set<Vote> votes = this.votePointVotes.get(votePoint);
+        Set<Vote> votes = this.cacheFromVotePoint.get(votePoint);
 
-        // purge votepoint names present in uuidToPlayerVotesMap
+        // purge votepoint names present in cacheFromUUID
         votes.forEach(vote -> {
             try {
-                this.uuidToPlayerVotesMap.get(vote.getVoterUuid()).get(vote.getScore()).remove(votePoint);
+                this.cacheFromUUID.get(vote.getVoterUuid()).get(vote.getScore()).remove(votePoint);
             } catch (NullPointerException exception) {
                 // NPE should be thrown If and Only If
-                // uuidToPlayerVotesMap and votePointVotes are not synchronized correctly
+                // cacheFromUUID and cacheFromVotePoint are not synchronized correctly
                 exception.printStackTrace();
             }
         });
 
-        // clear votePointVotes
-        this.votePointVotes.remove(votePoint);
+        // clear cacheFromVotePoint
+        this.cacheFromVotePoint.remove(votePoint);
     }
 
     /**
@@ -184,7 +184,7 @@ public class VoteManager {
      * @return set containing all the votes casted to the vote point.
      */
     public Set<Vote> getVotes(VotePoint votePoint) {
-        return this.votePointVotes.get(votePoint);
+        return this.cacheFromVotePoint.get(votePoint);
     }
 
     /**
@@ -211,23 +211,5 @@ public class VoteManager {
      */
     public boolean hasVoted(UUID playerUUID, VotePoint votePoint) {
         return this.getVotedScore(playerUUID, votePoint).isPresent();
-    }
-
-    private static class VotesCacheByScores extends CachingMap<VoteScore, Set<VotePoint>> {
-        VotesCacheByScores() {
-            super(HashSet::new);
-        }
-    }
-
-    private static class UUIDToPlayerVotesMap extends CachingMap<UUID, VotesCacheByScores> {
-        UUIDToPlayerVotesMap() {
-            super(VotesCacheByScores::new);
-        }
-    }
-
-    private static class VotePointVotesCache extends CachingMap<VotePoint, Set<Vote>> {
-        VotePointVotesCache() {
-            super(HashSet::new);
-        }
     }
 }

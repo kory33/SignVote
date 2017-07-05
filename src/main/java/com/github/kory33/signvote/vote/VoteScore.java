@@ -15,4 +15,8 @@ public final class VoteScore {
     public int toInt() {
         return this.score;
     }
+
+    public String toString() {
+        return Integer.valueOf(this.score).toString();
+    }
 }
