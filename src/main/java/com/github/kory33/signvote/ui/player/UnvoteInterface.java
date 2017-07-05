@@ -1,20 +1,19 @@
 package com.github.kory33.signvote.ui.player;
 
-import java.util.Optional;
-
 import com.github.kory33.chatgui.command.RunnableInvoker;
-import com.github.kory33.signvote.ui.player.defaults.IDefaultClickableInterface;
-import com.github.ucchyocean.messaging.tellraw.MessageParts;
-import lombok.Getter;
-import org.bukkit.entity.Player;
-
+import com.github.kory33.chatgui.model.player.PlayerClickableChatInterface;
 import com.github.kory33.chatgui.tellraw.MessagePartsList;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.exception.VotePointNotVotedException;
-import com.github.kory33.signvote.model.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
-import com.github.kory33.chatgui.model.player.PlayerClickableChatInterface;
+import com.github.kory33.signvote.ui.player.defaults.IDefaultClickableInterface;
+import com.github.kory33.signvote.vote.VotePoint;
+import com.github.ucchyocean.messaging.tellraw.MessageParts;
+import lombok.Getter;
+import org.bukkit.entity.Player;
+
+import java.util.Optional;
 
 /**
  * Represents an interface which confirms and executes player's un-vote.
@@ -60,16 +59,15 @@ public final class UnvoteInterface extends PlayerClickableChatInterface implemen
     }
 
     private String getHeading() {
-        String votePointName = this.votePoint.getName();
         Optional<Integer> optionalVotedScore = this.session.getVoteManager()
-                .getVotedScore(this.targetPlayer.getUniqueId(), votePointName);
+                .getVotedScore(this.targetPlayer.getUniqueId(), this.votePoint);
         if (!optionalVotedScore.isPresent()) {
             throw new IllegalStateException("Player Unvote Interface has been invoked against a non-voted votepoint!");
         }
 
         int votedScore = optionalVotedScore.get();
 
-        return messageConfig.getFormatted(MessageConfigNodes.UNVOTE_UI_HEADING, votePointName, votedScore);
+        return messageConfig.getFormatted(MessageConfigNodes.UNVOTE_UI_HEADING, this.votePoint.getName(), votedScore);
     }
 
     private MessagePartsList getSessionClosedMessage() {

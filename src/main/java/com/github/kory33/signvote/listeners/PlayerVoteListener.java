@@ -13,7 +13,7 @@ import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.core.SignVote;
 import com.github.kory33.chatgui.manager.PlayerInteractiveInterfaceManager;
 import com.github.kory33.signvote.manager.VoteSessionManager;
-import com.github.kory33.signvote.model.VotePoint;
+import com.github.kory33.signvote.vote.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 import com.github.kory33.signvote.ui.player.UnvoteInterface;
 import com.github.kory33.signvote.ui.player.VoteInterface;

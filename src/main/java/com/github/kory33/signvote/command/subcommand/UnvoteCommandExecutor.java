@@ -12,7 +12,7 @@ import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.core.SignVote;
 import com.github.kory33.signvote.exception.VotePointNotVotedException;
 import com.github.kory33.signvote.manager.VoteSessionManager;
-import com.github.kory33.signvote.model.VotePoint;
+import com.github.kory33.signvote.vote.VotePoint;
 import com.github.kory33.signvote.session.VoteSession;
 
 /**

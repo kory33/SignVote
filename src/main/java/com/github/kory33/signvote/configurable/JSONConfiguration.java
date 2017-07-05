@@ -1,15 +1,13 @@
 package com.github.kory33.signvote.configurable;
 
+import com.github.kory33.signvote.utils.FileUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.util.logging.Level;
 
@@ -22,9 +20,7 @@ public class JSONConfiguration {
      * @throws IOException when failed to read data from the given file.
      */
     public JSONConfiguration(File configFile) throws IOException {
-        BufferedReader reader = Files.newBufferedReader(configFile.toPath());
-        this.jsonObject = (new JsonParser()).parse(reader).getAsJsonObject();
-        reader.close();
+        this.jsonObject = FileUtils.readJSON(configFile);
     }
 
     private JsonElement fetchKeyObject(String joinedKey) {

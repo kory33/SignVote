@@ -1,9 +1,8 @@
-package com.github.kory33.signvote.model;
+package com.github.kory33.signvote.vote;
 
-import com.github.kory33.signvote.constants.Formats;
 import com.github.kory33.signvote.constants.VotePointDataFileKeys;
+import com.github.kory33.signvote.utils.FileUtils;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -11,10 +10,8 @@ import org.bukkit.World;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
 /**
  * A class representing a sign of a vote point
@@ -29,9 +26,7 @@ public class VotePoint {
     }
 
     public VotePoint(File votePointFIle) throws IllegalArgumentException, IOException {
-        BufferedReader reader = Files.newBufferedReader(votePointFIle.toPath(), Formats.FILE_ENCODING);
-        JsonObject jsonObject = (new JsonParser()).parse(reader).getAsJsonObject();
-        reader.close();
+        JsonObject jsonObject = FileUtils.readJSON(votePointFIle);
 
         this.name = jsonObject.get(VotePointDataFileKeys.NAME).getAsString();
 

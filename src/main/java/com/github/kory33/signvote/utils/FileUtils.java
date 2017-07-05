@@ -1,5 +1,10 @@
 package com.github.kory33.signvote.utils;
 
+import com.github.kory33.signvote.constants.Formats;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -10,9 +15,6 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.stream.Stream;
-
-import com.github.kory33.signvote.constants.Formats;
-import com.google.gson.JsonObject;
 
 /**
  * An util class which handles file I/O
@@ -70,11 +72,40 @@ public class FileUtils {
     }
 
     /**
+     * Read json data from the given target file
+     *
+     */
+    public static JsonObject readJSON(final File targetFile) throws IOException {
+        try (BufferedReader reader = Files.newBufferedReader(targetFile.toPath(), Formats.FILE_ENCODING)) {
+            return (new JsonParser()).parse(reader).getAsJsonObject();
+        }
+    }
+
+    /**
      * Get a stream of files that are present in the given directory
      * @param directory directory from which the list of files is fetched
      * @return a stream containing reference to files in the given directory
+     * or an empty stream if the given file does not represent a directory
      */
     public static Stream<File> getFileListStream(File directory) {
-        return Arrays.stream(directory.listFiles());
+        File[] files = directory.listFiles();
+        if (files == null) {
+            return Stream.empty();
+        }
+        return Arrays.stream(files);
+    }
+
+    /**
+     * Get the name of the file with it's extension removed.
+     * @param file target file
+     * @return file name without the extension
+     */
+    public static String getFileBaseName(File file) {
+        String fileName = file.getName();
+        int lastIndexOfDot = fileName.lastIndexOf(".");
+        if (lastIndexOfDot == 0) {
+            return fileName;
+        }
+        return fileName.substring(0, lastIndexOfDot);
     }
 }

@@ -1,25 +1,25 @@
 package com.github.kory33.signvote.ui.player;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Optional;
-
-import com.github.kory33.signvote.ui.player.defaults.IDefaultClickableInterface;
-import lombok.Getter;
-import org.bukkit.entity.Player;
-
-import com.github.kory33.chatgui.tellraw.MessagePartsList;
 import com.github.kory33.chatgui.command.RunnableInvoker;
+import com.github.kory33.chatgui.model.player.PlayerClickableChatInterface;
+import com.github.kory33.chatgui.tellraw.MessagePartsList;
 import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.exception.InvalidScoreVotedException;
 import com.github.kory33.signvote.exception.ScoreCountLimitReachedException;
 import com.github.kory33.signvote.exception.VotePointAlreadyVotedException;
 import com.github.kory33.signvote.exception.VoteSessionClosedException;
-import com.github.kory33.signvote.model.VotePoint;
+import com.github.kory33.signvote.vote.Limit;
+import com.github.kory33.signvote.vote.VotePoint;
+import com.github.kory33.signvote.vote.VoteScore;
 import com.github.kory33.signvote.session.VoteSession;
-import com.github.kory33.chatgui.model.player.PlayerClickableChatInterface;
+import com.github.kory33.signvote.ui.player.defaults.IDefaultClickableInterface;
 import com.github.ucchyocean.messaging.tellraw.MessageParts;
+import lombok.Getter;
+import org.bukkit.entity.Player;
+
+import java.util.Comparator;
+import java.util.Map;
 
 /**
  * Represents an interface which allows a player to vote to a vote point.
@@ -44,7 +44,7 @@ public final class VoteInterface extends PlayerClickableChatInterface implements
         return new MessageParts(message);
     }
 
-    private void vote(int score) {
+    private void vote(VoteScore voteScore) {
         if (!this.isValidSession()) {
             return;
         }
@@ -52,7 +52,7 @@ public final class VoteInterface extends PlayerClickableChatInterface implements
         String resultMessage;
 
         try {
-            this.session.vote(this.targetPlayer, votePoint, score);
+            this.session.vote(this.targetPlayer, votePoint, voteScore);
             resultMessage = this.messageConfig.getFormatted(MessageConfigNodes.VOTED);
         } catch (ScoreCountLimitReachedException exception) {
             resultMessage = this.messageConfig.getString(MessageConfigNodes.REACHED_VOTE_SCORE_LIMIT);
@@ -83,21 +83,25 @@ public final class VoteInterface extends PlayerClickableChatInterface implements
         super.cancelAction(this.messageConfig.getString(MessageConfigNodes.UI_CANCELLED));
     }
 
-    private String getScoreSelectionLine(int score, Optional<Integer> remaining) {
-        String remainingString = remaining.map(Object::toString)
-                .orElseGet(() -> this.messageConfig.getString(MessageConfigNodes.INFINITE));
+    private String getScoreSelectionLine(VoteScore score, Limit remaining) {
+        String remainingString = remaining.isInfinite()
+                ? this.messageConfig.getString(MessageConfigNodes.INFINITE)
+                : remaining.toString();
 
-        return this.messageConfig.getFormatted(MessageConfigNodes.VOTE_UI_SCORE_SELECTION, score, remainingString);
+        return this.messageConfig
+                .getFormatted(MessageConfigNodes.VOTE_UI_SCORE_SELECTION, score.toInt(), remainingString);
     }
 
     private MessagePartsList getSessionClosedMessage() {
-        String message = this.messageConfig.getString(MessageConfigNodes.VOTE_SESSION_CLOSED);
-        return new MessagePartsList(message + "\n");
+        String message = this.messageConfig.getString(MessageConfigNodes.VOTE_UI_NONE_AVAILABLE);
+        MessagePartsList messagePartsList = new MessagePartsList();
+        messagePartsList.addLine(message);
+        return messagePartsList;
     }
 
     @Override
     protected MessagePartsList getBodyMessages() {
-        HashMap<Integer, Optional<Integer>> availableVotePoints = this.session.getAvailableVoteCounts(this.targetPlayer);
+        Map<VoteScore, Limit> availableVotePoints = this.session.getAvailableVoteCounts(this.targetPlayer);
         if (availableVotePoints.isEmpty()) {
             return this.getSessionClosedMessage();
         }
@@ -115,13 +119,16 @@ public final class VoteInterface extends PlayerClickableChatInterface implements
         messagePartsList.addLine(this.getHeading());
 
         availableVotePoints
-            .keySet()
-            .stream()
-            .sorted(Comparator.reverseOrder())
-            .forEach(score -> {
-                messagePartsList.add(this.getButton(() -> this.vote(score), defaultButtonMessage));
-                messagePartsList.addLine(this.getScoreSelectionLine(score, availableVotePoints.get(score)));
-            });
+                .entrySet()
+                .stream()
+                .sorted(Comparator.comparing(Map.Entry::getValue, Comparator.reverseOrder()))
+                .forEach(entry -> {
+                    VoteScore score = entry.getKey();
+                    Limit limit = entry.getValue();
+
+                    messagePartsList.add(this.getButton(() -> this.vote(score), defaultButtonMessage));
+                    messagePartsList.addLine(this.getScoreSelectionLine(score, limit));
+                });
 
         messagePartsList.add(this.getButton(this::cancelAction, defaultButtonMessage));
         messagePartsList.addLine(this.getFormattedMessagePart(MessageConfigNodes.UI_CANCEL));

@@ -3,12 +3,15 @@ package com.github.kory33.signvote.command.subcommand;
 import java.util.ArrayList;
 
 import com.github.kory33.chatgui.command.RunnableInvoker;
+import com.github.kory33.signvote.exception.data.InvalidLimitDataException;
+import com.github.kory33.signvote.vote.Limit;
+import com.github.kory33.signvote.vote.VoteLimit;
+import com.github.kory33.signvote.vote.VoteScore;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.kory33.signvote.configurable.JSONConfiguration;
-import com.github.kory33.signvote.constants.MagicNumbers;
 import com.github.kory33.signvote.constants.MessageConfigNodes;
 import com.github.kory33.signvote.constants.PermissionNodes;
 import com.github.kory33.signvote.core.SignVote;
@@ -82,11 +85,12 @@ public class AddScoreCommandExecutor implements SubCommandExecutor{
             return false;
         }
 
-        int score, limit;
+        VoteScore voteScore;
+        Limit limit;
         try {
-            score = Integer.parseInt(args.remove(0));
-            limit = Integer.parseInt(args.remove(0));
-        } catch (NumberFormatException e) {
+            voteScore = new VoteScore(Integer.parseInt(args.remove(0)));
+            limit = Limit.fromString(args.remove(0));
+        } catch (NumberFormatException | InvalidLimitDataException e) {
             sender.sendMessage(this.messageConfiguration.getString(MessageConfigNodes.INVALID_NUMBER));
             return true;
         }
@@ -100,15 +104,18 @@ public class AddScoreCommandExecutor implements SubCommandExecutor{
         }
 
         try {
-            session.getVoteScoreCountLimits().addLimit(score, permission, limit);
+            session.getVoteLimitManager().addVoteLimit(new VoteLimit(voteScore, limit, permission));
         } catch (IllegalArgumentException e) {
             sender.sendMessage(this.messageConfiguration.getString(MessageConfigNodes.INVALID_NUMBER));
             return true;
         }
 
-        String limitString = limit == MagicNumbers.VOTELIMIT_INFINITY ? "Infinity" : String.valueOf(limit);
+        String limitString = limit.isInfinite()
+                ? messageConfiguration.getString(MessageConfigNodes.INFINITE)
+                : limit.toString();
+
         sender.sendMessage(messageConfiguration.getFormatted(MessageConfigNodes.F_SCORE_LIMIT_ADDED,
-                limitString, score, session.getName(), permission));
+                limitString, voteScore.toInt(), session.getName(), permission));
         return true;
     }
 }

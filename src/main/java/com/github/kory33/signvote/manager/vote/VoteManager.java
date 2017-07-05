@@ -1,0 +1,215 @@
+package com.github.kory33.signvote.manager.vote;
+
+import com.github.kory33.signvote.exception.VotePointAlreadyVotedException;
+import com.github.kory33.signvote.exception.VotePointNotVotedException;
+import com.github.kory33.signvote.session.VoteSession;
+import com.github.kory33.signvote.utils.FileUtils;
+import com.github.kory33.signvote.utils.MapUtil;
+import com.github.kory33.signvote.vote.Vote;
+import com.github.kory33.signvote.vote.VotePoint;
+import com.github.kory33.signvote.vote.VoteScore;
+import com.google.gson.JsonObject;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+
+/**
+ * A class which handles all the vote data
+ */
+public class VoteManager {
+    private final UUIDToPlayerVotesCacheMap cacheFromUUID;
+    private final VotePointToVoteSetCacheMap cacheFromVotePoint;
+    private final VoteSession parentSession;
+
+    /**
+     * Construct a VoteManager object from data at given file location
+     * @param voteDataDirectory directory in which vote data is stored player-wise
+     * @param parentSession session which is responsible for votes that are about to be read
+     * @throws IllegalArgumentException when null value or a non-directory file is given as a parameter
+     */
+    public VoteManager(File voteDataDirectory, VoteSession parentSession) throws IOException {
+        this.parentSession = parentSession;
+        this.cacheFromUUID = new UUIDToPlayerVotesCacheMap();
+        this.cacheFromVotePoint = new VotePointToVoteSetCacheMap();
+
+        if (voteDataDirectory == null) {
+            throw new IllegalArgumentException("Directory cannot be null!");
+        }
+
+        if (!voteDataDirectory.isDirectory()) {
+            throw new IOException("Directory has to be specified for save location!");
+        }
+
+        FileUtils.getFileListStream(voteDataDirectory).forEach(playerVoteDataFile -> {
+            JsonObject jsonObject = null;
+            try {
+                jsonObject = FileUtils.readJSON(playerVoteDataFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            UUID uuid = UUID.fromString(FileUtils.getFileBaseName(playerVoteDataFile));
+            this.loadPlayerVoteData(uuid, jsonObject);
+        });
+    }
+
+    private void loadPlayerVoteData(UUID playerUUID, JsonObject jsonObject) {
+        jsonObject.entrySet().forEach(entry -> {
+            VoteScore score = new VoteScore(Integer.parseInt(entry.getKey()));
+
+            entry.getValue().getAsJsonArray().forEach(elem -> {
+                VotePoint votePoint = this.parentSession.getVotePoint(elem.getAsString());
+                if (votePoint == null) {
+                    return;
+                }
+
+                try {
+                    this.addVotePointData(playerUUID, score, votePoint);
+                } catch (VotePointAlreadyVotedException ignored) {}
+            });
+        });
+    }
+
+    /**
+     * Get the players' vote data, as a map of Player to JsonObject
+     * @return mapping of (player's)UUID -> json object containing votes of the player
+     */
+    public Map<UUID, JsonObject> getPlayersVoteData() {
+        return MapUtil.mapValues(this.cacheFromUUID.toImmutableMap(), VoteScoreToVotePointCacheMap::toJsonObject);
+    }
+
+    /**
+     * Construct an empty VoteManager object.
+     */
+    public VoteManager(VoteSession parentSession) {
+        this.cacheFromUUID = new UUIDToPlayerVotesCacheMap();
+        this.cacheFromVotePoint = new VotePointToVoteSetCacheMap();
+        this.parentSession = parentSession;
+    }
+
+    /**
+     * Get the mapping of voted score to a list of voted points
+     */
+    private VoteScoreToVotePointCacheMap getVotedPointsMap(UUID uuid) {
+        return this.cacheFromUUID.get(uuid);
+    }
+
+    /**
+     * Get the mapping of [vote score] to the [number of times the score has been voted by the player]
+     * @param uuid UUID of the player
+     * @return A map containing vote scores as keys and vote counts(with the score of corresponding key) as values
+     */
+    public Map<VoteScore, Integer> getVotedPointsCount(UUID uuid) {
+        return MapUtil.mapValues(this.getVotedPointsMap(uuid).toImmutableMap(), Set::size);
+    }
+
+    /**
+     * Add a vote data related to the score and the votepoint to which the player has voted
+     * @param voterUUID UUID of a player who has voted
+     * @param voteScore score which the player has voted
+     * @param votePoint vote point to which the player has voted
+     * @throws IllegalArgumentException when there is a duplicate in the vote
+     */
+    public void addVotePointData(UUID voterUUID, VoteScore voteScore, VotePoint votePoint) throws VotePointAlreadyVotedException {
+        VoteScoreToVotePointCacheMap cacheByScores = this.cacheFromUUID.get(voterUUID);
+
+        if (this.getVotedScore(voterUUID, votePoint).isPresent()) {
+            throw new VotePointAlreadyVotedException(voterUUID, votePoint);
+        }
+
+        cacheByScores.get(voteScore).add(votePoint);
+        this.cacheFromVotePoint.get(votePoint).add(new Vote(voteScore, voterUUID));
+    }
+
+    /**
+     * Remove a vote casted by the given player to the given vote point.
+     * @param playerUUID UUID of a player who tries to cancel the vote
+     * @param votePoint vote point whose vote by the player is being cancelled
+     * @throws VotePointNotVotedException when the player has not voted to the target vote point
+     */
+    public void removeVote(UUID playerUUID, VotePoint votePoint) throws VotePointNotVotedException {
+        VoteScoreToVotePointCacheMap playerVotes = this.getVotedPointsMap(playerUUID);
+
+        Optional<VotePointSet> targetVotePointSet = playerVotes.toImmutableMap()
+                .entrySet()
+                .stream()
+                .filter(voteScoreSetEntry -> voteScoreSetEntry.getValue().contains(votePoint))
+                .map(Entry::getValue)
+                .findFirst();
+
+        VotePointToVoteSetCacheMap votePointToVoteSetCacheMap = this.cacheFromVotePoint;
+        Optional<Vote> targetVoteCache = votePointToVoteSetCacheMap.get(votePoint)
+                .stream()
+                .filter(vote -> vote.getVoterUuid().equals(playerUUID))
+                .findFirst();
+
+        if (!targetVotePointSet.isPresent() || !targetVoteCache.isPresent()) {
+            throw new VotePointNotVotedException(playerUUID, votePoint, this.parentSession);
+        }
+
+        targetVotePointSet.get().remove(votePoint);
+        votePointToVoteSetCacheMap.get(votePoint).remove(targetVoteCache.get());
+    }
+
+    /**
+     * Remove all the votes associated with the given votepoint.
+     * @param votePoint vote point from which votes will be removed
+     */
+    public void removeAllVotes(VotePoint votePoint) {
+        Set<Vote> votes = this.cacheFromVotePoint.get(votePoint);
+
+        // purge votepoint names present in cacheFromUUID
+        votes.forEach(vote -> {
+            try {
+                this.cacheFromUUID.get(vote.getVoterUuid()).get(vote.getScore()).remove(votePoint);
+            } catch (NullPointerException exception) {
+                // NPE should be thrown If and Only If
+                // cacheFromUUID and cacheFromVotePoint are not synchronized correctly
+                exception.printStackTrace();
+            }
+        });
+
+        // clear cacheFromVotePoint
+        this.cacheFromVotePoint.remove(votePoint);
+    }
+
+    /**
+     * Get a set of votes casted to the given vote point.
+     * @param votePoint target vote point
+     * @return set containing all the votes casted to the vote point.
+     */
+    public Set<Vote> getVotes(VotePoint votePoint) {
+        return this.cacheFromVotePoint.get(votePoint);
+    }
+
+    /**
+     * Get the score a given player has voted to a given name of votepoint.
+     * The returned optional object contains no value if the player has not voted.
+     * @param playerUUID UUID of the player
+     * @param votePoint vote point from which score data is fetched
+     * @return an Optional object containing score vote by the player
+     */
+    public Optional<Integer> getVotedScore(UUID playerUUID, VotePoint votePoint) {
+        return this.getVotedPointsMap(playerUUID).toImmutableMap().entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().contains(votePoint))
+                .map(Entry::getKey)
+                .map(VoteScore::toInt)
+                .findFirst();
+    }
+
+    /**
+     * Check if the given player has voted to the specified votepoint.
+     * @param playerUUID UUID of the player
+     * @param votePoint target vote point
+     * @return boolean value true iff player has voted to the given vote point.
+     */
+    public boolean hasVoted(UUID playerUUID, VotePoint votePoint) {
+        return this.getVotedScore(playerUUID, votePoint).isPresent();
+    }
+}

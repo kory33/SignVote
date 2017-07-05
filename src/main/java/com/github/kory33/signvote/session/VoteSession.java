@@ -1,13 +1,15 @@
 package com.github.kory33.signvote.session;
 
 import com.github.kory33.chatgui.util.collection.BijectiveHashMap;
-import com.github.kory33.signvote.collection.VoteScoreLimits;
-import com.github.kory33.signvote.configurable.JSONConfiguration;
 import com.github.kory33.signvote.constants.*;
 import com.github.kory33.signvote.exception.*;
-import com.github.kory33.signvote.manager.VoteManager;
-import com.github.kory33.signvote.model.VotePoint;
+import com.github.kory33.signvote.manager.VoteLimitManager;
+import com.github.kory33.signvote.manager.vote.VoteManager;
 import com.github.kory33.signvote.utils.FileUtils;
+import com.github.kory33.signvote.vote.Limit;
+import com.github.kory33.signvote.vote.VotePoint;
+import com.github.kory33.signvote.vote.VoteScore;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,8 +19,7 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
@@ -29,7 +30,7 @@ public class VoteSession {
     private final BijectiveHashMap<Sign, VotePoint> signMap;
     private final BijectiveHashMap<String, VotePoint> votePointNameMap;
 
-    @Getter final private VoteScoreLimits voteScoreCountLimits;
+    @Getter final private VoteLimitManager voteLimitManager;
     @Getter final private String name;
     @Getter private final VoteManager voteManager;
 
@@ -47,21 +48,19 @@ public class VoteSession {
         // read information of this vote session
         File sessionDataFile = new File(sessionSaveLocation, FilePaths.SESSION_DATA_FILENAME);
 
-        JsonObject sessionConfigJson = (new JSONConfiguration(sessionDataFile)).getJsonObject();
-        JsonObject voteLimits = sessionConfigJson.get(VoteSessionDataFileKeys.VOTE_SCORE_LIMITS).getAsJsonObject();
+        JsonObject sessionConfigJson = FileUtils.readJSON(sessionDataFile);
+        JsonArray voteLimitsJsonArray = sessionConfigJson
+                .get(VoteSessionDataFileKeys.VOTE_SCORE_LIMITS)
+                .getAsJsonArray();
 
-        this.voteScoreCountLimits = new VoteScoreLimits(voteLimits);
+        this.voteLimitManager = VoteLimitManager.fromJsonArray(voteLimitsJsonArray);
         this.name = sessionConfigJson.get(VoteSessionDataFileKeys.NAME).getAsString();
 
         this.setOpen(sessionConfigJson.get(VoteSessionDataFileKeys.IS_OPEN).getAsBoolean());
 
         // load all the saved votepoints
         File votePointDirectory = new File(sessionSaveLocation, FilePaths.VOTE_POINTS_DIR);
-        File[] votePointFiles = votePointDirectory.listFiles();
-        assert votePointFiles != null;
-        for (File votePointFile: votePointFiles) {
-            this.addVotePoint(votePointFile);
-        }
+        FileUtils.getFileListStream(votePointDirectory).forEach(this::addVotePoint);
 
         // initialize vote manager
         this.voteManager = new VoteManager(new File(sessionSaveLocation, FilePaths.VOTE_DATA_DIR), this);
@@ -74,7 +73,7 @@ public class VoteSession {
     public VoteSession(String sessionName) {
         this.name = sessionName;
 
-        this.voteScoreCountLimits = new VoteScoreLimits();
+        this.voteLimitManager = new VoteLimitManager();
         this.voteManager = new VoteManager(this);
 
         this.signMap = new BijectiveHashMap<>();
@@ -113,7 +112,7 @@ public class VoteSession {
         JsonObject jsonObject = new JsonObject();
 
         jsonObject.addProperty(VoteSessionDataFileKeys.NAME, this.name);
-        jsonObject.add(VoteSessionDataFileKeys.VOTE_SCORE_LIMITS, this.voteScoreCountLimits.toJson());
+        jsonObject.add(VoteSessionDataFileKeys.VOTE_SCORE_LIMITS, this.voteLimitManager.toJsonArray());
         jsonObject.addProperty(VoteSessionDataFileKeys.IS_OPEN, this.isOpen);
 
         return jsonObject;
@@ -193,47 +192,25 @@ public class VoteSession {
     }
 
     /**
-     * Rename the votepoint to a given name.
-     * @param oldName old name of the vote point
-     * @param newName new name of the vote point
-     */
-    public void renameVotePoint(String oldName, String newName) throws IllegalArgumentException{
-        VotePoint target = this.votePointNameMap.get(oldName);
-        if (target == null) {
-            throw new IllegalArgumentException("No votepoint with that name exists.");
-        }
-
-        if (this.votePointNameMap.containsKey(newName)) {
-            throw new IllegalArgumentException("A votepoint with name of \"" + newName + "\" already exists.");
-        }
-
-        target.setName(newName);
-        voteManager.refreshVotePointName(target, oldName);
-    }
-
-    /**
      * Get a score -> count map of available votes for a given player
      * @param player player instance
      * @return map of score -> reserved limit
      * limit is an optional with limit value, empty if infinite number of votes can be casted
      */
-    public HashMap<Integer, Optional<Integer>> getAvailableVoteCounts(Player player) {
-        HashMap<Integer, Optional<Integer>> availableCounts = this.getReservedVoteCounts(player);
-
-        HashMap<Integer, Integer> votedScoreCounts = this.voteManager.getVotedPointsCount(player.getUniqueId());
+    public Map<VoteScore, Limit> getAvailableVoteCounts(Player player) {
+        Map<VoteScore, Limit> availableCounts = this.getReservedVoteCounts(player);
+        Map<VoteScore, Integer> votedScoreCounts = this.voteManager.getVotedPointsCount(player.getUniqueId());
 
         votedScoreCounts.forEach((score, votedNum) -> {
             if (!availableCounts.containsKey(score)) {
                 return;
             }
 
-            Optional<Integer> reservedVotes = availableCounts.remove(score);
-
-            // infinity votes(empty Optional) remains infinity, otherwise Max(reserved - voted) is remaining
-            Optional<Integer> remainingVotes = reservedVotes.map(res -> Math.max(res - votedNum, 0));
+            Limit reservedVotes = availableCounts.remove(score);
+            Limit remainingVotes = reservedVotes.minus(votedNum);
 
             // iff remaining != 0
-            if (remainingVotes.orElse(-1) != 0) {
+            if (!remainingVotes.isZero()) {
                 availableCounts.put(score, remainingVotes);
             }
         });
@@ -247,21 +224,8 @@ public class VoteSession {
      * @return map of score -> available limit
      * limit is an optional with limit value, empty if infinite number of votes can be casted
      */
-    public HashMap<Integer, Optional<Integer>> getReservedVoteCounts(Player player) {
-        HashMap<Integer, Optional<Integer>> reservedCounts = new HashMap<>();
-
-        for (int score: this.voteScoreCountLimits.getVotableScores()) {
-            int limit = this.voteScoreCountLimits.getLimit(score, player);
-            if (limit == MagicNumbers.VOTELIMIT_INFINITY) {
-                reservedCounts.put(score, Optional.empty());
-                continue;
-            }
-            if (limit > 0) {
-                reservedCounts.put(score, Optional.of(limit));
-            }
-        }
-
-        return reservedCounts;
+    public Map<VoteScore, Limit> getReservedVoteCounts(Player player) {
+        return this.voteLimitManager.getLimitSet(player);
     }
 
     /**
@@ -276,9 +240,9 @@ public class VoteSession {
      * @throws VotePointAlreadyVotedException when the player has already voted to the votepoint
      * @throws VoteSessionClosedException when this vote session is closed
      */
-    public void vote(Player player, VotePoint votePoint, int voteScore)
+    public void vote(Player player, VotePoint votePoint, VoteScore voteScore)
             throws ScoreCountLimitReachedException, VotePointAlreadyVotedException, InvalidScoreVotedException, VoteSessionClosedException {
-        if (this.voteScoreCountLimits.getLimit(voteScore, player) == 0) {
+        if (this.voteLimitManager.getLimit(voteScore, player).isZero()) {
             throw new InvalidScoreVotedException(votePoint, player, voteScore);
         }
 

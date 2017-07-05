@@ -1,4 +1,4 @@
-package com.github.kory33.signvote.model;
+package com.github.kory33.signvote.vote;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -36,7 +36,7 @@ public class VotePointStats {
 
         this.voteSession.getVoteManager().getVotes(this.votePoint)
             .forEach(vote -> {
-                int score = vote.getScore();
+                int score = vote.getScore().toInt();
                 int count = distrMap.getOrDefault(score, 0);
                 distrMap.put(score, count + 1);
             });
