@@ -20,17 +20,16 @@ class VotePointProtector(private val plugin: SignVote) : Listener {
         val brokenBlock = event.block
 
         val protectTarget = BlockUtil.getBlocksAdjacentTo(brokenBlock)
-                .find { block ->
-                    val signMaterial = block.state.data as? org.bukkit.material.Sign ?: return@find true
+                .firstOrNull { block ->
+                    val signMaterial = block.state.data as? org.bukkit.material.Sign ?: return@firstOrNull false
 
                     // ignore if the sign is not attached to the broken block
                     val attachedBlock = block.getRelative(signMaterial.attachedFace)
-                    if (attachedBlock == brokenBlock) {
-                        return@find true
+                    if (attachedBlock != brokenBlock) {
+                        return@firstOrNull false
                     }
 
-                    // ignore if the sign is not a SignVote's vote-point
-                    return@find !this.plugin.api!!.isSignVoteSign(block)
+                    return@firstOrNull this.plugin.api!!.isSignVoteSign(block)
                 }
 
         if(protectTarget != null) {
