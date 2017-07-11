@@ -2,11 +2,9 @@ package com.github.kory33.signvote.listeners
 
 import com.github.kory33.signvote.core.SignVote
 import com.github.kory33.signvote.utils.BlockUtil
-import org.bukkit.block.Block
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
-import org.bukkit.material.MaterialData
 
 /**
  * A listener class that aims to protect blocks behind vote-points

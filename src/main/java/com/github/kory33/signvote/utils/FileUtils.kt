@@ -3,17 +3,14 @@ package com.github.kory33.signvote.utils
 import com.github.kory33.signvote.constants.Formats
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-
-import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
-import java.io.OutputStream
 import java.nio.file.FileVisitResult
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.SimpleFileVisitor
 import java.nio.file.attribute.BasicFileAttributes
-import java.util.Arrays
+import java.util.*
 import java.util.stream.Stream
 
 /**

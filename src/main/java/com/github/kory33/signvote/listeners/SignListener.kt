@@ -7,9 +7,7 @@ import com.github.kory33.signvote.constants.PermissionNodes
 import com.github.kory33.signvote.constants.SignTexts
 import com.github.kory33.signvote.core.SignVote
 import com.github.kory33.signvote.manager.VoteSessionManager
-import com.github.kory33.signvote.session.VoteSession
 import com.github.kory33.signvote.vote.VotePoint
-import org.bukkit.block.Block
 import org.bukkit.block.Sign
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

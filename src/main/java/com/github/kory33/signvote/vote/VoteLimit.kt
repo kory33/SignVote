@@ -1,14 +1,13 @@
 package com.github.kory33.signvote.vote
 
 import com.github.kory33.signvote.exception.data.InvalidLimitDataException
-import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import org.bukkit.entity.Player
 
 /**
  * A class that represents a limit of vote counts
  */
-data class VoteLimit @java.beans.ConstructorProperties("score", "limit", "permission")
+data class VoteLimit
 constructor(val score: VoteScore, val limit: Limit, private val permission: String?) {
 
     constructor(score: VoteScore, limit: Limit) : this(score, limit, null)

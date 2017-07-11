@@ -5,8 +5,6 @@ package com.github.kory33.signvote.constants
  * @author Kory
  */
 object SubCommands {
-    val ROOT = "/signvote:signvote"
-
     val CREATE = "create"
     val DELETE = "delete"
     val LIST = "list"

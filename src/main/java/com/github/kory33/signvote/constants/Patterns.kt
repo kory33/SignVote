@@ -7,6 +7,6 @@ import java.util.regex.Pattern
  * @author Kory
  */
 object Patterns {
-    val JSON_FILE_NAME = Pattern.compile("^(.*)" + Formats.JSON_EXT + "$")
-    val PATTERN_VALID_VP_NAME = Pattern.compile("^(\\w|(\\w[^\\\\/]*\\w))$")
+    val JSON_FILE_NAME: Pattern = Pattern.compile("^(.*)" + Formats.JSON_EXT + "$")
+    val PATTERN_VALID_VP_NAME: Pattern = Pattern.compile("^(\\w|(\\w[^\\\\/]*\\w))$")
 }

@@ -6,9 +6,7 @@ import com.github.kory33.signvote.core.SignVote
 import net.md_5.bungee.api.ChatColor
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
-
-import java.util.ArrayList
-import kotlin.collections.Map.Entry
+import java.util.*
 
 /**
  * Executor class of "help"(default) sub-command

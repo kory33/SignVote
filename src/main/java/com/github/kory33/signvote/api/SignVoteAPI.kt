@@ -2,7 +2,6 @@ package com.github.kory33.signvote.api
 
 import com.github.kory33.signvote.core.SignVote
 import org.bukkit.block.Block
-import org.bukkit.block.BlockState
 import org.bukkit.block.Sign
 
 /**

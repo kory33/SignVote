@@ -6,13 +6,10 @@ import com.github.kory33.signvote.constants.PermissionNodes
 import com.github.kory33.signvote.core.SignVote
 import com.github.kory33.signvote.exception.VotePointNotVotedException
 import com.github.kory33.signvote.manager.VoteSessionManager
-import com.github.kory33.signvote.session.VoteSession
-import com.github.kory33.signvote.vote.VotePoint
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-
-import java.util.ArrayList
+import java.util.*
 
 /**
  * Executor class of "unvote" sub-command

@@ -7,6 +7,6 @@ import java.nio.charset.Charset
  * @author Kory
  */
 object Formats {
-    val FILE_ENCODING = Charset.forName("utf-8")
+    val FILE_ENCODING: Charset = Charset.forName("utf-8")
     val JSON_EXT = ".json"
 }

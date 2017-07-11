@@ -5,11 +5,9 @@ import com.github.kory33.signvote.constants.MessageConfigNodes
 import com.github.kory33.signvote.constants.PermissionNodes
 import com.github.kory33.signvote.core.SignVote
 import com.github.kory33.signvote.manager.VoteSessionManager
-import com.github.kory33.signvote.session.VoteSession
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
-
-import java.util.ArrayList
+import java.util.*
 
 /**
  * Executor class of "open" sub-command

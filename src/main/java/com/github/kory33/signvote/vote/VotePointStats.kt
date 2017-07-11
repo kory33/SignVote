@@ -34,10 +34,9 @@ class VotePointStats(private val voteSession: VoteSession, val votePoint: VotePo
         val distrMap = HashMap<Int, Int>()
 
         this.voteSession.voteManager.getVotes(this.votePoint)
-                .forEach { vote ->
-                    val score = vote.score.toInt()
-                    val count = distrMap.getOrDefault(score, 0)
-                    distrMap.put(score, count + 1)
+                .forEach { (score) ->
+                    val count = distrMap.getOrDefault(score.toInt(), 0)
+                    distrMap.put(score.toInt(), count + 1)
                 }
 
         return distrMap

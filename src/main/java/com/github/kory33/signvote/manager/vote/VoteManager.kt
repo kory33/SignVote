@@ -164,9 +164,9 @@ class VoteManager {
         val votes = this.cacheFromVotePoint[votePoint]
 
         // purge votepoint names present in cacheFromUUID
-        votes.forEach { vote ->
+        votes.forEach { (score, voterUuid) ->
             try {
-                this.cacheFromUUID[vote.voterUuid][vote.score].remove(votePoint)
+                this.cacheFromUUID[voterUuid][score].remove(votePoint)
             } catch (exception: NullPointerException) {
                 // NPE should be thrown If and Only If
                 // cacheFromUUID and cacheFromVotePoint are not synchronized correctly

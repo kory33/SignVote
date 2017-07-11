@@ -30,7 +30,7 @@ interface SubCommandExecutor {
 
     /**
      * Send help message to the target.
-     * Without overrides, this method sends the string obtained from [SubCommandExecutor.getHelpString].
+     * Without overrides, this method sends the string obtained from [SubCommandExecutor.helpString].
      * @param target target to which the help message is sent
      */
     fun displayHelp(target: CommandSender) {

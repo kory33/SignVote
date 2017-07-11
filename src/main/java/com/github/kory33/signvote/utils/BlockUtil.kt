@@ -2,8 +2,6 @@ package com.github.kory33.signvote.utils
 
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
-import java.util.stream.Collectors
-import java.util.stream.Stream
 
 /**
  * An util class that handles things related to Blocks
