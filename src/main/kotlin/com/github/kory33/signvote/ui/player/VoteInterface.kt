@@ -126,7 +126,7 @@ class VoteInterface(player: Player, private val session: VoteSession, private va
                     }
 
             messagePartsList.add(this.getButton({ this.cancelAction() }, defaultButtonMessage))
-            messagePartsList.addLine(this.getFormattedMessagePart(MessageConfigNodes.UI_CANCEL))
+            messagePartsList.add(this.getFormattedMessagePart(MessageConfigNodes.UI_CANCEL))
 
             return messagePartsList
         }

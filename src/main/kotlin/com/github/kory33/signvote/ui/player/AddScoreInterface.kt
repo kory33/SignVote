@@ -122,11 +122,13 @@ class AddScoreInterface(player: Player,
                     this.messageConfig.getString(MessageConfigNodes.ADDSCORE_UI_SUBMIT))
 
             val messagePartsList = MessagePartsList()
+
             messagePartsList.addLine(this.heading)
             messagePartsList.addAll(scoreForm)
             messagePartsList.addAll(limitForm)
             messagePartsList.addAll(permissionForm)
-            messagePartsList.addLine(submitButton)
+            messagePartsList.add(submitButton)
+
             return messagePartsList
         }
 }

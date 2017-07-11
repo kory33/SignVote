@@ -77,10 +77,12 @@ class UnvoteInterface(targetPlayer: Player,
 
             val messagePartsList = MessagePartsList()
             messagePartsList.addLine(this.heading)
+
             messagePartsList.add(this.getButton({ this.unVote() }, defaultButtonMessage))
             messagePartsList.addLine(this.getFormattedMessagePart(MessageConfigNodes.UNVOTE_UI_COMFIRM))
+
             messagePartsList.add(this.getButton({ this.cancelAction() }, defaultButtonMessage))
-            messagePartsList.addLine(this.getFormattedMessagePart(MessageConfigNodes.UI_CANCEL))
+            messagePartsList.add(this.getFormattedMessagePart(MessageConfigNodes.UI_CANCEL))
 
             return messagePartsList
         }
